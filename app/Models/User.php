@@ -2,47 +2,78 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role',
+        'parent_id',
+        'avatar_url',
+        'xp',
+        'level'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password'
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    public function parent()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(User::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(User::class, 'parent_id');
+    }
+
+    public function habitsAssigned()
+    {
+        return $this->hasMany(Habit::class, 'assigned_by');
+    }
+
+    public function challenges()
+    {
+        return $this->hasMany(Challenge::class, 'created_by');
+    }
+
+    public function reflections()
+    {
+        return $this->hasMany(Reflection::class);
+    }
+
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class, 'user_badges')
+                    ->withPivot('awarded_at')
+                    ->withTimestamps();
+    }
+
+    public function appreciationsSent()
+    {
+        return $this->hasMany(Appreciation::class, 'from_user');
+    }
+
+    public function appreciationsReceived()
+    {
+        return $this->hasMany(Appreciation::class, 'to_user');
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(ForumPost::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(ForumComment::class);
     }
 }
