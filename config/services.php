@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'go_admin' => [
+        'url' => env('GO_ADMIN_API_URL', 'http://localhost:8080'),
+    ],
+
 ];
