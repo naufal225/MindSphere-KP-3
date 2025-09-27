@@ -15,14 +15,13 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-600">Total Pengguna Aktif</p>
-
-                <p class="text-3xl font-bold text-gray-900">{{ number_format($totalActiveUsers) }}</p>
+                <p class="text-3xl font-bold text-gray-900" id="totalActiveUsers">0</p>
                 <div class="flex gap-2 mt-1 text-xs text-gray-500">
-                    <span>{{ $totalStudents }} Siswa</span>
+                    <span id="totalStudents">0</span> Siswa
                     <span>•</span>
-                    <span>{{ $totalTeachers }} Guru</span>
+                    <span id="totalTeachers">0</span> Guru
                     <span>•</span>
-                    <span>{{ $totalParents }} Ortu</span>
+                    <span id="totalParents">0</span> Ortu
                 </div>
             </div>
             <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg">
@@ -36,11 +35,11 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-600">Challenge Aktif</p>
-                <p class="text-3xl font-bold text-gray-900">{{ $activeIndividualChallenges + $activeGroupChallenges }}</p>
+                <p class="text-3xl font-bold text-gray-900" id="totalActiveChallenges">0</p>
                 <div class="flex gap-2 mt-1 text-xs text-gray-500">
-                    <span>{{ $activeIndividualChallenges }} Individu</span>
+                    <span id="activeIndividualChallenges">0</span> Individu
                     <span>•</span>
-                    <span>{{ $activeGroupChallenges }} Grup</span>
+                    <span id="activeGroupChallenges">0</span> Grup
                 </div>
             </div>
             <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
@@ -54,11 +53,11 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-600">Habit Minggu Ini</p>
-                <p class="text-3xl font-bold text-gray-900">{{ $doneHabits + $notDoneHabits }}</p>
+                <p class="text-3xl font-bold text-gray-900" id="totalHabits">0</p>
                 <div class="flex gap-2 mt-1 text-xs">
-                    <span class="text-green-600">{{ $doneHabits }} Done</span>
+                    <span class="text-green-600" id="doneHabits">0</span> Done
                     <span>•</span>
-                    <span class="text-red-600">{{ $notDoneHabits }} Missed</span>
+                    <span class="text-red-600" id="notDoneHabits">0</span> Missed
                 </div>
             </div>
             <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg">
@@ -72,11 +71,11 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-600">Refleksi Hari Ini</p>
-                <p class="text-3xl font-bold text-gray-900">{{ $reflectionsToday }}</p>
+                <p class="text-3xl font-bold text-gray-900" id="reflectionsToday">0</p>
                 <div class="flex gap-2 mt-1 text-xs text-gray-500">
-                    <span>{{ $forumPostsThisWeek }} Post Forum</span>
+                    <span id="forumPostsThisWeek">0</span> Post Forum
                     <span>•</span>
-                    <span>{{ $forumCommentsThisWeek }} Komentar</span>
+                    <span id="forumCommentsThisWeek">0</span> Komentar
                 </div>
             </div>
             <div class="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-lg">
@@ -84,53 +83,6 @@
             </div>
         </div>
     </div>
-</div>
-
-<!-- Quick Action Buttons -->
-<div class="grid grid-cols-1 gap-4 mb-8 sm:grid-cols-2 lg:grid-cols-4">
-    <a href=""
-       class="p-4 text-white transition-all rounded-lg bg-[#2563EB] hover:bg-[#1E40AF] hover:shadow-md">
-        <div class="flex flex-col items-center text-center">
-            <div class="flex items-center justify-center w-12 h-12 mb-3 bg-white rounded-full bg-opacity-20">
-                <i class="text-xl fas fa-users"></i>
-            </div>
-            <h3 class="mb-1 font-semibold">Kelola Pengguna</h3>
-            <p class="text-sm text-blue-100">Data siswa, guru, orang tua</p>
-        </div>
-    </a>
-
-    <a href=""
-       class="p-4 text-white transition-all rounded-lg bg-[#22C55E] hover:bg-[#16A34A] hover:shadow-md">
-        <div class="flex flex-col items-center text-center">
-            <div class="flex items-center justify-center w-12 h-12 mb-3 bg-white rounded-full bg-opacity-20">
-                <i class="text-xl fas fa-flag-checkered"></i>
-            </div>
-            <h3 class="mb-1 font-semibold">Buat Challenge</h3>
-            <p class="text-sm text-green-100">Tantangan individu/grup</p>
-        </div>
-    </a>
-
-    <a href=""
-       class="p-4 text-white transition-all rounded-lg bg-[#8B5CF6] hover:bg-[#7C3AED] hover:shadow-md">
-        <div class="flex flex-col items-center text-center">
-            <div class="flex items-center justify-center w-12 h-12 mb-3 bg-white rounded-full bg-opacity-20">
-                <i class="text-xl fas fa-tasks"></i>
-            </div>
-            <h3 class="mb-1 font-semibold">Kelola Habits</h3>
-            <p class="text-sm text-purple-100">Kebiasaan harian/mingguan</p>
-        </div>
-    </a>
-
-    <a href=""
-       class="p-4 text-white transition-all rounded-lg bg-[#F59E0B] hover:bg-[#D97706] hover:shadow-md">
-        <div class="flex flex-col items-center text-center">
-            <div class="flex items-center justify-center w-12 h-12 mb-3 bg-white rounded-full bg-opacity-20">
-                <i class="text-xl fas fa-award"></i>
-            </div>
-            <h3 class="mb-1 font-semibold">Kelola Badges</h3>
-            <p class="text-sm text-yellow-100">Penghargaan & achievement</p>
-        </div>
-    </a>
 </div>
 
 <!-- Main Content Grid -->
@@ -142,31 +94,8 @@
             <p class="text-sm text-gray-500">Siswa dengan XP tertinggi</p>
         </div>
         <div class="p-6">
-            <div class="space-y-4">
-                @foreach($topStudents as $index => $student)
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white bg-blue-600 rounded-full">
-                            {{ $index + 1 }}
-                        </div>
-                        @if($student->avatar_url)
-                        <img src="{{ $student->avatar_url }}" alt="{{ $student->name }}"
-                             class="w-10 h-10 rounded-full">
-                        @else
-                        <div class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
-                            <span class="text-lg font-bold text-blue-600">{{ substr($student->name, 0, 1) }}</span>
-                        </div>
-                        @endif
-                        <div>
-                            <p class="font-medium text-gray-800">{{ $student->name }}</p>
-                            <p class="text-sm text-gray-500">Level {{ $student->level }}</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="font-bold text-gray-900">{{ number_format($student->xp) }} XP</p>
-                    </div>
-                </div>
-                @endforeach
+            <div class="space-y-4" id="topStudentsContainer">
+                <p class="text-center text-gray-500">Memuat data...</p>
             </div>
         </div>
     </div>
@@ -178,33 +107,8 @@
             <p class="text-sm text-gray-500">Update terbaru dari sistem</p>
         </div>
         <div class="p-6">
-            <div class="space-y-4">
-                @forelse($recentActivities as $activity)
-                <div class="flex items-start space-x-3">
-                    <div class="flex items-center justify-center w-8 h-8 mt-1 rounded-full
-                        @if($activity['type'] === 'challenge_completion') bg-green-100 text-green-600
-                        @elseif($activity['type'] === 'badge_award') bg-yellow-100 text-yellow-600
-                        @elseif($activity['type'] === 'new_challenge') bg-blue-100 text-blue-600
-                        @elseif($activity['type'] === 'appreciation') bg-purple-100 text-purple-600
-                        @else bg-gray-100 text-gray-600 @endif">
-                        <i class="text-sm fas
-                            @if($activity['type'] === 'challenge_completion') fa-flag-checkered
-                            @elseif($activity['type'] === 'badge_award') fa-award
-                            @elseif($activity['type'] === 'new_challenge') fa-plus-circle
-                            @elseif($activity['type'] === 'appreciation') fa-heart
-                            @else fa-info-circle @endif"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="text-sm text-gray-800">{{ $activity['message'] }}</p>
-                        <p class="text-xs text-gray-500">{{ $activity['timestamp']->diffForHumans() }}</p>
-                    </div>
-                </div>
-                @empty
-                <div class="text-center text-gray-500 py-4">
-                    <i class="mb-2 text-4xl fas fa-inbox"></i>
-                    <p>Tidak ada aktivitas terbaru</p>
-                </div>
-                @endforelse
+            <div class="space-y-4" id="recentActivitiesContainer">
+                <p class="text-center text-gray-500">Memuat data...</p>
             </div>
         </div>
     </div>
@@ -238,78 +142,172 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Chart.js Configuration
-    Chart.defaults.font.family = "Inter, system-ui, sans-serif";
-    Chart.defaults.color = "#6B7280";
+    const API_URL = 'http://127.0.0.1:8080/api/v1/admin/dashboard';
 
-    // Mood Distribution Chart
-    const moodCtx = document.getElementById('moodChart').getContext('2d');
-    const moodChart = new Chart(moodCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Happy', 'Neutral', 'Sad', 'Angry', 'Tired'],
-            datasets: [{
-                data: [
-                    {{ $moodDistribution['happy'] ?? 0 }},
-                    {{ $moodDistribution['neutral'] ?? 0 }},
-                    {{ $moodDistribution['sad'] ?? 0 }},
-                    {{ $moodDistribution['angry'] ?? 0 }},
-                    {{ $moodDistribution['tired'] ?? 0 }}
-                ],
-                backgroundColor: [
-                    '#10B981', '#6B7280', '#3B82F6', '#EF4444', '#F59E0B'
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
+    async function loadDashboardData() {
+        try {
+            const response = await fetch(API_URL);
+            const result = await response.json();
+            const data = result.data;
+
+            // Update stats cards
+            document.getElementById('totalActiveUsers').textContent = data.total_active_users;
+            document.getElementById('totalStudents').textContent = data.total_students;
+            document.getElementById('totalTeachers').textContent = data.total_teachers;
+            document.getElementById('totalParents').textContent = data.total_parents;
+            document.getElementById('activeIndividualChallenges').textContent = data.active_individual_challenges;
+            document.getElementById('activeGroupChallenges').textContent = data.active_group_challenges;
+            document.getElementById('totalActiveChallenges').textContent = data.active_individual_challenges + data.active_group_challenges;
+            document.getElementById('doneHabits').textContent = data.done_habits;
+            document.getElementById('notDoneHabits').textContent = data.not_done_habits;
+            document.getElementById('totalHabits').textContent = data.done_habits + data.not_done_habits;
+            document.getElementById('reflectionsToday').textContent = data.reflections_today;
+            document.getElementById('forumPostsThisWeek').textContent = data.forum_posts_this_week;
+            document.getElementById('forumCommentsThisWeek').textContent = data.forum_comments_this_week;
+
+            // Update leaderboard
+            const topStudentsContainer = document.getElementById('topStudentsContainer');
+            topStudentsContainer.innerHTML = '';
+            if (data.top_students && data.top_students.length > 0) {
+                // Hapus dummy data jika nama adalah "Belum Ada Data"
+                const validStudents = data.top_students.filter(s => s.name !== "Belum Ada Data");
+                if (validStudents.length > 0) {
+                    validStudents.forEach((student, index) => {
+                        topStudentsContainer.innerHTML += `
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white bg-blue-600 rounded-full">
+                                        ${index + 1}
+                                    </div>
+                                    <div class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
+                                        <span class="text-lg font-bold text-blue-600">${student.name.charAt(0)}</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-800">${student.name}</p>
+                                        <p class="text-sm text-gray-500">Level ${student.level}</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-gray-900">${(student.xp || 0).toLocaleString()} XP</p>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    topStudentsContainer.innerHTML = '<p class="text-center text-gray-500">Belum ada data siswa</p>';
                 }
+            } else {
+                topStudentsContainer.innerHTML = '<p class="text-center text-gray-500">Belum ada data siswa</p>';
             }
-        }
-    });
+            
+            // Update recent activities
+            const recentActivitiesContainer = document.getElementById('recentActivitiesContainer');
+            recentActivitiesContainer.innerHTML = '';
+            if (data.recent_activities && data.recent_activities.length > 0) {
+                const validActivities = data.recent_activities.filter(a => a.message !== "Belum ada aktivitas terbaru");
+                if (validActivities.length > 0) {
+                    validActivities.forEach(activity => {
+                        // ... render activity
+                    });
+                } else {
+                    recentActivitiesContainer.innerHTML = `
+                        <div class="text-center text-gray-500 py-4">
+                            <i class="mb-2 text-4xl fas fa-inbox"></i>
+                            <p>Belum ada aktivitas terbaru</p>
+                        </div>
+                    `;
+                }
+            } else {
+                recentActivitiesContainer.innerHTML = `
+                    <div class="text-center text-gray-500 py-4">
+                        <i class="mb-2 text-4xl fas fa-inbox"></i>
+                        <p>Belum ada aktivitas terbaru</p>
+                    </div>
+                `;
+            }
 
-    // Habit Trends Chart
-    const habitCtx = document.getElementById('habitTrendChart').getContext('2d');
-    const habitChart = new Chart(habitCtx, {
-        type: 'line',
-        data: {
-            labels: @json(array_column($habitTrends, 'week')),
-            datasets: [
-                {
-                    label: 'Habit Done',
-                    data: @json(array_column($habitTrends, 'done')),
-                    borderColor: '#10B981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    tension: 0.3,
-                    fill: true
-                },
-                {
-                    label: 'Habit Not Done',
-                    data: @json(array_column($habitTrends, 'not_done')),
-                    borderColor: '#EF4444',
-                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                    tension: 0.3,
-                    fill: true
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
+            // Initialize charts
+            initCharts(data);
+
+        } catch (error) {
+            console.error('Error loading dashboard data:', error);
+            alert('Gagal memuat data dashboard.');
+        }
+    }
+
+    function initCharts(data) {
+        // Mood Distribution Chart
+        const moodCtx = document.getElementById('moodChart').getContext('2d');
+        new Chart(moodCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Happy', 'Neutral', 'Sad', 'Angry', 'Tired'],
+                datasets: [{
+                    data: [
+                        data.mood_distribution.happy || 0,
+                        data.mood_distribution.neutral || 0,
+                        data.mood_distribution.sad || 0,
+                        data.mood_distribution.angry || 0,
+                        data.mood_distribution.tired || 0
+                    ],
+                    backgroundColor: [
+                        '#10B981', '#6B7280', '#3B82F6', '#EF4444', '#F59E0B'
+                    ]
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
                 }
             }
-        }
-    });
+        });
+
+        // Habit Trends Chart
+        const habitCtx = document.getElementById('habitTrendChart').getContext('2d');
+        new Chart(habitCtx, {
+            type: 'line',
+            data: {
+                labels: data.habit_trends.map(t => t.week),
+                datasets: [
+                    {
+                        label: 'Habit Done',
+                        data: data.habit_trends.map(t => t.done),
+                        borderColor: '#10B981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Habit Not Done',
+                        data: data.habit_trends.map(t => t.not_done),
+                        borderColor: '#EF4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Load data when page loads
+    document.addEventListener('DOMContentLoaded', loadDashboardData);
 </script>
 @endpush
 
