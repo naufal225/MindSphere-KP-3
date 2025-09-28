@@ -25,6 +25,13 @@ class User extends Authenticatable
         'password'
     ];
 
+
+    protected $casts = [
+        'id' => 'integer',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function parent()
     {
         return $this->belongsTo(User::class, 'parent_id');
@@ -53,8 +60,8 @@ class User extends Authenticatable
     public function badges()
     {
         return $this->belongsToMany(Badge::class, 'user_badges')
-                    ->withPivot('awarded_at')
-                    ->withTimestamps();
+            ->withPivot('awarded_at')
+            ->withTimestamps();
     }
 
     public function appreciationsSent()
@@ -76,4 +83,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(ForumComment::class);
     }
+
+    public function classesAsTeacher()
+    {
+        return $this->hasMany(SchoolClass::class, 'teacher_id');
+    }
+
+    public function classAsStudent()
+    {
+        return $this->belongsToMany(SchoolClass::class, 'class_student', 'student_id', 'class_id');
+    }
+
 }

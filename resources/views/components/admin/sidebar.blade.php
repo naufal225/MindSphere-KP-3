@@ -4,7 +4,7 @@
     <div class="flex items-center justify-between px-6 py-4 bg-[#2563EB]">
         <div class="w-full">
             <div class="flex justify-center">
-                <img src="{{ asset('img/logo.png') }}" alt="MindSphere Logo" class="w-16 h-16">
+                <img src="{{ asset('img/logo.png') }}" alt="MindSphere Logo" class="rounded-lg shadow-lg w-16 h-16">
             </div>
             <h1 class="mt-2 text-lg font-bold text-center text-white">MindSphere</h1>
         </div>
@@ -15,28 +15,35 @@
 
     <!-- Navigation -->
     <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto sidebar-scroll">
-        <a href=""
+        <a href="{{ route('admin.dashboard') }}"
             class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
             <i class="w-5 mr-3 text-center fas fa-tachometer-alt"></i>
             <span class="font-medium">Dashboard</span>
         </a>
 
         <!-- Data Users -->
-        <a href=""
+        <a href="{{ route('admin.users.index') }}"
             class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.users.*') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
             <i class="w-5 mr-3 text-center fas fa-users"></i>
             <span class="font-medium">Data Users</span>
         </a>
 
         <!-- Kelas -->
-        <a href=""
-            class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.classes.*') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
+        <a href="{{ route('admin.school_classes.index') }}"
+            class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.school_classes.*') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
             <i class="w-5 mr-3 text-center fas fa-graduation-cap"></i>
             <span class="font-medium">Kelas</span>
         </a>
 
+        <!-- Categories -->
+        <a href="{{ route('admin.categories.index') }}"
+            class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.categories.*') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
+            <i class="w-5 mr-3 text-center fas fa-tags"></i>
+            <span class="font-medium">Kategori</span>
+        </a>
+
         <!-- Habits & Challenges Categories Dropdown -->
-        <div class="space-y-1"
+        {{-- <div class="space-y-1"
             x-data="{ open: {{ request()->routeIs('admin.categories.*', 'admin.habit-categories.*', 'admin.challenge-categories.*') ? 'true' : 'false' }} }">
             <button type="button"
                 class="flex items-center w-full px-4 py-3 text-left transition-all duration-200 rounded-lg"
@@ -59,19 +66,19 @@
                     <span>Challenge Categories</span>
                 </a>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Challenges -->
-        <a href=""
+        <a href="{{ route('admin.challenges.index') }}"
             class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.challenges.*') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
             <i class="w-5 mr-3 text-center fas fa-flag-checkered"></i>
             <span class="font-medium">Challenges</span>
         </a>
 
         <!-- Habits -->
-        <a href=""
+        <a href="{{ route('admin.habits.index') }}"
             class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.habits.*') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
-            <i class="w-5 mr-3 text-center fas fa-sync-alt"></i>
+        <i class="w-5 mr-3 text-center fas fa-sync-alt"></i>
             <span class="font-medium">Habits</span>
         </a>
 

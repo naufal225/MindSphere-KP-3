@@ -4,10 +4,38 @@
 @section('subtitle', 'Overview Sistem Manajemen Habits & Challenges')
 
 @section('content')
+
 <!-- Stats Cards -->
 <div class="mb-6">
     <p class="text-gray-600">Data terkini {{ now()->translatedFormat('F Y') }}</p>
 </div>
+
+
+@if(session('success'))
+<div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
+    {{ session('success') }}
+</div>
+@endif
+
+@if(session('error'))
+<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+    {{ session('error') }}
+</div>
+@endif
+
+@if($errors->any())
+<div class="p-4 mb-6 bg-red-50 border border-red-200 rounded-lg">
+    <div class="flex items-center mb-2">
+        <i class="mr-2 text-red-500 fa-solid fa-circle-exclamation"></i>
+        <h3 class="text-sm font-semibold text-red-800">Terjadi kesalahan:</h3>
+    </div>
+    <ul class="ml-6 text-sm text-red-700 list-disc">
+        @foreach($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
 
 <div class="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4">
     <!-- Total Pengguna -->
@@ -26,7 +54,7 @@
                 </div>
             </div>
             <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg">
-                <i class="text-xl text-blue-600 fas fa-users"></i>
+                <i class="text-xl text-blue-600 fa fa-users"></i>
             </div>
         </div>
     </div>
@@ -36,7 +64,8 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-600">Challenge Aktif</p>
-                <p class="text-3xl font-bold text-gray-900">{{ $activeIndividualChallenges + $activeGroupChallenges }}</p>
+                <p class="text-3xl font-bold text-gray-900">{{ $activeIndividualChallenges + $activeGroupChallenges }}
+                </p>
                 <div class="flex gap-2 mt-1 text-xs text-gray-500">
                     <span>{{ $activeIndividualChallenges }} Individu</span>
                     <span>•</span>
@@ -44,7 +73,7 @@
                 </div>
             </div>
             <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
-                <i class="text-xl text-green-600 fas fa-flag-checkered"></i>
+                <i class="text-xl text-green-600 fa fa-flag-checkered"></i>
             </div>
         </div>
     </div>
@@ -62,7 +91,7 @@
                 </div>
             </div>
             <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg">
-                <i class="text-xl text-purple-600 fas fa-sync-alt"></i>
+                <i class="text-xl text-purple-600 fa fa-sync-alt"></i>
             </div>
         </div>
     </div>
@@ -80,7 +109,7 @@
                 </div>
             </div>
             <div class="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-lg">
-                <i class="text-xl text-orange-600 fas fa-brain"></i>
+                <i class="text-xl text-orange-600 fa fa-brain"></i>
             </div>
         </div>
     </div>
@@ -88,44 +117,41 @@
 
 <!-- Quick Action Buttons -->
 <div class="grid grid-cols-1 gap-4 mb-8 sm:grid-cols-2 lg:grid-cols-4">
-    <a href=""
-       class="p-4 text-white transition-all rounded-lg bg-[#2563EB] hover:bg-[#1E40AF] hover:shadow-md">
+    <a href="{{ route('admin.users.index') }}"
+        class="p-4 text-white transition-all rounded-lg bg-[#2563EB] hover:bg-[#1E40AF] hover:shadow-md">
         <div class="flex flex-col items-center text-center">
-            <div class="flex items-center justify-center w-12 h-12 mb-3 bg-white rounded-full bg-opacity-20">
-                <i class="text-xl fas fa-users"></i>
+            <div class="flex items-center justify-center w-12 h-12 mb-3  rounded-full bg-opacity-20">
+                <i class="text-xl fa fa-users"></i>
             </div>
             <h3 class="mb-1 font-semibold">Kelola Pengguna</h3>
             <p class="text-sm text-blue-100">Data siswa, guru, orang tua</p>
         </div>
     </a>
 
-    <a href=""
-       class="p-4 text-white transition-all rounded-lg bg-[#22C55E] hover:bg-[#16A34A] hover:shadow-md">
+    <a href="" class="p-4 text-white transition-all rounded-lg bg-[#22C55E] hover:bg-[#16A34A] hover:shadow-md">
         <div class="flex flex-col items-center text-center">
-            <div class="flex items-center justify-center w-12 h-12 mb-3 bg-white rounded-full bg-opacity-20">
-                <i class="text-xl fas fa-flag-checkered"></i>
+            <div class="flex items-center justify-center w-12 h-12 mb-3  rounded-full bg-opacity-20">
+                <i class="text-xl fa fa-flag-checkered"></i>
             </div>
             <h3 class="mb-1 font-semibold">Buat Challenge</h3>
             <p class="text-sm text-green-100">Tantangan individu/grup</p>
         </div>
     </a>
 
-    <a href=""
-       class="p-4 text-white transition-all rounded-lg bg-[#8B5CF6] hover:bg-[#7C3AED] hover:shadow-md">
+    <a href="" class="p-4 text-white transition-all rounded-lg bg-[#8B5CF6] hover:bg-[#7C3AED] hover:shadow-md">
         <div class="flex flex-col items-center text-center">
-            <div class="flex items-center justify-center w-12 h-12 mb-3 bg-white rounded-full bg-opacity-20">
-                <i class="text-xl fas fa-tasks"></i>
+            <div class="flex items-center justify-center w-12 h-12 mb-3  rounded-full bg-opacity-20">
+                <i class="text-xl fa fa-tasks"></i>
             </div>
             <h3 class="mb-1 font-semibold">Kelola Habits</h3>
             <p class="text-sm text-purple-100">Kebiasaan harian/mingguan</p>
         </div>
     </a>
 
-    <a href=""
-       class="p-4 text-white transition-all rounded-lg bg-[#F59E0B] hover:bg-[#D97706] hover:shadow-md">
+    <a href="" class="p-4 text-white transition-all rounded-lg bg-[#F59E0B] hover:bg-[#D97706] hover:shadow-md">
         <div class="flex flex-col items-center text-center">
-            <div class="flex items-center justify-center w-12 h-12 mb-3 bg-white rounded-full bg-opacity-20">
-                <i class="text-xl fas fa-award"></i>
+            <div class="flex items-center justify-center w-12 h-12 mb-3  rounded-full bg-opacity-20">
+                <i class="text-xl fa fa-award"></i>
             </div>
             <h3 class="mb-1 font-semibold">Kelola Badges</h3>
             <p class="text-sm text-yellow-100">Penghargaan & achievement</p>
@@ -146,24 +172,25 @@
                 @foreach($topStudents as $index => $student)
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white bg-blue-600 rounded-full">
+                        <div
+                            class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white bg-blue-600 rounded-full">
                             {{ $index + 1 }}
                         </div>
-                        @if($student->avatar_url)
-                        <img src="{{ $student->avatar_url }}" alt="{{ $student->name }}"
-                             class="w-10 h-10 rounded-full">
+                        @if($student['avatar_url'])
+                        <img src="{{ $student['avatar_url'] }}" alt="{{ $student['name'] }}"
+                            class="w-8 h-8 rounded-full object-cover">
                         @else
-                        <div class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
-                            <span class="text-lg font-bold text-blue-600">{{ substr($student->name, 0, 1) }}</span>
+                        <div class="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full">
+                            <span class="text-sm font-bold text-blue-600">{{ substr($student['name'], 0, 1) }}</span>
                         </div>
                         @endif
                         <div>
-                            <p class="font-medium text-gray-800">{{ $student->name }}</p>
-                            <p class="text-sm text-gray-500">Level {{ $student->level }}</p>
+                            <p class="font-medium text-gray-800">{{ $student['name'] }}</p>
+                            <p class="text-sm text-gray-500">Level {{ $student['level'] }}</p>
                         </div>
                     </div>
                     <div class="text-right">
-                        <p class="font-bold text-gray-900">{{ number_format($student->xp) }} XP</p>
+                        <p class="font-bold text-gray-900">{{ number_format($student['xp']) }} XP</p>
                     </div>
                 </div>
                 @endforeach
@@ -187,7 +214,7 @@
                         @elseif($activity['type'] === 'new_challenge') bg-blue-100 text-blue-600
                         @elseif($activity['type'] === 'appreciation') bg-purple-100 text-purple-600
                         @else bg-gray-100 text-gray-600 @endif">
-                        <i class="text-sm fas
+                        <i class="text-sm fa
                             @if($activity['type'] === 'challenge_completion') fa-flag-checkered
                             @elseif($activity['type'] === 'badge_award') fa-award
                             @elseif($activity['type'] === 'new_challenge') fa-plus-circle
@@ -201,7 +228,7 @@
                 </div>
                 @empty
                 <div class="text-center text-gray-500 py-4">
-                    <i class="mb-2 text-4xl fas fa-inbox"></i>
+                    <i class="mb-2 text-4xl fa fa-inbox"></i>
                     <p>Tidak ada aktivitas terbaru</p>
                 </div>
                 @endforelse
@@ -236,7 +263,7 @@
 </div>
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js  "></script>
 <script>
     // Chart.js Configuration
     Chart.defaults.font.family = "Inter, system-ui, sans-serif";

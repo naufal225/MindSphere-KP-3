@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="icon" type="image/x-icon" href="{{ asset('yaztech-icon.jpg') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('img/logo.png') }}">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
     <style>
@@ -67,7 +67,7 @@
         <!-- Main Content -->
         <div class="relative z-10 flex flex-col flex-1 overflow-hidden lg:ml-0">
             <!-- Header - MindSphere Secondary Blue -->
-            {{-- @include('components.admin.header') --}}
+            @include('components.admin.header')
 
             <!-- Dashboard Content -->
             <main class="relative z-10 flex-1 p-6 overflow-x-hidden overflow-y-auto bg-[#F3F4F6]">
