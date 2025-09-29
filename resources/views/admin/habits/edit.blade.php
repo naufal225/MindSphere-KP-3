@@ -92,7 +92,7 @@
                         </div>
 
                         <!-- Tipe Kebiasaan -->
-                        <div>
+                        {{-- <div>
                             <label for="type" class="block mb-2 text-sm font-medium text-gray-700">
                                 <i class="mr-1 fa-solid fa-user"></i> Tipe Kebiasaan
                             </label>
@@ -107,7 +107,7 @@
                                 <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
                             </p>
                             @enderror
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
 
@@ -223,7 +223,7 @@
     </div>
 </div>
 
-@push('scripts')
+{{-- @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const typeSelect = document.getElementById('type');
@@ -267,5 +267,5 @@
         }
     });
 </script>
-@endpush
+@endpush --}}
 @endsection

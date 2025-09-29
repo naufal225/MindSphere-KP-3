@@ -90,7 +90,7 @@
                             @enderror
                         </div>
 
-                        <!-- Tipe Kebiasaan -->
+                        {{-- <!-- Tipe Kebiasaan -->
                         <div>
                             <label for="type" class="block mb-2 text-sm font-medium text-gray-700">
                                 <i class="mr-1 fa-solid fa-user"></i> Tipe Kebiasaan
@@ -106,7 +106,7 @@
                                 <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
                             </p>
                             @enderror
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
 
@@ -217,7 +217,7 @@
         </div>
     </div>
 </div>
-
+{{--
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -293,5 +293,5 @@
         }
     });
 </script>
-@endpush
+@endpush --}}
 @endsection

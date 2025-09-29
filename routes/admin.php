@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BadgeController;
 use App\Http\Controllers\Admin\ChallengeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
@@ -21,4 +22,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('challenges', ChallengeController::class);
 
     Route::resource('habits', HabitController::class);
+
+    Route::resource('badges', BadgeController::class);
 });

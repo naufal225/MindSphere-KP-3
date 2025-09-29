@@ -2,12 +2,14 @@
 
 namespace App\Http\Services;
 
+use App\Enums\HabitType;
 use App\Models\Habit;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 
 class HabitService
 {
@@ -93,6 +95,10 @@ class HabitService
     public function create(array $data): Habit
     {
         try {
+            if($data['assigned_by'] == null) {
+                $data['assigned_by'] = Auth::id();
+            }
+            $data['type'] = HabitType::ASSIGNED;
             return Habit::create($data);
         } catch (Exception $e) {
             throw new Exception('Gagal membuat kebiasaan: ' . $e->getMessage());

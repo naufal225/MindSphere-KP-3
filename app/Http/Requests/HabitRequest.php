@@ -17,7 +17,7 @@ class HabitRequest extends FormRequest
         return [
             'title'        => 'required|string|max:255',
             'description'  => 'required|string',
-            'type'         => ['required', Rule::in(['self', 'assigned'])],
+            // 'type'         => ['required', Rule::in(['self', 'assigned'])],
             'assigned_by'  => $this->isTypeAssigned() ? 'required|exists:users,id' : 'nullable|exists:users,id',
             'category_id'  => 'required|exists:categories,id',
             'period'       => ['required', Rule::in(['daily', 'weekly'])],
@@ -34,8 +34,8 @@ class HabitRequest extends FormRequest
             'description.required' => 'Deskripsi kebiasaan wajib diisi.',
             'description.string'   => 'Deskripsi kebiasaan harus berupa teks.',
 
-            'type.required'        => 'Jenis kebiasaan wajib dipilih.',
-            'type.in'              => 'Jenis kebiasaan tidak valid. Pilih antara "self" atau "assigned".',
+            // 'type.required'        => 'Jenis kebiasaan wajib dipilih.',
+            // 'type.in'              => 'Jenis kebiasaan tidak valid. Pilih antara "self" atau "assigned".',
 
             'assigned_by.required' => 'Pengguna yang menugaskan wajib diisi untuk kebiasaan bertipe "assigned".',
             'assigned_by.exists'   => 'Pengguna yang menugaskan tidak ditemukan.',
