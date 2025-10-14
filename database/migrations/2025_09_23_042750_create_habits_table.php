@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('assigned_by')->nullable();
             $table->unsignedBigInteger('category_id');
             $table->enum('period', ['daily', 'weekly']);
+            $table->integer('xp_reward');
             $table->timestamps();
 
             $table->foreign('assigned_by')->references('id')->on('users')->onDelete('set null');

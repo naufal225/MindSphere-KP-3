@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->enum('type', ['individual', 'group']);
+            $table->enum('type', ['self', 'assigned']);
             $table->unsignedBigInteger('category_id');
             $table->integer('xp_reward');
             $table->unsignedBigInteger('created_by');

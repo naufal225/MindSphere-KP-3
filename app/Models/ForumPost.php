@@ -13,21 +13,41 @@ class ForumPost extends Model
         'user_id',
         'title',
         'content',
-        'category_id'
+        'scope_type',
+        'scope_id',
+        'is_locked',
+        'is_pinned',
     ];
 
+    /**
+     * Relasi ke user yang membuat post.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function category()
+    /**
+     * Relasi ke kelas (jika scope_type = 'class')
+     */
+    public function classRoom()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(SchoolClass::class, 'scope_id');
     }
 
+    /**
+     * Relasi ke komentar (hanya level pertama)
+     */
     public function comments()
     {
-        return $this->hasMany(ForumComment::class);
+        return $this->hasMany(ForumComment::class, 'post_id')->whereNull('parent_id');
+    }
+
+    /**
+     * Relasi ke semua lampiran (gambar, file, dll)
+     */
+    public function attachments()
+    {
+        return $this->hasMany(ForumAttachment::class, 'post_id');
     }
 }

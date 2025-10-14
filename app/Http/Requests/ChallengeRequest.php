@@ -24,7 +24,7 @@ class ChallengeRequest extends FormRequest
         $rules = [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'type' => 'required|in:individual,group',
+            'type' => 'required|in:self,assigned',
             'category_id' => 'required|exists:categories,id',
             'xp_reward' => 'required|integer|min:1',
             'start_date' => 'required|date',

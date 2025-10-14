@@ -42,31 +42,12 @@
             <span class="font-medium">Kategori</span>
         </a>
 
-        <!-- Habits & Challenges Categories Dropdown -->
-        {{-- <div class="space-y-1"
-            x-data="{ open: {{ request()->routeIs('admin.categories.*', 'admin.habit-categories.*', 'admin.challenge-categories.*') ? 'true' : 'false' }} }">
-            <button type="button"
-                class="flex items-center w-full px-4 py-3 text-left transition-all duration-200 rounded-lg"
-                :class="open ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white'"
-                @click="open = !open">
-                <i class="w-5 mr-3 text-center fas fa-tags"></i>
-                <span class="flex-1 font-medium">Categories</span>
-                <i class="text-xs transition-transform duration-200 fas fa-chevron-down"
-                    :class="{'rotate-180': open}"></i>
-            </button>
-            <div class="pl-4 space-y-1 overflow-hidden" x-show="open" x-collapse>
-                <a href=""
-                    class="flex items-center px-4 py-2 rounded-lg text-sm transition-all duration-200 {{ request()->routeIs('admin.habit-categories.*') ? 'bg-[#3B82F6] text-white' : 'text-blue-200 hover:bg-[#2563EB] hover:text-white' }}">
-                    <i class="w-4 mr-2 text-center fas fa-repeat"></i>
-                    <span>Habit Categories</span>
-                </a>
-                <a href=""
-                    class="flex items-center px-4 py-2 rounded-lg text-sm transition-all duration-200 {{ request()->routeIs('admin.challenge-categories.*') ? 'bg-[#3B82F6] text-white' : 'text-blue-200 hover:bg-[#2563EB] hover:text-white' }}">
-                    <i class="w-4 mr-2 text-center fas fa-flag"></i>
-                    <span>Challenge Categories</span>
-                </a>
-            </div>
-        </div> --}}
+        <!-- Forum -->
+        <a href="{{ route('admin.forum.index') }}"
+            class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.forum.*') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
+            <i class="w-5 mr-3 text-center fas fa-comments"></i>
+            <span class="font-medium">Forum</span>
+        </a>
 
         <!-- Challenges -->
         <a href="{{ route('admin.challenges.index') }}"
@@ -78,7 +59,7 @@
         <!-- Habits -->
         <a href="{{ route('admin.habits.index') }}"
             class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.habits.*') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
-        <i class="w-5 mr-3 text-center fas fa-sync-alt"></i>
+            <i class="w-5 mr-3 text-center fas fa-sync-alt"></i>
             <span class="font-medium">Habits</span>
         </a>
 
@@ -102,12 +83,13 @@
                     :class="{'rotate-180': open}"></i>
             </button>
             <div class="pl-4 space-y-1 overflow-hidden" x-show="open" x-collapse>
-                <a href=""
+                <a href="{{ route('admin.user-progress.index') }}"
                     class="flex items-center px-4 py-2 rounded-lg text-sm transition-all duration-200 {{ request()->routeIs('admin.user-progress.*') ? 'bg-[#3B82F6] text-white' : 'text-blue-200 hover:bg-[#2563EB] hover:text-white' }}">
                     <i class="w-4 mr-2 text-center fas fa-chart-line"></i>
                     <span>User Progress</span>
                 </a>
-                <a href=""
+                {{-- Fitur dibawah nyusul kapan kapan ajahh ;v --}}
+                {{-- <a href=""
                     class="flex items-center px-4 py-2 rounded-lg text-sm transition-all duration-200 {{ request()->routeIs('admin.habit-stats.*') ? 'bg-[#3B82F6] text-white' : 'text-blue-200 hover:bg-[#2563EB] hover:text-white' }}">
                     <i class="w-4 mr-2 text-center fas fa-chart-pie"></i>
                     <span>Habit Statistics</span>
@@ -116,12 +98,12 @@
                     class="flex items-center px-4 py-2 rounded-lg text-sm transition-all duration-200 {{ request()->routeIs('admin.challenge-stats.*') ? 'bg-[#3B82F6] text-white' : 'text-blue-200 hover:bg-[#2563EB] hover:text-white' }}">
                     <i class="w-4 mr-2 text-center fas fa-trophy"></i>
                     <span>Challenge Completion</span>
-                </a>
+                </a> --}}
             </div>
         </div>
 
         <!-- System Settings -->
-        <div class="space-y-1" x-data="{ open: {{ request()->routeIs('admin.settings.*') ? 'true' : 'false' }} }">
+        {{-- <div class="space-y-1" x-data="{ open: {{ request()->routeIs('admin.settings.*') ? 'true' : 'false' }} }">
             <button type="button"
                 class="flex items-center w-full px-4 py-3 text-left transition-all duration-200 rounded-lg"
                 :class="open ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white'"
@@ -148,7 +130,7 @@
                     <span>Notifications</span>
                 </a>
             </div>
-        </div>
+        </div> --}}
     </nav>
 
     <div class="p-4 border-t border-blue-600">

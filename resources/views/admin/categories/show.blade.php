@@ -187,25 +187,36 @@
                     <!-- Content Tab -->
                     <div id="content-tab" class="hidden tab-content">
                         <h3 class="mb-4 text-lg font-semibold text-gray-800">
-                            <i class="mr-2 fa-solid fa-list"></i>Konten Terkait
+                            <i class="mr-2 fa-solid fa-list"></i>Konten Terkait (4 Terbaru)
                         </h3>
 
                         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <!-- Habits Section -->
                             <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
-                                <div class="flex items-center mb-3">
-                                    <i class="mr-2 text-green-600 fa-solid fa-repeat"></i>
-                                    <h4 class="font-semibold text-green-800">Habits</h4>
-                                    <span class="ml-2 text-sm text-green-600 bg-green-100 px-2 py-1 rounded-full">
-                                        {{ $category->habits_count }}
-                                    </span>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <i class="mr-2 text-green-600 fa-solid fa-repeat"></i>
+                                        <h4 class="font-semibold text-green-800">Habits</h4>
+                                        <span class="ml-2 text-sm text-green-600 bg-green-100 px-2 py-1 rounded-full">
+                                            {{ $category->habits_count }}
+                                        </span>
+                                    </div>
+                                    @if($category->habits_count > 4)
+                                    <a href="{{ route('admin.categories.habits', $category->id) }}"
+                                       class="text-sm text-green-700 hover:text-green-900 hover:underline">
+                                        Lihat Detail
+                                    </a>
+                                    @endif
                                 </div>
-                                @if($category->habits_count > 0)
+                                @if($category->habits->count() > 0)
                                 <div class="space-y-2 max-h-60 overflow-y-auto">
                                     @foreach($category->habits as $habit)
-                                    <div class="flex items-center p-2 text-sm bg-white rounded-lg border border-green-100">
-                                        <i class="mr-2 text-green-500 fa-solid fa-circle-small"></i>
-                                        <span class="truncate">{{ $habit->title }}</span>
+                                    <div class="flex items-center justify-between p-2 text-sm bg-white rounded-lg border border-green-100">
+                                        <div class="flex items-center">
+                                            <i class="mr-2 text-green-500 fa-solid fa-circle-small"></i>
+                                            <span class="truncate">{{ $habit->title }}</span>
+                                        </div>
+                                        <span class="text-xs text-gray-500">{{ $habit->created_at->format('d M') }}</span>
                                     </div>
                                     @endforeach
                                 </div>
@@ -216,19 +227,30 @@
 
                             <!-- Challenges Section -->
                             <div class="p-4 bg-purple-50 border border-purple-200 rounded-lg">
-                                <div class="flex items-center mb-3">
-                                    <i class="mr-2 text-purple-600 fa-solid fa-flag"></i>
-                                    <h4 class="font-semibold text-purple-800">Challenges</h4>
-                                    <span class="ml-2 text-sm text-purple-600 bg-purple-100 px-2 py-1 rounded-full">
-                                        {{ $category->challenges_count }}
-                                    </span>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <i class="mr-2 text-purple-600 fa-solid fa-flag"></i>
+                                        <h4 class="font-semibold text-purple-800">Challenges</h4>
+                                        <span class="ml-2 text-sm text-purple-600 bg-purple-100 px-2 py-1 rounded-full">
+                                            {{ $category->challenges_count }}
+                                        </span>
+                                    </div>
+                                    @if($category->challenges_count > 4)
+                                    <a href="{{ route('admin.categories.challenges', $category->id) }}"
+                                       class="text-sm text-purple-700 hover:text-purple-900 hover:underline">
+                                        Lihat Detail
+                                    </a>
+                                    @endif
                                 </div>
-                                @if($category->challenges_count > 0)
+                                @if($category->challenges->count() > 0)
                                 <div class="space-y-2 max-h-60 overflow-y-auto">
                                     @foreach($category->challenges as $challenge)
-                                    <div class="flex items-center p-2 text-sm bg-white rounded-lg border border-purple-100">
-                                        <i class="mr-2 text-purple-500 fa-solid fa-circle-small"></i>
-                                        <span class="truncate">{{ $challenge->title }}</span>
+                                    <div class="flex items-center justify-between p-2 text-sm bg-white rounded-lg border border-purple-100">
+                                        <div class="flex items-center">
+                                            <i class="mr-2 text-purple-500 fa-solid fa-circle-small"></i>
+                                            <span class="truncate">{{ $challenge->title }}</span>
+                                        </div>
+                                        <span class="text-xs text-gray-500">{{ $challenge->created_at->format('d M') }}</span>
                                     </div>
                                     @endforeach
                                 </div>
@@ -239,19 +261,30 @@
 
                             <!-- Badges Section -->
                             <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                <div class="flex items-center mb-3">
-                                    <i class="mr-2 text-yellow-600 fa-solid fa-medal"></i>
-                                    <h4 class="font-semibold text-yellow-800">Badges</h4>
-                                    <span class="ml-2 text-sm text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">
-                                        {{ $category->badges_count }}
-                                    </span>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <i class="mr-2 text-yellow-600 fa-solid fa-medal"></i>
+                                        <h4 class="font-semibold text-yellow-800">Badges</h4>
+                                        <span class="ml-2 text-sm text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">
+                                            {{ $category->badges_count }}
+                                        </span>
+                                    </div>
+                                    @if($category->badges_count > 4)
+                                    <a href="{{ route('admin.categories.badges', $category->id) }}"
+                                       class="text-sm text-yellow-700 hover:text-yellow-900 hover:underline">
+                                        Lihat Detail
+                                    </a>
+                                    @endif
                                 </div>
-                                @if($category->badges_count > 0)
+                                @if($category->badges->count() > 0)
                                 <div class="space-y-2 max-h-60 overflow-y-auto">
                                     @foreach($category->badges as $badge)
-                                    <div class="flex items-center p-2 text-sm bg-white rounded-lg border border-yellow-100">
-                                        <i class="mr-2 text-yellow-500 fa-solid fa-circle-small"></i>
-                                        <span class="truncate">{{ $badge->name }}</span>
+                                    <div class="flex items-center justify-between p-2 text-sm bg-white rounded-lg border border-yellow-100">
+                                        <div class="flex items-center">
+                                            <i class="mr-2 text-yellow-500 fa-solid fa-circle-small"></i>
+                                            <span class="truncate">{{ $badge->name }}</span>
+                                        </div>
+                                        <span class="text-xs text-gray-500">{{ $badge->created_at->format('d M') }}</span>
                                     </div>
                                     @endforeach
                                 </div>
@@ -262,19 +295,30 @@
 
                             <!-- Reflections Section -->
                             <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                                <div class="flex items-center mb-3">
-                                    <i class="mr-2 text-blue-600 fa-solid fa-message"></i>
-                                    <h4 class="font-semibold text-blue-800">Reflections</h4>
-                                    <span class="ml-2 text-sm text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
-                                        {{ $category->reflections_count }}
-                                    </span>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <i class="mr-2 text-blue-600 fa-solid fa-message"></i>
+                                        <h4 class="font-semibold text-blue-800">Reflections</h4>
+                                        <span class="ml-2 text-sm text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                                            {{ $category->reflections_count }}
+                                        </span>
+                                    </div>
+                                    @if($category->reflections_count > 4)
+                                    <a href="{{ route('admin.categories.reflections', $category->id) }}"
+                                       class="text-sm text-blue-700 hover:text-blue-900 hover:underline">
+                                        Lihat Detail
+                                    </a>
+                                    @endif
                                 </div>
-                                @if($category->reflections_count > 0)
+                                @if($category->reflections->count() > 0)
                                 <div class="space-y-2 max-h-60 overflow-y-auto">
                                     @foreach($category->reflections as $reflection)
-                                    <div class="flex items-center p-2 text-sm bg-white rounded-lg border border-blue-100">
-                                        <i class="mr-2 text-blue-500 fa-solid fa-circle-small"></i>
-                                        <span class="truncate">{{ Str::limit($reflection->content, 50) }}</span>
+                                    <div class="flex items-center justify-between p-2 text-sm bg-white rounded-lg border border-blue-100">
+                                        <div class="flex items-center">
+                                            <i class="mr-2 text-blue-500 fa-solid fa-circle-small"></i>
+                                            <span class="truncate">{{ Str::limit($reflection->content, 50) }}</span>
+                                        </div>
+                                        <span class="text-xs text-gray-500">{{ $reflection->created_at->format('d M') }}</span>
                                     </div>
                                     @endforeach
                                 </div>

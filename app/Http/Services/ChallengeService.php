@@ -21,7 +21,7 @@ class ChallengeService
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
-                      ->orWhere('description', 'like', "%{$search}%");
+                        ->orWhere('description', 'like', "%{$search}%");
                 });
             }
 
@@ -41,7 +41,7 @@ class ChallengeService
                 switch ($request->status) {
                     case 'active':
                         $query->where('start_date', '<=', $now)
-                              ->where('end_date', '>=', $now);
+                            ->where('end_date', '>=', $now);
                         break;
                     case 'upcoming':
                         $query->where('start_date', '>', $now);
@@ -55,6 +55,8 @@ class ChallengeService
             // Sort
             $sortField = $request->get('sort_field', 'created_at');
             $sortDirection = $request->get('sort_direction', 'desc');
+
+            $query->withCount('participants');
 
             $query->orderBy($sortField, $sortDirection);
 
@@ -71,8 +73,8 @@ class ChallengeService
         return [
             'total' => Challenge::count(),
             'active' => Challenge::where('start_date', '<=', $now)
-                        ->where('end_date', '>=', $now)
-                        ->count(),
+                ->where('end_date', '>=', $now)
+                ->count(),
             'upcoming' => Challenge::where('start_date', '>', $now)->count(),
             'total_participants' => ChallengeParticipant::count(),
         ];

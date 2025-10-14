@@ -34,8 +34,6 @@ class CategoryService
 
         $query->orderBy($sortField, $sortDirection);
 
-        $query->withCount('participants');
-
         return $query->paginate($perPage);
     }
 
@@ -52,10 +50,26 @@ class CategoryService
     public function findById(int $id): Category
     {
         $category = Category::with([
-            'habits:id,title,category_id',
-            'challenges:id,title,category_id',
-            'badges:id,name,category_id',
-            'reflections:id,content,category_id'
+            'habits' => function ($query) {
+                $query->select('id', 'title', 'category_id', 'created_at')
+                    ->orderBy('created_at', 'desc')
+                    ->limit(4);
+            },
+            'challenges' => function ($query) {
+                $query->select('id', 'title', 'category_id', 'created_at')
+                    ->orderBy('created_at', 'desc')
+                    ->limit(4);
+            },
+            'badges' => function ($query) {
+                $query->select('id', 'name', 'category_id', 'created_at')
+                    ->orderBy('created_at', 'desc')
+                    ->limit(4);
+            },
+            'reflections' => function ($query) {
+                $query->select('id', 'content', 'category_id', 'created_at')
+                    ->orderBy('created_at', 'desc')
+                    ->limit(4);
+            }
         ])->find($id);
 
         if (!$category) {

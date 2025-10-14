@@ -40,6 +40,26 @@ class Category extends Model
         return $this->hasMany(Badge::class);
     }
 
+    public function getHabitsCountAttribute()
+    {
+        return $this->habits()->count();
+    }
+
+    public function getChallengesCountAttribute()
+    {
+        return $this->challenges()->count();
+    }
+
+    public function getReflectionsCountAttribute()
+    {
+        return $this->reflections()->count();
+    }
+
+    public function getBadgesCountAttribute()
+    {
+        return $this->badges()->count();
+    }
+
     public function posts()
     {
         return $this->hasMany(ForumPost::class);

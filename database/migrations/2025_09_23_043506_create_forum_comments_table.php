@@ -14,11 +14,13 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('user_id');
-            $table->text('content');
+            $table->unsignedBigInteger('parent_id')->nullable(); // <== kunci untuk nested comment
+            $table->text('content')->nullable(); // komentar bisa teks, gambar, atau keduanya
             $table->timestamps();
 
             $table->foreign('post_id')->references('id')->on('forum_posts')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on('forum_comments')->onDelete('cascade');
         });
     }
 

@@ -11,15 +11,41 @@
 </div>
 
 
-@if(session('success'))
-<div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
-    {{ session('success') }}
+<!-- Error Messages -->
+@if(session('error'))
+<div class="p-4 border border-red-300 rounded-lg bg-red-50">
+    <div class="flex items-center">
+        <div class="flex-shrink-0">
+            <i class="text-red-400 fas fa-exclamation-circle"></i>
+        </div>
+        <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-800">
+                Terjadi Kesalahan
+            </h3>
+            <div class="mt-2 text-sm text-red-700">
+                <p>{{ session('error') }}</p>
+            </div>
+        </div>
+    </div>
 </div>
 @endif
 
-@if(session('error'))
-<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-    {{ session('error') }}
+<!-- Success Messages -->
+@if(session('success'))
+<div class="p-4 border border-green-300 rounded-lg bg-green-50">
+    <div class="flex items-center">
+        <div class="flex-shrink-0">
+            <i class="text-green-400 fas fa-check-circle"></i>
+        </div>
+        <div class="ml-3">
+            <h3 class="text-sm font-medium text-green-800">
+                Sukses
+            </h3>
+            <div class="mt-2 text-sm text-green-700">
+                <p>{{ session('success') }}</p>
+            </div>
+        </div>
+    </div>
 </div>
 @endif
 
@@ -128,17 +154,19 @@
         </div>
     </a>
 
-    <a href="" class="p-4 text-white transition-all rounded-lg bg-[#22C55E] hover:bg-[#16A34A] hover:shadow-md">
+    <a href="{{ route('admin.challenges.index') }}"
+        class="p-4 text-white transition-all rounded-lg bg-[#22C55E] hover:bg-[#16A34A] hover:shadow-md">
         <div class="flex flex-col items-center text-center">
             <div class="flex items-center justify-center w-12 h-12 mb-3  rounded-full bg-opacity-20">
                 <i class="text-xl fa fa-flag-checkered"></i>
             </div>
-            <h3 class="mb-1 font-semibold">Buat Challenge</h3>
-            <p class="text-sm text-green-100">Tantangan individu/grup</p>
+            <h3 class="mb-1 font-semibold">Kelola Challenge</h3>
+            <p class="text-sm text-green-100">Tantangan untuk siswa</p>
         </div>
     </a>
 
-    <a href="" class="p-4 text-white transition-all rounded-lg bg-[#8B5CF6] hover:bg-[#7C3AED] hover:shadow-md">
+    <a href="{{ route('admin.habits.index') }}"
+        class="p-4 text-white transition-all rounded-lg bg-[#8B5CF6] hover:bg-[#7C3AED] hover:shadow-md">
         <div class="flex flex-col items-center text-center">
             <div class="flex items-center justify-center w-12 h-12 mb-3  rounded-full bg-opacity-20">
                 <i class="text-xl fa fa-tasks"></i>
@@ -148,7 +176,8 @@
         </div>
     </a>
 
-    <a href="" class="p-4 text-white transition-all rounded-lg bg-[#F59E0B] hover:bg-[#D97706] hover:shadow-md">
+    <a href="{{ route('admin.badges.index') }}"
+        class="p-4 text-white transition-all rounded-lg bg-[#F59E0B] hover:bg-[#D97706] hover:shadow-md">
         <div class="flex flex-col items-center text-center">
             <div class="flex items-center justify-center w-12 h-12 mb-3  rounded-full bg-opacity-20">
                 <i class="text-xl fa fa-award"></i>
