@@ -69,18 +69,7 @@
                 </select>
             </div>
 
-            <!-- Type Filter -->
-            <div>
-                <label for="type" class="block mb-2 text-sm font-medium text-gray-700">
-                    <i class="mr-1 fa-solid fa-user"></i> Tipe Kebiasaan
-                </label>
-                <select name="type" id="type"
-                    class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Semua Tipe</option>
-                    <option value="self" {{ request('type') == 'self' ? 'selected' : '' }}>Mandiri</option>
-                    <option value="assigned" {{ request('type') == 'assigned' ? 'selected' : '' }}>Ditugaskan</option>
-                </select>
-            </div>
+
 
             <!-- Period Filter -->
             <div>
@@ -187,7 +176,6 @@
                     class="text-sm border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500">
                     <option value="created_at" {{ request('sort_field', 'created_at') == 'created_at' ? 'selected' : '' }}>Terbaru</option>
                     <option value="title" {{ request('sort_field') == 'title' ? 'selected' : '' }}>Judul A-Z</option>
-                    <option value="type" {{ request('sort_field') == 'type' ? 'selected' : '' }}>Tipe</option>
                     <option value="period" {{ request('sort_field') == 'period' ? 'selected' : '' }}>Periode</option>
                 </select>
             </div>
@@ -202,7 +190,7 @@
                         <i class="mr-1 fa-solid fa-heading"></i> Judul Kebiasaan
                     </th>
                     <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                        <i class="mr-1 fa-solid fa-tags"></i> Kategori & Tipe
+                        <i class="mr-1 fa-solid fa-tags"></i> Kategori 
                     </th>
                     <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                         <i class="mr-1 fa-solid fa-calendar"></i> Periode

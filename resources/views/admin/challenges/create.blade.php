@@ -94,26 +94,6 @@
                             @enderror
                         </div>
 
-                        <!-- Tipe Tantangan -->
-                        <div>
-                            <label for="type" class="block mb-2 text-sm font-medium text-gray-700">
-                                <i class="mr-1 fa-solid fa-users"></i> Tipe Tantangan
-                            </label>
-                            <select name="type" id="type" required
-                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('type') border-red-500 @enderror">
-                                <option value="">Pilih Tipe</option>
-                                @foreach(\App\Enums\ChallengeType::cases() as $type)
-                                <option value="{{ $type->value }}" {{ old('type')==$type->value ? 'selected' : '' }}>
-                                    {{ ucfirst($type->value) }}
-                                </option>
-                                @endforeach
-                            </select>
-                            @error('type')
-                            <p class="mt-2 text-sm text-red-600">
-                                <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
-                            </p>
-                            @enderror
-                        </div>
                     </div>
                 </div>
 

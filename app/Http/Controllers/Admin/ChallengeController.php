@@ -46,6 +46,7 @@ class ChallengeController extends Controller
         try {
             $data = $request->validated();
             $data['created_by'] = auth()->id();
+            $data['updated_by'] = auth()->id();
 
             $this->service->create($data);
             return redirect()->route('admin.challenges.index')->with('success', 'Tantangan berhasil dibuat.');
@@ -83,6 +84,7 @@ class ChallengeController extends Controller
     {
         try {
             $data = $request->validated();
+            $data['updated_by'] = auth()->id();
             $this->service->update($id, $data);
             return redirect()->route('admin.challenges.index')->with('success', 'Tantangan berhasil diperbarui.');
         } catch (Exception $e) {

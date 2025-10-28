@@ -2,12 +2,14 @@
 
 namespace App\Http\Services;
 
+use App\Enums\ChallengeType;
 use App\Models\Challenge;
 use App\Models\ChallengeParticipant;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ChallengeService
 {
@@ -103,6 +105,9 @@ class ChallengeService
     public function create(array $data): Challenge
     {
         try {
+            $data['type'] = ChallengeType::ASSIGNED;
+            $data['created_by'] = $data['created_by'] ?? Auth::id();
+            $data['updated_by'] = Auth::id();
             return Challenge::create($data);
         } catch (Exception $e) {
             throw new Exception('Gagal membuat tantangan baru: ' . $e->getMessage());
@@ -113,6 +118,7 @@ class ChallengeService
     {
         try {
             $challenge = Challenge::findOrFail($id);
+            $data['updated_by'] = Auth::id();
             $challenge->update($data);
             return $challenge;
         } catch (ModelNotFoundException $e) {

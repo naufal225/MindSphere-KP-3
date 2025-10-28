@@ -95,9 +95,9 @@ class HabitService
     public function create(array $data): Habit
     {
         try {
-            if($data['assigned_by'] == null) {
-                $data['assigned_by'] = Auth::id();
-            }
+            $data['assigned_by'] = $data['assigned_by'] ?? Auth::id();
+            $data['created_by'] = Auth::id();
+            $data['updated_by'] = Auth::id();
             $data['type'] = HabitType::ASSIGNED;
             return Habit::create($data);
         } catch (Exception $e) {
@@ -109,6 +109,7 @@ class HabitService
     {
         try {
             $habit = Habit::findOrFail($id);
+            $data['updated_by'] = Auth::id();
             $habit->update($data);
             return $habit;
         } catch (ModelNotFoundException $e) {

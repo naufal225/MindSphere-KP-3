@@ -182,16 +182,7 @@
 
                             <!-- Additional Information -->
                             <div class="space-y-4">
-                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                                    <i
-                                        class="w-8 h-8 p-2 mr-3 text-red-600 bg-red-100 rounded-lg fa-solid fa-user"></i>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Tipe Kebiasaan</p>
-                                        <p class="font-medium text-gray-900">
-                                            {{ $habit->type->value === 'self' ? 'Mandiri' : 'Ditugaskan' }}
-                                        </p>
-                                    </div>
-                                </div>
+                               
 
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg">
                                     <i

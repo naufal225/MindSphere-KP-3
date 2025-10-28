@@ -18,7 +18,6 @@
         </div>
     </div>
 
-
     @if(session('success'))
     <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
         {{ session('success') }}
@@ -66,6 +65,20 @@
                             class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('name') border-red-500 @enderror"
                             placeholder="Masukkan nama lengkap">
                         @error('name')
+                        <p class="mt-2 text-sm text-red-600"><i class="mr-1 fa-solid fa-circle-exclamation"></i> {{
+                            $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Username -->
+                    <div>
+                        <label for="username" class="block mb-2 text-sm font-medium text-gray-700">
+                            <i class="mr-1 fa-solid fa-at"></i> Username
+                        </label>
+                        <input type="text" name="username" id="username" value="{{ old('username', $user->username) }}"
+                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('username') border-red-500 @enderror"
+                            placeholder="mis. johndoe">
+                        @error('username')
                         <p class="mt-2 text-sm text-red-600"><i class="mr-1 fa-solid fa-circle-exclamation"></i> {{
                             $message }}</p>
                         @enderror
@@ -129,6 +142,38 @@
                 </div>
             </div>
 
+            <!-- Parent Selection (Conditional for Siswa) -->
+            <div class="mb-8" id="parent-section" style="display: none;">
+                <div class="flex items-center mb-4">
+                    <i class="mr-2 text-orange-500 fa-solid fa-user-group"></i>
+                    <h3 class="text-lg font-semibold text-gray-800">Penunjukan Orang Tua</h3>
+                </div>
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <label for="parent_id" class="block mb-2 text-sm font-medium text-gray-700">
+                            <i class="mr-1 fa-solid fa-users"></i> Pilih Orang Tua
+                        </label>
+                        <select name="parent_id" id="parent_id"
+                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('parent_id') border-red-500 @enderror">
+                            <option value="">Pilih Orang Tua (Opsional)</option>
+                            @foreach($parents as $parent)
+                            <option value="{{ $parent->id }}" {{ (old('parent_id') ?? $user->parent_id) == $parent->id ? 'selected' : '' }}>
+                                {{ $parent->name }} ({{ $parent->email }})
+                            </option>
+                            @endforeach
+                        </select>
+                        @error('parent_id')
+                        <p class="mt-2 text-sm text-red-600"><i class="mr-1 fa-solid fa-circle-exclamation"></i>
+                            {{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">
+                            <i class="mr-1 fa-solid fa-info-circle"></i>
+                            Pilih orang tua yang akan terhubung dengan siswa ini (opsional)
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Penugasan Kelas (Conditional) -->
             <div class="mb-8" id="class-section" style="display: none;">
                 <div class="flex items-center mb-4">
@@ -144,9 +189,7 @@
                             class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('class_id') border-red-500 @enderror">
                             <option value="">Pilih Kelas</option>
                             @foreach($classes as $class)
-                            <option value="{{ $class->id }}" {{ (old('class_id') ?? ($user->role === 'guru' ?
-                                $class->teacher_id : $user->classAsStudent->pluck('id')->first())) == $class->id ?
-                                'selected' : '' }}>
+                            <option value="{{ $class->id }}" {{ (old('class_id') ?? ($user->role === 'guru' ? $class->teacher_id : $user->classAsStudent->pluck('id')->first())) == $class->id ? 'selected' : '' }}>
                                 {{ $class->name }}
                             </option>
                             @endforeach
@@ -300,12 +343,10 @@
                         <span class="font-medium">ID:</span> {{ $user->id }}
                     </div>
                     <div>
-                        <span class="font-medium">Bergabung:</span> {{ $user->created_at ? $user->created_at->format('d
-                        M Y') : '-' }}
+                        <span class="font-medium">Bergabung:</span> {{ $user->created_at ? $user->created_at->format('d M Y') : '-' }}
                     </div>
                     <div>
-                        <span class="font-medium">Diperbarui:</span> {{ $user->updated_at ? $user->updated_at->format('d
-                        M Y') : '-' }}
+                        <span class="font-medium">Diperbarui:</span> {{ $user->updated_at ? $user->updated_at->format('d M Y') : '-' }}
                     </div>
                     <div>
                         <span class="font-medium">Status:</span>
@@ -334,120 +375,136 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    const roleSelect = document.getElementById('role');
-    const classSection = document.getElementById('class-section');
-    const classHelpText = document.getElementById('class-help-text');
-    const classSelect = document.getElementById('class_id');
+        const roleSelect = document.getElementById('role');
+        const classSection = document.getElementById('class-section');
+        const parentSection = document.getElementById('parent-section');
+        const classHelpText = document.getElementById('class-help-text');
+        const classSelect = document.getElementById('class_id');
+        const parentSelect = document.getElementById('parent_id');
 
-    const nameInput = document.getElementById('name');
-    const avatarFileInput = document.getElementById('avatar_file');
-    const avatarUrlInput = document.getElementById('avatar_url');
-    const removeAvatarCheckbox = document.getElementById('remove_avatar');
-    const currentAvatar = document.getElementById('currentAvatar');
-    const newAvatarPreview = document.getElementById('newAvatarPreview');
-    const avatarImagePreview = document.getElementById('avatarImagePreview');
-    const previewText = document.getElementById('previewText');
-    const currentAvatarImage = document.getElementById('currentAvatarImage');
+        const nameInput = document.getElementById('name');
+        const avatarFileInput = document.getElementById('avatar_file');
+        const avatarUrlInput = document.getElementById('avatar_url');
+        const removeAvatarCheckbox = document.getElementById('remove_avatar');
+        const currentAvatar = document.getElementById('currentAvatar');
+        const newAvatarPreview = document.getElementById('newAvatarPreview');
+        const avatarImagePreview = document.getElementById('avatarImagePreview');
+        const previewText = document.getElementById('previewText');
+        const currentAvatarImage = document.getElementById('currentAvatarImage');
 
-    // Toggle kelas berdasarkan role
-    function toggleClassSection() {
-        const role = roleSelect.value;
-        if (role === 'guru' || role === 'siswa') {
-            classSection.style.display = 'block';
-            if (role === 'siswa') {
-                classHelpText.textContent = 'Wajib dipilih untuk siswa.';
-                classSelect.setAttribute('required', 'required');
-            } else if (role === 'guru') {
-                classHelpText.textContent = 'Opsional untuk guru (akan menjadi wali kelas).';
+        // Toggle sections berdasarkan role
+        function toggleSections() {
+            const role = roleSelect.value;
+
+            // Toggle class section
+            if (role === 'guru' || role === 'siswa') {
+                classSection.style.display = 'block';
+                if (role === 'siswa') {
+                    classHelpText.textContent = 'Wajib dipilih untuk siswa.';
+                    classSelect.setAttribute('required', 'required');
+                } else if (role === 'guru') {
+                    classHelpText.textContent = 'Opsional untuk guru (akan menjadi wali kelas).';
+                    classSelect.removeAttribute('required');
+                }
+            } else {
+                classSection.style.display = 'none';
                 classSelect.removeAttribute('required');
+                classSelect.value = '';
             }
-        } else {
-            classSection.style.display = 'none';
-            classSelect.removeAttribute('required');
-        }
-    }
 
-    roleSelect.addEventListener('change', toggleClassSection);
-    toggleClassSection(); // on load
-
-    // Handle file upload preview
-    avatarFileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            if (file.size > 2 * 1024 * 1024) {
-                alert('File terlalu besar! Maksimal 2MB.');
-                this.value = '';
-                return;
+            // Toggle parent section
+            if (role === 'siswa') {
+                parentSection.style.display = 'block';
+            } else {
+                parentSection.style.display = 'none';
+                parentSelect.value = '';
             }
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                avatarImagePreview.src = e.target.result;
-                newAvatarPreview.classList.remove('hidden');
-                currentAvatar.classList.add('hidden');
-                previewText.textContent = 'Preview avatar baru';
-                avatarUrlInput.value = '';
-                removeAvatarCheckbox.checked = false;
-            };
-            reader.readAsDataURL(file);
-        } else {
-            newAvatarPreview.classList.add('hidden');
-            currentAvatar.classList.remove('hidden');
-            previewText.textContent = 'Avatar saat ini akan dipertahankan';
         }
-    });
 
-    // Handle URL input preview
-    avatarUrlInput.addEventListener('input', function() {
-        const url = this.value.trim();
-        if (url === '') {
-            newAvatarPreview.classList.add('hidden');
-            currentAvatar.classList.remove('hidden');
-            previewText.textContent = 'Avatar saat ini akan dipertahankan';
-            return;
-        }
-        if (url.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
-            avatarImagePreview.src = url;
-            avatarImagePreview.onload = function() {
-                newAvatarPreview.classList.remove('hidden');
-                currentAvatar.classList.add('hidden');
-                previewText.textContent = 'Preview avatar baru dari URL';
-            };
-            avatarImagePreview.onerror = function() {
+        // Event listener untuk role change
+        roleSelect.addEventListener('change', toggleSections);
+
+        // Panggil pada load
+        toggleSections();
+
+        // Handle file upload preview
+        avatarFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('File terlalu besar! Maksimal 2MB.');
+                    this.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarImagePreview.src = e.target.result;
+                    newAvatarPreview.classList.remove('hidden');
+                    currentAvatar.classList.add('hidden');
+                    previewText.textContent = 'Preview avatar baru';
+                    avatarUrlInput.value = '';
+                    removeAvatarCheckbox.checked = false;
+                };
+                reader.readAsDataURL(file);
+            } else {
                 newAvatarPreview.classList.add('hidden');
                 currentAvatar.classList.remove('hidden');
                 previewText.textContent = 'Avatar saat ini akan dipertahankan';
-            };
-            avatarFileInput.value = '';
-            removeAvatarCheckbox.checked = false;
+            }
+        });
+
+        // Handle URL input preview
+        avatarUrlInput.addEventListener('input', function() {
+            const url = this.value.trim();
+            if (url === '') {
+                newAvatarPreview.classList.add('hidden');
+                currentAvatar.classList.remove('hidden');
+                previewText.textContent = 'Avatar saat ini akan dipertahankan';
+                return;
+            }
+            if (url.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
+                avatarImagePreview.src = url;
+                avatarImagePreview.onload = function() {
+                    newAvatarPreview.classList.remove('hidden');
+                    currentAvatar.classList.add('hidden');
+                    previewText.textContent = 'Preview avatar baru dari URL';
+                };
+                avatarImagePreview.onerror = function() {
+                    newAvatarPreview.classList.add('hidden');
+                    currentAvatar.classList.remove('hidden');
+                    previewText.textContent = 'Avatar saat ini akan dipertahankan';
+                };
+                avatarFileInput.value = '';
+                removeAvatarCheckbox.checked = false;
+            }
+        });
+
+        // Handle remove avatar checkbox
+        removeAvatarCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                newAvatarPreview.classList.add('hidden');
+                currentAvatar.classList.remove('hidden');
+                if (currentAvatarImage) {
+                    currentAvatarImage.classList.add('hidden');
+                }
+                previewText.textContent = 'Avatar akan dihapus dan menggunakan default';
+                avatarFileInput.value = '';
+                avatarUrlInput.value = '';
+            } else {
+                if (currentAvatarImage) {
+                    currentAvatarImage.classList.remove('hidden');
+                }
+                previewText.textContent = 'Avatar saat ini akan dipertahankan';
+            }
+        });
+
+        // Show preview if there's existing URL value on page load
+        if (avatarUrlInput.value.trim() !== '' && avatarUrlInput.value !== '{{ $user->avatar_url }}') {
+            avatarImagePreview.src = avatarUrlInput.value;
+            newAvatarPreview.classList.remove('hidden');
+            currentAvatar.classList.add('hidden');
+            previewText.textContent = 'Preview avatar baru dari URL';
         }
     });
-
-    // Handle remove avatar checkbox
-    removeAvatarCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-            newAvatarPreview.classList.add('hidden');
-            currentAvatar.classList.remove('hidden');
-            if (currentAvatarImage) {
-                currentAvatarImage.classList.add('hidden');
-            }
-            previewText.textContent = 'Avatar akan dihapus dan menggunakan default';
-            avatarFileInput.value = '';
-            avatarUrlInput.value = '';
-        } else {
-            if (currentAvatarImage) {
-                currentAvatarImage.classList.remove('hidden');
-            }
-            previewText.textContent = 'Avatar saat ini akan dipertahankan';
-        }
-    });
-
-    // Show preview if there's existing URL value on page load
-    if (avatarUrlInput.value.trim() !== '' && avatarUrlInput.value !== '{{ $user->avatar_url }}') {
-        avatarImagePreview.src = avatarUrlInput.value;
-        newAvatarPreview.classList.remove('hidden');
-        currentAvatar.classList.add('hidden');
-        previewText.textContent = 'Preview avatar baru dari URL';
-    }
-});
 </script>
 @endpush

@@ -22,9 +22,8 @@ class CategoryController extends Controller
         try {
             $categories = $this->service->getAll($request, 10);
             $stats = $this->service->getCategoryStats();
-            $categoryCodes = \App\Enums\CategoryCode::cases();
 
-            return view('admin.categories.index', compact('categories', 'stats', 'categoryCodes'));
+            return view('admin.categories.index', compact('categories', 'stats'));
         } catch (Exception $e) {
             return back()->with('error', 'Terjadi kesalahan saat memuat data kategori: ' . $e->getMessage());
         }
@@ -63,6 +62,7 @@ class CategoryController extends Controller
     {
         try {
             $category = $this->service->findById($id);
+
             return view('admin.categories.edit', compact('category'));
         } catch (Exception $e) {
             return back()->with('error', 'Gagal memuat kategori untuk diedit: ' . $e->getMessage());

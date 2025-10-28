@@ -17,7 +17,10 @@ class Habit extends Model
         'type',
         'assigned_by',
         'category_id',
-        'period'
+        'period',
+        'xp_reward',
+        'created_by',
+        'updated_by'
     ];
 
     protected $casts = [
@@ -38,5 +41,20 @@ class Habit extends Model
     public function logs()
     {
         return $this->hasMany(HabitLog::class);
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }

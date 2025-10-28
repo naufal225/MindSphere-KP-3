@@ -15,12 +15,16 @@ class UserRequest extends FormRequest
     {
         $userId = $this->route('user');
         $uniqueEmail = $userId ? 'unique:users,email,' . $userId : 'unique:users,email';
+        $uniqueUsername = $userId ? 'unique:users,username,' . $userId : 'unique:users,username';
 
         $rules = [
             'name' => 'required|string|max:255',
+            'username' => ['required', 'alpha_dash', 'min:3', 'max:30', $uniqueUsername],
             'email' => ['required', 'email', $uniqueEmail],
             'role' => 'required|in:guru,siswa,ortu',
+            'parent_id' => 'nullable|exists:users,id',
             'xp' => 'nullable|integer|min:0',
+            'class_id' => 'nullable|exists:school_classes,id',
             'level' => 'nullable|integer|min:1',
             'avatar_url' => 'nullable|url',
         ];
@@ -36,6 +40,11 @@ class UserRequest extends FormRequest
             $rules['password'] = 'nullable|string|min:6';
         }
 
+        // Validasi conditional untuk parent_id
+        if ($this->input('role') === 'siswa') {
+            $rules['parent_id'] = 'nullable|exists:users,id,role,ortu';
+        }
+
         return $rules;
     }
 
@@ -43,6 +52,11 @@ class UserRequest extends FormRequest
     {
         return [
             'name.required' => 'Nama wajib diisi.',
+            'username.required' => 'Username wajib diisi.',
+            'username.alpha_dash' => 'Username hanya boleh berisi huruf, angka, strip dan underscore.',
+            'username.min' => 'Username minimal 3 karakter.',
+            'username.max' => 'Username maksimal 30 karakter.',
+            'username.unique' => 'Username sudah digunakan.',
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Email sudah digunakan.',
@@ -53,6 +67,7 @@ class UserRequest extends FormRequest
             'avatar_file.image' => 'File harus berupa gambar.',
             'avatar_file.mimes' => 'Format gambar harus: jpeg, png, jpg, gif.',
             'avatar_file.max' => 'Ukuran gambar maksimal 2MB.',
+            'parent_id.exists' => 'Orang tua yang dipilih tidak valid atau bukan role orang tua.',
         ];
     }
 }

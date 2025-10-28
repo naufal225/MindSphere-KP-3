@@ -42,7 +42,10 @@ class HabitController extends Controller
     public function store(HabitRequest $request): RedirectResponse
     {
         try {
-            $this->service->create($request->validated());
+            $data = $request->validated();
+            $data['created_by'] = auth()->id();
+            $data['updated_by'] = auth()->id();
+            $this->service->create($data);
             return redirect()->route('admin.habits.index')->with('success', 'Kebiasaan berhasil ditambahkan.');
         } catch (Exception $e) {
             return back()->withInput()->with('error', 'Gagal menambahkan kebiasaan: ' . $e->getMessage());
@@ -73,7 +76,9 @@ class HabitController extends Controller
     public function update(HabitRequest $request, string $id): RedirectResponse
     {
         try {
-            $this->service->update($id, $request->validated());
+            $data = $request->validated();
+            $data['updated_by'] = auth()->id();
+            $this->service->update($id, $data);
             return redirect()->route('admin.habits.index')->with('success', 'Kebiasaan berhasil diperbarui.');
         } catch (Exception $e) {
             return back()->withInput()->with('error', 'Gagal memperbarui kebiasaan: ' . $e->getMessage());

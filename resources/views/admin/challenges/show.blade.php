@@ -197,16 +197,7 @@
 
                             <!-- Additional Information -->
                             <div class="space-y-4">
-                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                                    <i
-                                        class="w-8 h-8 p-2 mr-3 text-red-600 bg-red-100 rounded-lg fa-solid fa-users"></i>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Tipe Tantangan</p>
-                                        <p class="font-medium text-gray-900 capitalize">{{ $challenge->type->value }}
-                                        </p>
-                                    </div>
-                                </div>
-
+                               
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg">
                                     <i
                                         class="w-8 h-8 p-2 mr-3 text-orange-600 bg-orange-100 rounded-lg fa-solid fa-calendar-plus"></i>

@@ -6,7 +6,7 @@
             <div class="flex justify-center">
                 <img src="{{ asset('img/logo.png') }}" alt="MindSphere Logo" class="rounded-lg shadow-lg w-16 h-16">
             </div>
-            <h1 class="mt-2 text-lg font-bold text-center text-white">MindSphere</h1>
+            <h1 class="mt-2 text-lg font-bold text-center text-white">KeepItGrow</h1>
         </div>
         <button class="text-white lg:hidden hover:text-blue-200" onclick="toggleSidebar()">
             <i class="text-lg fas fa-times"></i>
@@ -40,13 +40,6 @@
             class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.categories.*') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
             <i class="w-5 mr-3 text-center fas fa-tags"></i>
             <span class="font-medium">Kategori</span>
-        </a>
-
-        <!-- Forum -->
-        <a href="{{ route('admin.forum.index') }}"
-            class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.forum.*') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
-            <i class="w-5 mr-3 text-center fas fa-comments"></i>
-            <span class="font-medium">Forum</span>
         </a>
 
         <!-- Challenges -->
@@ -134,7 +127,7 @@
     </nav>
 
     <div class="p-4 border-t border-blue-600">
-        <a class="flex items-center mb-4" href="">
+        <a class="flex items-center mb-4" href="{{ route('admin.profile.index') }}">
             <div class="flex items-center justify-center w-10 h-10 mr-3 rounded-full bg-[#2563EB]">
                 @if(Auth::user()->url_profile)
                 <img class="object-cover w-10 h-10 rounded-full" src="{{ Auth::user()->url_profile }}"

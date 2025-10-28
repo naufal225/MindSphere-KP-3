@@ -3,6 +3,8 @@
 namespace App\Http\Services;
 
 use App\Enums\Role;
+use App\Models\ChallengeParticipant;
+use App\Models\HabitLog;
 use App\Models\SchoolClass;
 use App\Models\User;
 use Exception;
@@ -23,7 +25,8 @@ class UserService
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('username', 'like', "%{$search}%");
             });
         }
 
@@ -51,15 +54,98 @@ class UserService
                     });
             });
         }
-        
+
         return $query->orderBy('name')->paginate(10)->withQueryString();
     }
 
     public function getUserById($id)
     {
-        return User::findOrFail($id);
+        return User::with([
+            'challenges' => function ($query) {
+                $query->with('category');
+            },
+            'habitsAssigned' => function ($query) {
+                $query->with('category');
+            },
+            'classAsStudent' => function ($query) {
+                $query->with('teacher');
+            }
+        ])->findOrFail($id);
     }
 
+    public function getUserWithProgress($id)
+    {
+        $user = $this->getUserById($id);
+
+        // Get challenge progress
+        $challengeProgress = ChallengeParticipant::where('user_id', $id)
+            ->with([
+                'challenge' => function ($query) {
+                    $query->with('category');
+                }
+            ])
+            ->get()
+            ->map(function ($participant) {
+                return [
+                    'id' => $participant->challenge->id,
+                    'title' => $participant->challenge->title,
+                    'category' => $participant->challenge->category->name,
+                    'xp_reward' => $participant->challenge->xp_reward,
+                    'status' => $participant->status->value,
+                    'proof_url' => $participant->proof_url,
+                    'submitted_at' => $participant->submitted_at,
+                    'joined_at' => $participant->created_at,
+                    'start_date' => $participant->challenge->start_date,
+                    'end_date' => $participant->challenge->end_date,
+                ];
+            });
+
+        // Get habit progress
+        $habitProgress = HabitLog::where('user_id', $id)
+            ->with([
+                'habit' => function ($query) {
+                    $query->with('category');
+                }
+            ])
+            ->get()
+            ->groupBy('habit_id')
+            ->map(function ($logs, $habitId) {
+                $habit = $logs->first()->habit;
+                $completedCount = $logs->where('status', 'completed')->count();
+                $totalDays = $logs->count();
+
+                return [
+                    'id' => $habit->id,
+                    'title' => $habit->title,
+                    'category' => $habit->category->name,
+                    'xp_reward' => $habit->xp_reward,
+                    'period' => $habit->period,
+                    'total_logs' => $totalDays,
+                    'completed_logs' => $completedCount,
+                    'completion_rate' => $totalDays > 0 ? round(($completedCount / $totalDays) * 100) : 0,
+                    'last_activity' => $logs->sortByDesc('date')->first()->date ?? null,
+                ];
+            })->values();
+
+        // Get statistics
+        $stats = [
+            'total_challenges' => $challengeProgress->count(),
+            'completed_challenges' => $challengeProgress->where('status', 'completed')->count(),
+            'active_challenges' => $challengeProgress->whereIn('status', ['joined', 'submitted'])->count(),
+            'total_habits' => $habitProgress->count(),
+            'total_xp_earned' => $challengeProgress->where('status', 'completed')->sum('xp_reward') +
+                $habitProgress->sum(function ($habit) {
+                    return $habit['completed_logs'] * $habit['xp_reward'];
+                }),
+        ];
+
+        return [
+            'user' => $user,
+            'challenge_progress' => $challengeProgress,
+            'habit_progress' => $habitProgress,
+            'stats' => $stats
+        ];
+    }
     public function createUser(array $data)
     {
         try {
@@ -76,8 +162,9 @@ class UserService
 
             $user = User::create([
                 'name' => $data['name'],
+                'username' => $data['username'],
                 'email' => $data['email'],
-                'password' => Hash::make($data['password']),
+                'password' => bcrypt($data['password']),
                 'role' => $data['role'],
                 'xp' => $data['xp'] ?? 0,
                 'level' => $data['level'] ?? 1,
@@ -102,29 +189,27 @@ class UserService
 
     public function updateUser($id, array $data)
     {
-        $user = User::findOrFail($id);
+        try {
+            $user = User::findOrFail($id);
 
-        if (isset($data['avatar_file']) && $data['avatar_file'] instanceof UploadedFile) {
-            // Hapus avatar lama jika ada
-            if ($user->avatar_url) {
-                $this->deleteAvatar($user->avatar_url);
+            // Jika role bukan siswa, set parent_id ke null
+            if ($data['role'] !== 'siswa') {
+                $data['parent_id'] = null;
             }
 
-            $data['avatar_url'] = $this->uploadAvatar($data['avatar_file']);
-            unset($data['avatar_file']);
+            // Jika password kosong, hapus dari data
+            if (empty($data['password'])) {
+                unset($data['password']);
+            } else {
+                $data['password'] = bcrypt($data['password']);
+            }
+
+            $user->update($data);
+
+            return $user;
+        } catch (\Exception $e) {
+            throw new \Exception('Gagal memperbarui user: ' . $e->getMessage());
         }
-
-        if (isset($data['password']) && !empty($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
-        } else {
-            unset($data['password']);
-        }
-
-        // Handle perubahan role & kelas
-        $this->handleRoleAndClassAssignment($user, $data);
-
-        $user->update($data);
-        return $user;
     }
 
     public function deleteUser($id)

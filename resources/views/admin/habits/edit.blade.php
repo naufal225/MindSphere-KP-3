@@ -63,11 +63,11 @@
                     </div>
                 </div>
 
-                <!-- Kategori & Tipe -->
+                <!-- Kategori -->
                 <div>
                     <div class="flex items-center mb-4">
                         <i class="mr-2 text-green-500 fa-solid fa-tags"></i>
-                        <h3 class="text-lg font-semibold text-gray-800">Kategori & Tipe</h3>
+                        <h3 class="text-lg font-semibold text-gray-800">Kategori </h3>
                     </div>
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <!-- Kategori -->

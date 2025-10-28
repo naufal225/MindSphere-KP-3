@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\CategoryCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,13 +10,8 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = [
-        'code',
         'name',
         'description'
-    ];
-
-    protected $casts = [
-        'code' => CategoryCode::class
     ];
 
     public function habits()

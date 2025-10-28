@@ -74,21 +74,6 @@
                 </select>
             </div>
 
-            <!-- Type Filter -->
-            <div>
-                <label for="type" class="block mb-2 text-sm font-medium text-gray-700">
-                    <i class="mr-1 fa-solid fa-users"></i> Tipe Tantangan
-                </label>
-                <select name="type" id="type"
-                    class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Semua Tipe</option>
-                    @foreach($challengeTypes as $type)
-                    <option value="{{ $type->value }}" {{ request('type')==$type->value ? 'selected' : '' }}>
-                        {{ ucfirst($type->value) }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
 
             <!-- Status Filter -->
             <div>
@@ -203,7 +188,7 @@
                     </th>
                     <th scope="col"
                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                        <i class="mr-1 fa-solid fa-tags"></i> Kategori & Tipe
+                        <i class="mr-1 fa-solid fa-tags"></i> Kategori
                     </th>
                     <th scope="col"
                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">

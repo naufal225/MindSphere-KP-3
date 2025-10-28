@@ -24,7 +24,6 @@ class ChallengeRequest extends FormRequest
         $rules = [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'type' => 'required|in:self,assigned',
             'category_id' => 'required|exists:categories,id',
             'xp_reward' => 'required|integer|min:1',
             'start_date' => 'required|date',
@@ -53,9 +52,6 @@ class ChallengeRequest extends FormRequest
 
             'description.required' => 'Deskripsi tantangan wajib diisi.',
             'description.string' => 'Deskripsi tantangan harus berupa teks.',
-
-            'type.required' => 'Jenis tantangan wajib dipilih.',
-            'type.in' => 'Jenis tantangan tidak valid. Pilih antara individu atau kelompok.',
 
             'category_id.required' => 'Kategori tantangan wajib dipilih.',
             'category_id.exists' => 'Kategori yang dipilih tidak ditemukan.',

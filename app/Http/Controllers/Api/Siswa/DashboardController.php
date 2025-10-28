@@ -83,18 +83,6 @@ class DashboardController extends Controller
             ? ['status' => 'sudah', 'message' => 'Kamu sudah menulis refleksi hari ini 📝']
             : ['status' => 'belum', 'message' => 'Yuk tulis refleksi hari ini agar tetap sadar diri 🌱'];
 
-        // --- 6. 3 Postingan Komunitas Terbaru ---
-        $latestPosts = ForumPost::withCount('comments')
-            ->orderBy('created_at', 'desc')
-            ->take(3)
-            ->get(['id', 'title'])
-            ->map(function ($post) {
-                return [
-                    'id' => $post->id,
-                    'title' => $post->title,
-                    'comments_count' => $post->comments_count,
-                ];
-            });
 
         // --- Gabungkan semua ---
         $data = [
@@ -108,7 +96,6 @@ class DashboardController extends Controller
             'latest_habits' => $latestHabits,
             'latest_challenges' => $latestChallenges,
             'reflection_today' => $reflectionStatus,
-            'community_feed' => $latestPosts,
         ];
 
         return response()->json([

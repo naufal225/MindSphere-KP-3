@@ -4,6 +4,9 @@
 @section('subtitle', 'Informasi lengkap tentang kategori')
 
 @section('content')
+@php
+    $codeLabel = config('category.codes', [])[$category->code] ?? $category->code;
+@endphp
 <div class="max-w-6xl mx-auto">
     <!-- Header Section -->
     <div class="mb-6">
@@ -35,7 +38,7 @@
                         ];
                         @endphp
                         <div class="flex items-center justify-center w-32 h-32 mx-auto text-4xl font-bold text-white bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-lg border-4 border-white">
-                            {{ $category->code->value }}
+                            {{ $category->code }}
                         </div>
                         <!-- Status Indicator -->
                         <div class="absolute bottom-0 right-0 flex items-center justify-center w-8 h-8 bg-green-500 border-4 border-white rounded-full">
@@ -44,12 +47,12 @@
                     </div>
 
                     <h3 class="mt-4 text-xl font-bold text-gray-800">{{ $category->name }}</h3>
-                    <p class="text-gray-600">{{ $category->code->name }}</p>
+                    <p class="text-gray-600">{{ $codeLabel }}</p>
 
                     <!-- Code Badge -->
                     <span class="inline-flex items-center px-4 py-2 mt-3 text-sm font-medium text-blue-800 bg-blue-100 border border-blue-200 rounded-full">
                         <i class="mr-2 fa-solid fa-code"></i>
-                        {{ $category->code->value }}
+                        {{ $category->code }}
                     </span>
                 </div>
 
@@ -127,13 +130,7 @@
                                     </div>
                                 </div>
 
-                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                                    <i class="w-8 h-8 p-2 mr-3 text-green-600 bg-green-100 rounded-lg fa-solid fa-code"></i>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Kode Kategori</p>
-                                        <p class="font-medium text-gray-900">{{ $category->code->value }} - {{ $category->code->name }}</p>
-                                    </div>
-                                </div>
+                               
 
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg">
                                     <i class="w-8 h-8 p-2 mr-3 text-purple-600 bg-purple-100 rounded-lg fa-solid fa-heading"></i>

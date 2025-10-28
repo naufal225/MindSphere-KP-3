@@ -243,11 +243,244 @@
                         </div>
                     </div>
 
-                    <!-- Activity Tab (Placeholder) -->
+                    <!-- Activity Tab -->
                     <div id="activity-tab" class="hidden tab-content">
-                        <div class="text-center py-8 text-gray-500">
-                            <i class="mb-4 text-4xl fa-solid fa-chart-bar"></i>
-                            <p>Data aktivitas pengguna akan ditampilkan di sini</p>
+                        <h3 class="mb-6 text-lg font-semibold text-gray-800">
+                            <i class="mr-2 fa-solid fa-chart-line"></i>Statistik & Progress
+                        </h3>
+
+                        <!-- Statistics Cards -->
+                        <div class="grid grid-cols-2 gap-4 mb-6 md:grid-cols-4">
+                            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                <div class="flex items-center">
+                                    <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg">
+                                        <i class="text-blue-600 fa-solid fa-flag"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-600">Total Challenges</p>
+                                        <p class="text-2xl font-bold text-gray-900">{{ $stats['total_challenges'] }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                <div class="flex items-center">
+                                    <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
+                                        <i class="text-green-600 fa-solid fa-check-circle"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-600">Challenges Selesai</p>
+                                        <p class="text-2xl font-bold text-gray-900">{{ $stats['completed_challenges'] }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                <div class="flex items-center">
+                                    <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg">
+                                        <i class="text-purple-600 fa-solid fa-tasks"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-600">Total Habits</p>
+                                        <p class="text-2xl font-bold text-gray-900">{{ $stats['total_habits'] }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                <div class="flex items-center">
+                                    <div class="flex items-center justify-center w-12 h-12 bg-yellow-100 rounded-lg">
+                                        <i class="text-yellow-600 fa-solid fa-star"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-600">XP Diperoleh</p>
+                                        <p class="text-2xl font-bold text-gray-900">{{
+                                            number_format($stats['total_xp_earned']) }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Challenges Section -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="text-lg font-semibold text-gray-800">
+                                    <i class="mr-2 fa-solid fa-flag"></i>Challenges
+                                </h4>
+                                <span class="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full">
+                                    {{ $challenge_progress->count() }} challenge
+                                </span>
+                            </div>
+
+                            @if($challenge_progress->count() > 0)
+                            <div class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-sm">
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full divide-y divide-gray-200">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th
+                                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                                    Challenge</th>
+                                                <th
+                                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                                    Kategori</th>
+                                                <th
+                                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                                    Status</th>
+                                                <th
+                                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                                    XP</th>
+                                                <th
+                                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                                    Tanggal Bergabung</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+                                            @foreach($challenge_progress as $challenge)
+                                            <tr class="hover:bg-gray-50">
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="text-sm font-medium text-gray-900">{{
+                                                        $challenge['title'] }}</div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span
+                                                        class="inline-flex px-2 text-xs font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full">
+                                                        {{ $challenge['category'] }}
+                                                    </span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    @php
+                                                    $statusColors = [
+                                                    'joined' => 'bg-yellow-100 text-yellow-800',
+                                                    'submitted' => 'bg-blue-100 text-blue-800',
+                                                    'completed' => 'bg-green-100 text-green-800'
+                                                    ];
+                                                    $statusText = [
+                                                    'joined' => 'Dalam Pengerjaan',
+                                                    'submitted' => 'Menunggu Verifikasi',
+                                                    'completed' => 'Selesai'
+                                                    ];
+                                                    @endphp
+                                                    <span
+                                                        class="inline-flex px-2 text-xs font-semibold leading-5 rounded-full {{ $statusColors[$challenge['status']] ?? 'bg-gray-100 text-gray-800' }}">
+                                                        {{ $statusText[$challenge['status']] ?? $challenge['status'] }}
+                                                    </span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="flex items-center text-sm text-gray-900">
+                                                        <i class="mr-1 text-yellow-500 fa-solid fa-star"></i>
+                                                        {{ $challenge['xp_reward'] }}
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                    {{ $challenge['joined_at']->format('d M Y') }}
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            @else
+                            <div class="p-8 text-center bg-white border border-gray-200 rounded-lg">
+                                <i class="mb-4 text-4xl text-gray-400 fa-solid fa-flag"></i>
+                                <p class="text-gray-500">Belum ada challenges yang dikerjakan</p>
+                            </div>
+                            @endif
+                        </div>
+
+                        <!-- Habits Section -->
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="text-lg font-semibold text-gray-800">
+                                    <i class="mr-2 fa-solid fa-tasks"></i>Habits
+                                </h4>
+                                <span class="px-3 py-1 text-sm bg-purple-100 text-purple-800 rounded-full">
+                                    {{ $habit_progress->count() }} habit
+                                </span>
+                            </div>
+
+                            @if($habit_progress->count() > 0)
+                            <div class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-sm">
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full divide-y divide-gray-200">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th
+                                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                                    Habit</th>
+                                                <th
+                                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                                    Kategori</th>
+                                                <th
+                                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                                    Progress</th>
+                                                <th
+                                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                                    XP/Hari</th>
+                                                <th
+                                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                                    Aktivitas Terakhir</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+                                            @foreach($habit_progress as $habit)
+                                            <tr class="hover:bg-gray-50">
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="text-sm font-medium text-gray-900">{{ $habit['title'] }}
+                                                    </div>
+                                                    <div class="text-xs text-gray-500 capitalize">{{ $habit['period'] }}
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span
+                                                        class="inline-flex px-2 text-xs font-semibold leading-5 text-purple-800 bg-purple-100 rounded-full">
+                                                        {{ $habit['category'] }}
+                                                    </span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="flex items-center">
+                                                        <div class="w-32 mr-3">
+                                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                                <div class="bg-green-500 h-2 rounded-full"
+                                                                    style="width: {{ $habit['completion_rate'] }}%">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <span class="text-sm font-medium text-gray-700">{{
+                                                            $habit['completion_rate'] }}%</span>
+                                                    </div>
+                                                    <div class="text-xs text-gray-500 mt-1">
+                                                        {{ $habit['completed_logs'] }}/{{ $habit['total_logs'] }} hari
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="flex items-center text-sm text-gray-900">
+                                                        <i class="mr-1 text-yellow-500 fa-solid fa-star"></i>
+                                                        {{ $habit['xp_reward'] }}
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                    @if($habit['last_activity'])
+                                                    {{ \Carbon\Carbon::parse($habit['last_activity'])->format('d M Y')
+                                                    }}
+                                                    @else
+                                                    -
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            @else
+                            <div class="p-8 text-center bg-white border border-gray-200 rounded-lg">
+                                <i class="mb-4 text-4xl text-gray-400 fa-solid fa-tasks"></i>
+                                <p class="text-gray-500">Belum ada habits yang dikerjakan</p>
+                            </div>
+                            @endif
                         </div>
                     </div>
 
@@ -293,6 +526,11 @@
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
 
+    // Set first tab as active by default
+    if (tabButtons.length > 0) {
+        tabButtons[0].click();
+    }
+
     tabButtons.forEach(button => {
         button.addEventListener('click', function() {
             const tabId = this.getAttribute('data-tab');
@@ -313,7 +551,10 @@
         });
     });
 });
+ 
 </script>
+
+
 
 <style>
     .tab-button {

@@ -214,6 +214,10 @@
                     </th>
                     <th scope="col"
                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                        <i class="mr-1 fa-solid fa-at"></i> Username
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                         <i class="mr-1 fa-solid fa-shield"></i> Role
                     </th>
                     <th scope="col"
@@ -247,9 +251,9 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm font-semibold text-gray-900">{{ $user->name }}</div>
                         <div class="text-sm text-gray-500">{{ $user->email }}</div>
-                        @if($user->username)
-                        <div class="text-xs text-gray-400">@{{ $user->username }}</div>
-                        @endif
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">{{ $user->username ? '@'.$user->username : '-' }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         @php
@@ -314,7 +318,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-8 text-center">
+                    <td colspan="7" class="px-6 py-8 text-center">
                         <div class="flex flex-col items-center justify-center text-gray-400">
                             <i class="mb-3 text-4xl fa-solid fa-users-slash"></i>
                             <p class="text-lg font-medium text-gray-600">Tidak ada data pengguna</p>

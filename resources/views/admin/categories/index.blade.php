@@ -57,22 +57,6 @@
                     class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
             </div>
 
-            <!-- Code Filter -->
-            <div>
-                <label for="code" class="block mb-2 text-sm font-medium text-gray-700">
-                    <i class="mr-1 fa-solid fa-tag"></i> Filter Kode
-                </label>
-                <select name="code" id="code"
-                    class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Semua Kode</option>
-                    @foreach($categoryCodes as $code)
-                    <option value="{{ $code->value }}" {{ request('code')==$code->value ? 'selected' : '' }}>
-                        {{ $code->value }} - {{ $code->name }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-
             <!-- Sort Field -->
             <div>
                 <label for="sort_field" class="block mb-2 text-sm font-medium text-gray-700">
@@ -217,8 +201,8 @@
                         ];
                         @endphp
                         <span
-                            class="inline-flex items-center px-3 py-1 text-sm font-bold rounded-full {{ $codeColors[$category->code->value] ?? 'bg-gray-100 text-gray-800' }}">
-                            {{ $category->code->value }}
+                            class="inline-flex items-center px-3 py-1 text-sm font-bold rounded-full {{ $codeColors[$category->code] ?? 'bg-gray-100 text-gray-800' }}">
+                            {{ $category->code }}
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">

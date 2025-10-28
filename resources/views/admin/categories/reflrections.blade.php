@@ -14,7 +14,7 @@
                 </div>
                 <div>
                     <h1 class="text-2xl font-bold text-gray-800">Reflections Kategori</h1>
-                    <p class="text-gray-600">{{ $category->name }} - {{ $category->code->name }}</p>
+                    <p class="text-gray-600">{{ $category->name }} - {{ config('category.codes', [])[$category->code] ?? $category->code }}</p>
                 </div>
             </div>
             <a href="{{ route('admin.categories.show', $category->id) }}"

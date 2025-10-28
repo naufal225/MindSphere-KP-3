@@ -57,27 +57,7 @@
                     <h3 class="text-lg font-semibold text-gray-800">Informasi Kategori</h3>
                 </div>
                 <div class="grid grid-cols-1 gap-6">
-                    <!-- Code Field -->
-                    <div>
-                        <label for="code" class="block mb-2 text-sm font-medium text-gray-700">
-                            <i class="mr-1 fa-solid fa-code"></i> Kode Kategori
-                        </label>
-                        <select name="code" id="code" required
-                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('code') border-red-500 @enderror">
-                            <option value="">Pilih Kode Kategori</option>
-                            @foreach(\App\Enums\CategoryCode::cases() as $code)
-                            <option value="{{ $code->value }}" {{ (old('code') ?? $category->code->value) ==
-                                $code->value ? 'selected' : '' }}>
-                                {{ $code->value }} - {{ $code->name }}
-                            </option>
-                            @endforeach
-                        </select>
-                        @error('code')
-                        <p class="mt-2 text-sm text-red-600">
-                            <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
-                        </p>
-                        @enderror
-                    </div>
+                    
 
                     <!-- Name Field -->
                     <div>

@@ -12,7 +12,7 @@ class CategoryService
 {
     public function getAll(Request $request, int $perPage = 10): LengthAwarePaginator
     {
-        $query = Category::withCount(['habits', 'challenges', 'badges', 'reflections', 'posts']);
+        $query = Category::withCount(['habits', 'challenges', 'badges', 'reflections']);
 
         // Search
         if ($request->filled('search')) {

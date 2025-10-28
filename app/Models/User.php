@@ -13,6 +13,7 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
         'role',
@@ -75,16 +76,6 @@ class User extends Authenticatable
         return $this->hasMany(Appreciation::class, 'to_user');
     }
 
-    public function posts()
-    {
-        return $this->hasMany(ForumPost::class);
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(ForumComment::class);
-    }
-
     public function classesAsTeacher()
     {
         return $this->hasMany(SchoolClass::class, 'teacher_id');
@@ -95,4 +86,11 @@ class User extends Authenticatable
         return $this->belongsToMany(SchoolClass::class, 'class_student', 'student_id', 'class_id');
     }
 
+    public function habitLogs() {
+        return $this->hasMany(HabitLog::class, 'user_id');
+    }
+
+    public function challengeParticipants() {
+        return $this->hasMany(ChallengeParticipant::class, 'user_id');
+    }
 }

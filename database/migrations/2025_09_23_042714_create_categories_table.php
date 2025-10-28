@@ -12,7 +12,6 @@ return new class extends Migration {
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->enum('code', ['SA', 'SI', 'GM', 'KL', 'KR']);
             $table->string('name');
             $table->text('description');
             $table->timestamps();

@@ -15,8 +15,9 @@ return new class extends Migration {
             $table->unsignedBigInteger('habit_id');
             $table->unsignedBigInteger('user_id');
             $table->date('date');
-            $table->enum('status', ['done', 'not_done']);
+            $table->enum('status', ['joined', 'submitted', 'completed']);
             $table->text('note')->nullable();
+            $table->string('proof_url')->nullable();
             $table->timestamps();
 
             $table->foreign('habit_id')->references('id')->on('habits')->onDelete('cascade');

@@ -1,6 +1,6 @@
 @extends('components.admin.layout.app')
 
-@section('header', 'Dashboard MindSphere')
+@section('header', 'Dashboard KeepItGrow')
 @section('subtitle', 'Overview Sistem Manajemen Habits & Challenges')
 
 @section('content')

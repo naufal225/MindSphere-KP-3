@@ -42,25 +42,7 @@
             @csrf
 
             <div class="space-y-6">
-                <!-- Code Field -->
-                <div>
-                    <label for="code" class="block text-sm font-medium text-gray-700">
-                        Kode Kategori <span class="text-red-500">*</span>
-                    </label>
-                    <select name="code" id="code" required
-                        class="block w-full px-4 py-3 mt-1 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('code') border-red-300 @enderror">
-                        <option value="">Pilih Kode Kategori</option>
-                        @foreach(\App\Enums\CategoryCode::cases() as $code)
-                        <option value="{{ $code->value }}" {{ old('code')==$code->value ? 'selected' : '' }}>
-                            {{ $code->value }} - {{ $code->name }}
-                        </option>
-                        @endforeach
-                    </select>
-                    @error('code')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                    <p class="mt-1 text-sm text-gray-500">Kode unik untuk mengidentifikasi kategori</p>
-                </div>
+                
 
                 <!-- Name Field -->
                 <div>

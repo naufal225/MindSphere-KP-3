@@ -15,7 +15,8 @@ class HabitLog extends Model
         'user_id',
         'date',
         'status',
-        'note'
+        'note',
+        'proof_url'
     ];
 
     protected $casts = [

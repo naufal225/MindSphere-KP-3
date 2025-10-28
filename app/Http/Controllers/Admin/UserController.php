@@ -31,11 +31,13 @@ class UserController extends Controller
     {
         try {
             $classes = \App\Models\SchoolClass::all();
-            return view('admin.users.create', compact('classes'));
+            $parents = \App\Models\User::where('role', 'ortu')->get(); // Ambil data orang tua
+            return view('admin.users.create', compact('classes', 'parents'));
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
 
     public function store(UserRequest $request)
     {
@@ -50,19 +52,22 @@ class UserController extends Controller
     public function show($id)
     {
         try {
-            $user = $this->service->getUserById($id);
-            return view('admin.users.show', compact('user'));
+            $data = $this->service->getUserWithProgress($id);
+            return view('admin.users.show', $data);
         } catch (\Exception $e) {
             return redirect()->route('admin.users.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
+
+
 
     public function edit($id)
     {
         try {
             $user = $this->service->getUserById($id);
             $classes = \App\Models\SchoolClass::all();
-            return view('admin.users.edit', compact('user', 'classes'));
+            $parents = \App\Models\User::where('role', 'ortu')->get(); // Ambil data orang tua
+            return view('admin.users.edit', compact('user', 'classes', 'parents'));
         } catch (\Exception $e) {
             return redirect()->route('admin.users.index')->withErrors(['error' => $e->getMessage()]);
         }
