@@ -12,7 +12,7 @@ class CategoryService
 {
     public function getAll(Request $request, int $perPage = 10): LengthAwarePaginator
     {
-        $query = Category::withCount(['habits', 'challenges', 'badges', 'reflections']);
+        $query = Category::withCount(['habits', 'challenges', 'reflections']);
 
         // Search
         if ($request->filled('search')) {
@@ -43,7 +43,6 @@ class CategoryService
             'total' => Category::count(),
             'total_habits' => Category::withCount('habits')->get()->sum('habits_count'),
             'total_challenges' => Category::withCount('challenges')->get()->sum('challenges_count'),
-            'total_badges' => Category::withCount('badges')->get()->sum('badges_count'),
         ];
     }
 
@@ -57,11 +56,6 @@ class CategoryService
             },
             'challenges' => function ($query) {
                 $query->select('id', 'title', 'category_id', 'created_at')
-                    ->orderBy('created_at', 'desc')
-                    ->limit(4);
-            },
-            'badges' => function ($query) {
-                $query->select('id', 'name', 'category_id', 'created_at')
                     ->orderBy('created_at', 'desc')
                     ->limit(4);
             },

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - MindSphere</title>
+    <title>Login - KeepItGrow</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/x-icon" href="{{ asset('yaztech-icon.jpg') }}">
     <style>
@@ -87,11 +87,11 @@
         <div class="overflow-hidden bg-white border border-gray-200 shadow-sm rounded-xl">
             <!-- Header Section -->
             <div class="px-8 py-10 text-center bg-white">
-                <!-- Logo with MindSphere branding -->
+                <!-- Logo with KeepItGrow branding -->
                 <div class="flex justify-center mb-4">
-                    <img src="{{ asset('img/logo.png') }}" alt="MindSphere Logo" class="w-24 h-24">
+                    <img src="{{ asset('img/logo.png') }}" alt="KeepItGrow Logo" class="w-24 h-24">
                 </div>
-                <h1 class="mb-2 text-2xl font-bold text-[#111827]">MindSphere</h1>
+                <h1 class="mb-2 text-2xl font-bold text-[#111827]">KeepItGrow</h1>
                 {{-- <p class="text-gray-600">Welcome back to your knowledge hub</p> --}}
             </div>
 

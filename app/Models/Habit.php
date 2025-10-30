@@ -19,13 +19,17 @@ class Habit extends Model
         'category_id',
         'period',
         'xp_reward',
+        'start_date',
+        'end_date',
         'created_by',
         'updated_by'
     ];
 
     protected $casts = [
         'type' => HabitType::class,
-        'period' => Period::class
+        'period' => Period::class,
+        'start_date' => 'date',
+        'end_date' => 'date'
     ];
 
     public function assignedBy()

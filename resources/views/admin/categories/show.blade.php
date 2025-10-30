@@ -77,14 +77,6 @@
                             <p class="text-sm text-gray-600">Total Challenges</p>
                         </div>
 
-                        <!-- Badges Stats -->
-                        <div class="text-center">
-                            <div class="flex items-center justify-center mb-2">
-                                <i class="mr-2 text-yellow-500 fa-solid fa-medal"></i>
-                                <span class="text-2xl font-bold text-gray-800">{{ $category->badges_count }}</span>
-                            </div>
-                            <p class="text-sm text-gray-600">Total Badges</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -130,7 +122,7 @@
                                     </div>
                                 </div>
 
-                               
+
 
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg">
                                     <i class="w-8 h-8 p-2 mr-3 text-purple-600 bg-purple-100 rounded-lg fa-solid fa-heading"></i>
@@ -163,7 +155,7 @@
                                     <i class="w-8 h-8 p-2 mr-3 text-red-600 bg-red-100 rounded-lg fa-solid fa-layer-group"></i>
                                     <div>
                                         <p class="text-sm text-gray-600">Total Konten</p>
-                                        <p class="font-medium text-gray-900">{{ $category->habits_count + $category->challenges_count + $category->badges_count + $category->reflections_count }}</p>
+                                        <p class="font-medium text-gray-900">{{ $category->habits_count + $category->challenges_count }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -184,7 +176,7 @@
                     <!-- Content Tab -->
                     <div id="content-tab" class="hidden tab-content">
                         <h3 class="mb-4 text-lg font-semibold text-gray-800">
-                            <i class="mr-2 fa-solid fa-list"></i>Konten Terkait (4 Terbaru)
+                            <i class="mr-2 fa-solid fa-list"></i>Konten Terkait 
                         </h3>
 
                         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -256,73 +248,6 @@
                                 @endif
                             </div>
 
-                            <!-- Badges Section -->
-                            <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                <div class="flex items-center justify-between mb-3">
-                                    <div class="flex items-center">
-                                        <i class="mr-2 text-yellow-600 fa-solid fa-medal"></i>
-                                        <h4 class="font-semibold text-yellow-800">Badges</h4>
-                                        <span class="ml-2 text-sm text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">
-                                            {{ $category->badges_count }}
-                                        </span>
-                                    </div>
-                                    @if($category->badges_count > 4)
-                                    <a href="{{ route('admin.categories.badges', $category->id) }}"
-                                       class="text-sm text-yellow-700 hover:text-yellow-900 hover:underline">
-                                        Lihat Detail
-                                    </a>
-                                    @endif
-                                </div>
-                                @if($category->badges->count() > 0)
-                                <div class="space-y-2 max-h-60 overflow-y-auto">
-                                    @foreach($category->badges as $badge)
-                                    <div class="flex items-center justify-between p-2 text-sm bg-white rounded-lg border border-yellow-100">
-                                        <div class="flex items-center">
-                                            <i class="mr-2 text-yellow-500 fa-solid fa-circle-small"></i>
-                                            <span class="truncate">{{ $badge->name }}</span>
-                                        </div>
-                                        <span class="text-xs text-gray-500">{{ $badge->created_at->format('d M') }}</span>
-                                    </div>
-                                    @endforeach
-                                </div>
-                                @else
-                                <p class="text-sm text-yellow-700">Belum ada badges dalam kategori ini</p>
-                                @endif
-                            </div>
-
-                            <!-- Reflections Section -->
-                            <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                                <div class="flex items-center justify-between mb-3">
-                                    <div class="flex items-center">
-                                        <i class="mr-2 text-blue-600 fa-solid fa-message"></i>
-                                        <h4 class="font-semibold text-blue-800">Reflections</h4>
-                                        <span class="ml-2 text-sm text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
-                                            {{ $category->reflections_count }}
-                                        </span>
-                                    </div>
-                                    @if($category->reflections_count > 4)
-                                    <a href="{{ route('admin.categories.reflections', $category->id) }}"
-                                       class="text-sm text-blue-700 hover:text-blue-900 hover:underline">
-                                        Lihat Detail
-                                    </a>
-                                    @endif
-                                </div>
-                                @if($category->reflections->count() > 0)
-                                <div class="space-y-2 max-h-60 overflow-y-auto">
-                                    @foreach($category->reflections as $reflection)
-                                    <div class="flex items-center justify-between p-2 text-sm bg-white rounded-lg border border-blue-100">
-                                        <div class="flex items-center">
-                                            <i class="mr-2 text-blue-500 fa-solid fa-circle-small"></i>
-                                            <span class="truncate">{{ Str::limit($reflection->content, 50) }}</span>
-                                        </div>
-                                        <span class="text-xs text-gray-500">{{ $reflection->created_at->format('d M') }}</span>
-                                    </div>
-                                    @endforeach
-                                </div>
-                                @else
-                                <p class="text-sm text-blue-700">Belum ada reflections dalam kategori ini</p>
-                                @endif
-                            </div>
                         </div>
                     </div>
 
@@ -347,19 +272,7 @@
                                 <i class="mt-2 text-purple-500 fa-solid fa-flag"></i>
                             </div>
 
-                            <!-- Total Badges -->
-                            <div class="p-4 text-center bg-yellow-50 border border-yellow-200 rounded-lg">
-                                <div class="text-2xl font-bold text-yellow-600">{{ $category->badges_count }}</div>
-                                <div class="text-sm font-medium text-yellow-800">Badges</div>
-                                <i class="mt-2 text-yellow-500 fa-solid fa-medal"></i>
-                            </div>
 
-                            <!-- Total Reflections -->
-                            <div class="p-4 text-center bg-blue-50 border border-blue-200 rounded-lg">
-                                <div class="text-2xl font-bold text-blue-600">{{ $category->reflections_count }}</div>
-                                <div class="text-sm font-medium text-blue-800">Reflections</div>
-                                <i class="mt-2 text-blue-500 fa-solid fa-message"></i>
-                            </div>
                         </div>
 
                         <!-- Distribution Chart (Placeholder) -->

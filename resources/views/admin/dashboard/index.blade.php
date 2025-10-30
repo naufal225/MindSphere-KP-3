@@ -176,16 +176,7 @@
         </div>
     </a>
 
-    <a href="{{ route('admin.badges.index') }}"
-        class="p-4 text-white transition-all rounded-lg bg-[#F59E0B] hover:bg-[#D97706] hover:shadow-md">
-        <div class="flex flex-col items-center text-center">
-            <div class="flex items-center justify-center w-12 h-12 mb-3  rounded-full bg-opacity-20">
-                <i class="text-xl fa fa-award"></i>
-            </div>
-            <h3 class="mb-1 font-semibold">Kelola Badges</h3>
-            <p class="text-sm text-yellow-100">Penghargaan & achievement</p>
-        </div>
-    </a>
+
 </div>
 
 <!-- Main Content Grid -->
@@ -239,13 +230,11 @@
                 <div class="flex items-start space-x-3">
                     <div class="flex items-center justify-center w-8 h-8 mt-1 rounded-full
                         @if($activity['type'] === 'challenge_completion') bg-green-100 text-green-600
-                        @elseif($activity['type'] === 'badge_award') bg-yellow-100 text-yellow-600
                         @elseif($activity['type'] === 'new_challenge') bg-blue-100 text-blue-600
                         @elseif($activity['type'] === 'appreciation') bg-purple-100 text-purple-600
                         @else bg-gray-100 text-gray-600 @endif">
                         <i class="text-sm fa
                             @if($activity['type'] === 'challenge_completion') fa-flag-checkered
-                            @elseif($activity['type'] === 'badge_award') fa-award
                             @elseif($activity['type'] === 'new_challenge') fa-plus-circle
                             @elseif($activity['type'] === 'appreciation') fa-heart
                             @else fa-info-circle @endif"></i>

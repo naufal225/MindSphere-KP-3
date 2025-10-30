@@ -17,7 +17,6 @@
     </div>
 </div>
 
-
 @if(session('success'))
 <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
     {{ session('success') }}
@@ -47,7 +46,7 @@
 <!-- Search & Filter -->
 <div class="p-6 mb-6 bg-white rounded-lg shadow-sm border border-gray-100">
     <form method="GET" action="{{ route('admin.challenges.index') }}">
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-5">
             <!-- Search Input -->
             <div>
                 <label for="search" class="block mb-2 text-sm font-medium text-gray-700">
@@ -74,6 +73,18 @@
                 </select>
             </div>
 
+            <!-- Type Filter -->
+            <div>
+                <label for="type" class="block mb-2 text-sm font-medium text-gray-700">
+                    <i class="mr-1 fa-solid fa-users"></i> Tipe Tantangan
+                </label>
+                <select name="type" id="type"
+                    class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">Semua Tipe</option>
+                    <option value="self" {{ request('type') == 'self' ? 'selected' : '' }}>Mandiri</option>
+                    <option value="assigned" {{ request('type') == 'assigned' ? 'selected' : '' }}>Ditugaskan</option>
+                </select>
+            </div>
 
             <!-- Status Filter -->
             <div>
@@ -83,9 +94,9 @@
                 <select name="status" id="status"
                     class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Semua Status</option>
-                    <option value="active" {{ request('status')=='active' ? 'selected' : '' }}>Aktif</option>
-                    <option value="upcoming" {{ request('status')=='upcoming' ? 'selected' : '' }}>Akan Datang</option>
-                    <option value="ended" {{ request('status')=='ended' ? 'selected' : '' }}>Berakhir</option>
+                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Aktif</option>
+                    <option value="upcoming" {{ request('status') == 'upcoming' ? 'selected' : '' }}>Akan Datang</option>
+                    <option value="ended" {{ request('status') == 'ended' ? 'selected' : '' }}>Berakhir</option>
                 </select>
             </div>
 
@@ -105,7 +116,7 @@
 </div>
 
 <!-- Stats Cards -->
-<div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-4">
+<div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-6">
     <div class="p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
         <div class="flex items-center">
             <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg">
@@ -121,11 +132,11 @@
     <div class="p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
         <div class="flex items-center">
             <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
-                <i class="text-xl text-green-600 fa-solid fa-play-circle"></i>
+                <i class="text-xl text-green-600 fa-solid fa-user"></i>
             </div>
             <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Tantangan Aktif</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $stats['active'] }}</p>
+                <p class="text-sm font-medium text-gray-600">Mandiri</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['self'] }}</p>
             </div>
         </div>
     </div>
@@ -133,7 +144,31 @@
     <div class="p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
         <div class="flex items-center">
             <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg">
-                <i class="text-xl text-purple-600 fa-solid fa-clock"></i>
+                <i class="text-xl text-purple-600 fa-solid fa-user-check"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Ditugaskan</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['assigned'] }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
+        <div class="flex items-center">
+            <div class="flex items-center justify-center w-12 h-12 bg-emerald-100 rounded-lg">
+                <i class="text-xl text-emerald-600 fa-solid fa-play-circle"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Aktif</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['active'] }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
+        <div class="flex items-center">
+            <div class="flex items-center justify-center w-12 h-12 bg-cyan-100 rounded-lg">
+                <i class="text-xl text-cyan-600 fa-solid fa-clock"></i>
             </div>
             <div class="ml-4">
                 <p class="text-sm font-medium text-gray-600">Akan Datang</p>
@@ -144,12 +179,12 @@
 
     <div class="p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
         <div class="flex items-center">
-            <div class="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-lg">
-                <i class="text-xl text-orange-600 fa-solid fa-users"></i>
+            <div class="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-lg">
+                <i class="text-xl text-gray-600 fa-solid fa-check-circle"></i>
             </div>
             <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Total Partisipan</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $stats['total_participants'] }}</p>
+                <p class="text-sm font-medium text-gray-600">Berakhir</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['ended'] }}</p>
             </div>
         </div>
     </div>
@@ -168,11 +203,10 @@
                 <span class="text-sm text-gray-500">Urutkan:</span>
                 <select name="sort_field" onchange="this.form.submit()"
                     class="text-sm border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500">
-                    <option value="created_at" {{ request('sort_field', 'created_at' )=='created_at' ? 'selected' : ''
-                        }}>Terbaru</option>
+                    <option value="created_at" {{ request('sort_field', 'created_at' )=='created_at' ? 'selected' : '' }}>Terbaru</option>
                     <option value="title" {{ request('sort_field')=='title' ? 'selected' : '' }}>Judul A-Z</option>
-                    <option value="start_date" {{ request('sort_field')=='start_date' ? 'selected' : '' }}>Tanggal Mulai
-                    </option>
+                    <option value="start_date" {{ request('sort_field')=='start_date' ? 'selected' : '' }}>Tanggal Mulai</option>
+                    <option value="end_date" {{ request('sort_field')=='end_date' ? 'selected' : '' }}>Tanggal Berakhir</option>
                 </select>
             </div>
         </div>
@@ -182,28 +216,25 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col"
-                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                    <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                         <i class="mr-1 fa-solid fa-heading"></i> Judul Tantangan
                     </th>
-                    <th scope="col"
-                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                        <i class="mr-1 fa-solid fa-tags"></i> Kategori
+                    <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                        <i class="mr-1 fa-solid fa-tags"></i> Kategori & Tipe
                     </th>
-                    <th scope="col"
-                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                        <i class="mr-1 fa-solid fa-calendar"></i> Periode
+                    <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                        <i class="mr-1 fa-solid fa-calendar"></i> Periode & Status
                     </th>
-                    <th scope="col"
-                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                    <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                         <i class="mr-1 fa-solid fa-star"></i> XP Reward
                     </th>
-                    <th scope="col"
-                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                    <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                         <i class="mr-1 fa-solid fa-users"></i> Partisipan
                     </th>
-                    <th scope="col"
-                        class="px-6 py-3 text-xs font-medium tracking-wider text-center text-gray-500 uppercase">
+                    <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                        <i class="mr-1 fa-solid fa-user"></i> Dibuat Oleh
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-center text-gray-500 uppercase">
                         <i class="mr-1 fa-solid fa-gear"></i> Aksi
                     </th>
                 </tr>
@@ -218,46 +249,56 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex flex-col space-y-1">
                             @if($challenge->category)
-                            <span
-                                class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">
+                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">
                                 <i class="mr-1 fa-solid fa-tag"></i>
                                 {{ $challenge->category->name }}
                             </span>
                             @endif
-                            <span
-                                class="inline-flex items-center px-2 py-1 text-xs font-medium text-purple-700 bg-purple-100 rounded-full">
-                                <i class="mr-1 fa-solid fa-users"></i>
-                                {{ ucfirst($challenge->type->value) }}
+                            @php
+                                $typeColors = [
+                                    'self' => 'bg-green-100 text-green-800',
+                                    'assigned' => 'bg-purple-100 text-purple-800'
+                                ];
+                                $typeIcons = [
+                                    'self' => 'fa-user',
+                                    'assigned' => 'fa-user-check'
+                                ];
+                            @endphp
+                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $typeColors[$challenge->type->value] }}">
+                                <i class="mr-1 fa-solid {{ $typeIcons[$challenge->type->value] }}"></i>
+                                {{ $challenge->type->value == 'self' ? 'Mandiri' : 'Ditugaskan' }}
                             </span>
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm text-gray-900">
+                            <i class="mr-1 fa-solid fa-play text-green-500"></i>
                             {{ $challenge->start_date->format('d M Y') }}
                         </div>
                         <div class="text-sm text-gray-500">
-                            s/d {{ $challenge->end_date->format('d M Y') }}
+                            <i class="mr-1 fa-solid fa-flag-checkered text-red-500"></i>
+                            {{ $challenge->end_date->format('d M Y') }}
                         </div>
                         @php
                         $now = now();
                         $statusColor = '';
+                        $statusIcon = '';
                         if ($now->between($challenge->start_date, $challenge->end_date)) {
-                        $statusColor = 'bg-green-100 text-green-800';
+                            $statusColor = 'bg-emerald-100 text-emerald-800';
+                            $statusIcon = 'fa-play-circle';
+                            $statusText = 'Aktif';
                         } elseif ($now->lt($challenge->start_date)) {
-                        $statusColor = 'bg-blue-100 text-blue-800';
+                            $statusColor = 'bg-cyan-100 text-cyan-800';
+                            $statusIcon = 'fa-clock';
+                            $statusText = 'Akan Datang';
                         } else {
-                        $statusColor = 'bg-gray-100 text-gray-800';
+                            $statusColor = 'bg-gray-100 text-gray-800';
+                            $statusIcon = 'fa-check-circle';
+                            $statusText = 'Berakhir';
                         }
                         @endphp
-                        <span
-                            class="inline-flex items-center px-2 py-1 mt-1 text-xs font-medium rounded-full {{ $statusColor }}">
-                            @if($now->between($challenge->start_date, $challenge->end_date))
-                            <i class="mr-1 fa-solid fa-play-circle"></i> Aktif
-                            @elseif($now->lt($challenge->start_date))
-                            <i class="mr-1 fa-solid fa-clock"></i> Akan Datang
-                            @else
-                            <i class="mr-1 fa-solid fa-check-circle"></i> Berakhir
-                            @endif
+                        <span class="inline-flex items-center px-2 py-1 mt-1 text-xs font-medium rounded-full {{ $statusColor }}">
+                            <i class="mr-1 fa-solid {{ $statusIcon }}"></i> {{ $statusText }}
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -269,6 +310,22 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm font-medium text-gray-900">{{ $challenge->participants_count ?? 0 }}</div>
                         <div class="text-xs text-gray-500">Partisipan</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        @if($challenge->createdBy)
+                        <div class="flex items-center">
+                            @if($challenge->createdBy->avatar_url)
+                            <img class="w-6 h-6 rounded-full" src="{{ $challenge->createdBy->avatar_url }}" alt="{{ $challenge->createdBy->name }}">
+                            @else
+                            <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                                {{ substr($challenge->createdBy->name, 0, 1) }}
+                            </div>
+                            @endif
+                            <span class="ml-2 text-sm text-gray-900">{{ $challenge->createdBy->name }}</span>
+                        </div>
+                        @else
+                        <span class="text-sm text-gray-500">-</span>
+                        @endif
                     </td>
                     <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
                         <div class="flex items-center justify-center space-x-2">
@@ -298,7 +355,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-8 text-center">
+                    <td colspan="7" class="px-6 py-8 text-center">
                         <div class="flex flex-col items-center justify-center text-gray-400">
                             <i class="mb-3 text-4xl fa-solid fa-flag"></i>
                             <p class="text-lg font-medium text-gray-600">Tidak ada data tantangan</p>
@@ -318,5 +375,4 @@
     {{ $challenges->withQueryString()->links() }}
 </div>
 @endif
-
 @endsection

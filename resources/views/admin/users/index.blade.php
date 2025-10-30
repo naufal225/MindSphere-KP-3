@@ -98,7 +98,7 @@
             </div>
 
             <!-- Status Filter -->
-            <div>
+            {{-- <div>
                 <label for="status" class="block mb-2 text-sm font-medium text-gray-700">
                     <i class="mr-1 fa-solid fa-circle-check"></i> Status
                 </label>
@@ -112,7 +112,7 @@
                         <i class="fa-solid fa-circle-pause text-gray-500"></i> Non-Aktif
                     </option>
                 </select>
-            </div>
+            </div> --}}
 
             <!-- Action Buttons -->
             <div class="flex items-end space-x-3">

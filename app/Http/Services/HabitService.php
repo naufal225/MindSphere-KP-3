@@ -16,7 +16,7 @@ class HabitService
     public function getAll(Request $request, int $perPage = 10): LengthAwarePaginator
     {
         try {
-            $query = Habit::with(['category', 'assignedBy'])->withCount('logs');
+            $query = Habit::with(['category', 'assignedBy', 'createdBy'])->withCount('logs');
 
             // Search
             if ($request->filled('search')) {
@@ -42,12 +42,29 @@ class HabitService
                 $query->where('period', $request->period);
             }
 
+            // Filter by status (active/upcoming/ended)
+            if ($request->filled('status')) {
+                $now = now();
+                switch ($request->status) {
+                    case 'active':
+                        $query->where('start_date', '<=', $now)
+                            ->where('end_date', '>=', $now);
+                        break;
+                    case 'upcoming':
+                        $query->where('start_date', '>', $now);
+                        break;
+                    case 'ended':
+                        $query->where('end_date', '<', $now);
+                        break;
+                }
+            }
+
             // Sort
             $sortField = $request->get('sort_field', 'created_at');
             $sortDirection = $request->get('sort_direction', 'desc');
 
             // Validasi field yang boleh di-sort
-            $allowedSortFields = ['title', 'type', 'period', 'created_at'];
+            $allowedSortFields = ['title', 'type', 'period', 'start_date', 'end_date', 'created_at'];
             if (!in_array($sortField, $allowedSortFields)) {
                 $sortField = 'created_at';
             }
@@ -62,12 +79,19 @@ class HabitService
 
     public function getHabitStats(): array
     {
+        $now = now();
+
         return [
             'total' => Habit::count(),
             'self' => Habit::where('type', 'self')->count(),
             'assigned' => Habit::where('type', 'assigned')->count(),
             'daily' => Habit::where('period', 'daily')->count(),
             'weekly' => Habit::where('period', 'weekly')->count(),
+            'active' => Habit::where('start_date', '<=', $now)
+                ->where('end_date', '>=', $now)
+                ->count(),
+            'upcoming' => Habit::where('start_date', '>', $now)->count(),
+            'ended' => Habit::where('end_date', '<', $now)->count(),
             'total_logs' => \App\Models\HabitLog::count(),
         ];
     }
@@ -78,6 +102,7 @@ class HabitService
             $habit = Habit::with([
                 'category',
                 'assignedBy',
+                'createdBy',
                 'logs.user'
             ])->findOrFail($id);
 
@@ -98,7 +123,7 @@ class HabitService
             $data['assigned_by'] = $data['assigned_by'] ?? Auth::id();
             $data['created_by'] = Auth::id();
             $data['updated_by'] = Auth::id();
-            $data['type'] = HabitType::ASSIGNED;
+            $data['type'] = HabitType::ASSIGNED; // Otomatis assigned karena dibuat admin
             return Habit::create($data);
         } catch (Exception $e) {
             throw new Exception('Gagal membuat kebiasaan: ' . $e->getMessage());

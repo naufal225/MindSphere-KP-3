@@ -60,6 +60,12 @@ class ChallengeService
 
             $query->withCount('participants');
 
+            // Validasi field yang boleh di-sort
+            $allowedSortFields = ['title', 'start_date', 'end_date', 'created_at'];
+            if (!in_array($sortField, $allowedSortFields)) {
+                $sortField = 'created_at';
+            }
+
             $query->orderBy($sortField, $sortDirection);
 
             return $query->paginate($perPage);
@@ -78,6 +84,9 @@ class ChallengeService
                 ->where('end_date', '>=', $now)
                 ->count(),
             'upcoming' => Challenge::where('start_date', '>', $now)->count(),
+            'ended' => Challenge::where('end_date', '<', $now)->count(),
+            'self' => Challenge::where('type', 'self')->count(),
+            'assigned' => Challenge::where('type', 'assigned')->count(),
             'total_participants' => ChallengeParticipant::count(),
         ];
     }

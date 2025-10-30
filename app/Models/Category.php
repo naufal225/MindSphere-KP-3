@@ -29,11 +29,6 @@ class Category extends Model
         return $this->hasMany(Reflection::class);
     }
 
-    public function badges()
-    {
-        return $this->hasMany(Badge::class);
-    }
-
     public function getHabitsCountAttribute()
     {
         return $this->habits()->count();
@@ -49,13 +44,4 @@ class Category extends Model
         return $this->reflections()->count();
     }
 
-    public function getBadgesCountAttribute()
-    {
-        return $this->badges()->count();
-    }
-
-    public function posts()
-    {
-        return $this->hasMany(ForumPost::class);
-    }
 }

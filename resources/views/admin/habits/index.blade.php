@@ -17,15 +17,40 @@
     </div>
 </div>
 
-@if(session('success'))
-<div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
-    {{ session('success') }}
+@if(session('error'))
+<div class="p-4 border border-red-300 rounded-lg bg-red-50">
+    <div class="flex items-center">
+        <div class="flex-shrink-0">
+            <i class="text-red-400 fas fa-exclamation-circle"></i>
+        </div>
+        <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-800">
+                Terjadi Kesalahan
+            </h3>
+            <div class="mt-2 text-sm text-red-700">
+                <p>{{ session('error') }}</p>
+            </div>
+        </div>
+    </div>
 </div>
 @endif
 
-@if(session('error'))
-<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-    {{ session('error') }}
+<!-- Success Messages -->
+@if(session('success'))
+<div class="p-4 border border-green-300 rounded-lg bg-green-50">
+    <div class="flex items-center">
+        <div class="flex-shrink-0">
+            <i class="text-green-400 fas fa-check-circle"></i>
+        </div>
+        <div class="ml-3">
+            <h3 class="text-sm font-medium text-green-800">
+                Sukses
+            </h3>
+            <div class="mt-2 text-sm text-green-700">
+                <p>{{ session('success') }}</p>
+            </div>
+        </div>
+    </div>
 </div>
 @endif
 
@@ -42,7 +67,7 @@
 <!-- Search & Filter -->
 <div class="p-6 mb-6 bg-white rounded-lg shadow-sm border border-gray-100">
     <form method="GET" action="{{ route('admin.habits.index') }}">
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-5">
             <!-- Search Input -->
             <div>
                 <label for="search" class="block mb-2 text-sm font-medium text-gray-700">
@@ -62,14 +87,25 @@
                     class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Semua Kategori</option>
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
+                    <option value="{{ $category->id }}" {{ request('category_id')==$category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
                     @endforeach
                 </select>
             </div>
 
-
+            <!-- Type Filter -->
+            <div>
+                <label for="type" class="block mb-2 text-sm font-medium text-gray-700">
+                    <i class="mr-1 fa-solid fa-users"></i> Tipe Kebiasaan
+                </label>
+                <select name="type" id="type"
+                    class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">Semua Tipe</option>
+                    <option value="self" {{ request('type')=='self' ? 'selected' : '' }}>Mandiri</option>
+                    <option value="assigned" {{ request('type')=='assigned' ? 'selected' : '' }}>Ditugaskan</option>
+                </select>
+            </div>
 
             <!-- Period Filter -->
             <div>
@@ -79,8 +115,22 @@
                 <select name="period" id="period"
                     class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Semua Periode</option>
-                    <option value="daily" {{ request('period') == 'daily' ? 'selected' : '' }}>Harian</option>
-                    <option value="weekly" {{ request('period') == 'weekly' ? 'selected' : '' }}>Mingguan</option>
+                    <option value="daily" {{ request('period')=='daily' ? 'selected' : '' }}>Harian</option>
+                    <option value="weekly" {{ request('period')=='weekly' ? 'selected' : '' }}>Mingguan</option>
+                </select>
+            </div>
+
+            <!-- Status Filter -->
+            <div>
+                <label for="status" class="block mb-2 text-sm font-medium text-gray-700">
+                    <i class="mr-1 fa-solid fa-clock"></i> Status
+                </label>
+                <select name="status" id="status"
+                    class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">Semua Status</option>
+                    <option value="active" {{ request('status')=='active' ? 'selected' : '' }}>Aktif</option>
+                    <option value="upcoming" {{ request('status')=='upcoming' ? 'selected' : '' }}>Akan Datang</option>
+                    <option value="ended" {{ request('status')=='ended' ? 'selected' : '' }}>Berakhir</option>
                 </select>
             </div>
 
@@ -100,14 +150,14 @@
 </div>
 
 <!-- Stats Cards -->
-<div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-5">
+<div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-8">
     <div class="p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
         <div class="flex items-center">
             <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg">
                 <i class="text-xl text-blue-600 fa-solid fa-repeat"></i>
             </div>
             <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Total Kebiasaan</p>
+                <p class="text-sm font-medium text-gray-600">Total</p>
                 <p class="text-2xl font-bold text-gray-900">{{ $stats['total'] }}</p>
             </div>
         </div>
@@ -160,6 +210,42 @@
             </div>
         </div>
     </div>
+
+    <div class="p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
+        <div class="flex items-center">
+            <div class="flex items-center justify-center w-12 h-12 bg-emerald-100 rounded-lg">
+                <i class="text-xl text-emerald-600 fa-solid fa-play-circle"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Aktif</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['active'] }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
+        <div class="flex items-center">
+            <div class="flex items-center justify-center w-12 h-12 bg-cyan-100 rounded-lg">
+                <i class="text-xl text-cyan-600 fa-solid fa-clock"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Akan Datang</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['upcoming'] }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
+        <div class="flex items-center">
+            <div class="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-lg">
+                <i class="text-xl text-gray-600 fa-solid fa-check-circle"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Berakhir</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['ended'] }}</p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Habits Table -->
@@ -168,15 +254,21 @@
         <div class="flex items-center justify-between">
             <div>
                 <h3 class="text-lg font-semibold text-gray-800">Daftar Kebiasaan</h3>
-                <p class="text-sm text-gray-600">Menampilkan {{ $habits->count() }} dari {{ $habits->total() }} kebiasaan</p>
+                <p class="text-sm text-gray-600">Menampilkan {{ $habits->count() }} dari {{ $habits->total() }}
+                    kebiasaan</p>
             </div>
             <div class="flex items-center space-x-2">
                 <span class="text-sm text-gray-500">Urutkan:</span>
                 <select name="sort_field" onchange="this.form.submit()"
                     class="text-sm border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500">
-                    <option value="created_at" {{ request('sort_field', 'created_at') == 'created_at' ? 'selected' : '' }}>Terbaru</option>
-                    <option value="title" {{ request('sort_field') == 'title' ? 'selected' : '' }}>Judul A-Z</option>
-                    <option value="period" {{ request('sort_field') == 'period' ? 'selected' : '' }}>Periode</option>
+                    <option value="created_at" {{ request('sort_field', 'created_at' )=='created_at' ? 'selected' : ''
+                        }}>Terbaru</option>
+                    <option value="title" {{ request('sort_field')=='title' ? 'selected' : '' }}>Judul A-Z</option>
+                    <option value="period" {{ request('sort_field')=='period' ? 'selected' : '' }}>Periode</option>
+                    <option value="start_date" {{ request('sort_field')=='start_date' ? 'selected' : '' }}>Tanggal Mulai
+                    </option>
+                    <option value="end_date" {{ request('sort_field')=='end_date' ? 'selected' : '' }}>Tanggal Berakhir
+                    </option>
                 </select>
             </div>
         </div>
@@ -186,22 +278,32 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                    <th scope="col"
+                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                         <i class="mr-1 fa-solid fa-heading"></i> Judul Kebiasaan
                     </th>
-                    <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                        <i class="mr-1 fa-solid fa-tags"></i> Kategori 
+                    <th scope="col"
+                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                        <i class="mr-1 fa-solid fa-tags"></i> Kategori & Tipe
                     </th>
-                    <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                        <i class="mr-1 fa-solid fa-calendar"></i> Periode
+                    <th scope="col"
+                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                        <i class="mr-1 fa-solid fa-calendar"></i> Periode & Status
                     </th>
-                    <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                        <i class="mr-1 fa-solid fa-user"></i> Ditugaskan Oleh
+                    <th scope="col"
+                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                        <i class="mr-1 fa-solid fa-star"></i> XP Reward
                     </th>
-                    <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                        <i class="mr-1 fa-solid fa-chart-line"></i> Aktivitas
+                    <th scope="col"
+                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                        <i class="mr-1 fa-solid fa-users"></i> Partisipan
                     </th>
-                    <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-center text-gray-500 uppercase">
+                    <th scope="col"
+                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                        <i class="mr-1 fa-solid fa-user"></i> Dibuat Oleh
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-xs font-medium tracking-wider text-center text-gray-500 uppercase">
                         <i class="mr-1 fa-solid fa-gear"></i> Aksi
                     </th>
                 </tr>
@@ -216,62 +318,112 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex flex-col space-y-1">
                             @if($habit->category)
-                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">
+                            <span
+                                class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">
                                 <i class="mr-1 fa-solid fa-tag"></i>
                                 {{ $habit->category->name }}
                             </span>
                             @endif
                             @php
-                                $typeColors = [
-                                    'self' => 'bg-green-100 text-green-800',
-                                    'assigned' => 'bg-purple-100 text-purple-800'
-                                ];
-                                $typeIcons = [
-                                    'self' => 'fa-user',
-                                    'assigned' => 'fa-user-check'
-                                ];
+                            $typeColors = [
+                            'self' => 'bg-green-100 text-green-800',
+                            'assigned' => 'bg-purple-100 text-purple-800'
+                            ];
+                            $typeIcons = [
+                            'self' => 'fa-user',
+                            'assigned' => 'fa-user-check'
+                            ];
                             @endphp
-                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $typeColors[$habit->type->value] }}">
+                            <span
+                                class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $typeColors[$habit->type->value] }}">
                                 <i class="mr-1 fa-solid {{ $typeIcons[$habit->type->value] }}"></i>
                                 {{ $habit->type->value == 'self' ? 'Mandiri' : 'Ditugaskan' }}
                             </span>
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        @php
+                        <div class="flex flex-col space-y-2">
+                            <!-- Period Badge -->
+                            @php
                             $periodColors = [
-                                'daily' => 'bg-orange-100 text-orange-800',
-                                'weekly' => 'bg-indigo-100 text-indigo-800'
+                            'daily' => 'bg-orange-100 text-orange-800',
+                            'weekly' => 'bg-indigo-100 text-indigo-800'
                             ];
                             $periodIcons = [
-                                'daily' => 'fa-calendar-day',
-                                'weekly' => 'fa-calendar-week'
+                            'daily' => 'fa-calendar-day',
+                            'weekly' => 'fa-calendar-week'
                             ];
-                        @endphp
-                        <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $periodColors[$habit->period->value] }}">
-                            <i class="mr-1 fa-solid {{ $periodIcons[$habit->period->value] }}"></i>
-                            {{ $habit->period->value == 'daily' ? 'Harian' : 'Mingguan' }}
-                        </span>
+                            @endphp
+                            <span
+                                class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $periodColors[$habit->period->value] }}">
+                                <i class="mr-1 fa-solid {{ $periodIcons[$habit->period->value] }}"></i>
+                                {{ $habit->period->value == 'daily' ? 'Harian' : 'Mingguan' }}
+                            </span>
+
+                            <!-- Date Range -->
+                            <div class="text-xs text-gray-600">
+                                <div class="flex items-center">
+                                    <i class="mr-1 fa-solid fa-play text-green-500"></i>
+                                    {{ $habit->start_date->format('d M Y') }}
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="mr-1 fa-solid fa-flag-checkered text-red-500"></i>
+                                    {{ $habit->end_date->format('d M Y') }}
+                                </div>
+                            </div>
+
+                            <!-- Status Badge -->
+                            @php
+                            $now = now();
+                            $statusColor = '';
+                            $statusIcon = '';
+                            if ($now->between($habit->start_date, $habit->end_date)) {
+                            $statusColor = 'bg-emerald-100 text-emerald-800';
+                            $statusIcon = 'fa-play-circle';
+                            $statusText = 'Aktif';
+                            } elseif ($now->lt($habit->start_date)) {
+                            $statusColor = 'bg-cyan-100 text-cyan-800';
+                            $statusIcon = 'fa-clock';
+                            $statusText = 'Akan Datang';
+                            } else {
+                            $statusColor = 'bg-gray-100 text-gray-800';
+                            $statusIcon = 'fa-check-circle';
+                            $statusText = 'Berakhir';
+                            }
+                            @endphp
+                            <span
+                                class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $statusColor }}">
+                                <i class="mr-1 fa-solid {{ $statusIcon }}"></i> {{ $statusText }}
+                            </span>
+                        </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        @if($habit->assignedBy)
-                        <div class="flex items-center">
-                            @if($habit->assignedBy->avatar_url)
-                            <img class="w-6 h-6 rounded-full" src="{{ $habit->assignedBy->avatar_url }}" alt="{{ $habit->assignedBy->name }}">
-                            @else
-                            <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                                {{ substr($habit->assignedBy->name, 0, 1) }}
-                            </div>
-                            @endif
-                            <span class="ml-2 text-sm text-gray-900">{{ $habit->assignedBy->name }}</span>
+                        <div class="flex items-center text-sm font-bold text-yellow-600">
+                            <i class="mr-1 fa-solid fa-star"></i>
+                            {{ number_format($habit->xp_reward) }} XP
                         </div>
-                        @else
-                        <span class="text-sm text-gray-500">-</span>
-                        @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm font-medium text-gray-900">{{ $habit->logs_count ?? 0 }}</div>
                         <div class="text-xs text-gray-500">Total Log</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        @if($habit->createdBy)
+                        <div class="flex items-center">
+                            @if($habit->createdBy->avatar_url)
+                            <img class="w-6 h-6 rounded-full" src="{{ $habit->createdBy->avatar_url }}"
+                                alt="{{ $habit->createdBy->name }}">
+                            @else
+                            <div
+                                class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                                {{ substr($habit->createdBy->name, 0, 1) }}
+                            </div>
+                            @endif
+                            <span class="ml-2 text-sm text-gray-900">{{ $habit->createdBy->name }}</span>
+                        </div>
+                        @else
+                        <span class="text-sm text-gray-500">-</span>
+                        @endif
                     </td>
                     <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
                         <div class="flex items-center justify-center space-x-2">
@@ -300,7 +452,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-8 text-center">
+                    <td colspan="7" class="px-6 py-8 text-center">
                         <div class="flex flex-col items-center justify-center text-gray-400">
                             <i class="mb-3 text-4xl fa-solid fa-repeat"></i>
                             <p class="text-lg font-medium text-gray-600">Tidak ada data kebiasaan</p>

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\BadgeController;
 use App\Http\Controllers\Admin\ChallengeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
@@ -25,14 +24,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Routes untuk menampilkan detail konten berdasarkan kategori
     Route::get('/categories/{category}/habits', [CategoryController::class, 'showHabits'])->name('categories.habits');
     Route::get('/categories/{category}/challenges', [CategoryController::class, 'showChallenges'])->name('categories.challenges');
-    Route::get('/categories/{category}/badges', [CategoryController::class, 'showBadges'])->name('categories.badges');
     Route::get('/categories/{category}/reflections', [CategoryController::class, 'showReflections'])->name('categories.reflections');
 
     Route::resource('challenges', ChallengeController::class);
 
     Route::resource('habits', HabitController::class);
-
-    Route::resource('badges', BadgeController::class);
 
     Route::prefix('user-progress')->name('user-progress.')->group(function () {
         Route::get('/', [UserProgressController::class, 'index'])->name('index');

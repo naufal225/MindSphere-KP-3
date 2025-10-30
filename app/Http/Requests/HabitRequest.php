@@ -17,10 +17,11 @@ class HabitRequest extends FormRequest
         return [
             'title'        => 'required|string|max:255',
             'description'  => 'required|string',
-            // 'type'         => ['required', Rule::in(['self', 'assigned'])],
-            'assigned_by'  => $this->isTypeAssigned() ? 'required|exists:users,id' : 'nullable|exists:users,id',
             'category_id'  => 'required|exists:categories,id',
             'period'       => ['required', Rule::in(['daily', 'weekly'])],
+            'xp_reward'    => 'required|integer|min:1|max:10000',
+            'start_date'   => 'required|date|after_or_equal:today',
+            'end_date'     => 'required|date|after_or_equal:start_date',
         ];
     }
 
@@ -34,23 +35,25 @@ class HabitRequest extends FormRequest
             'description.required' => 'Deskripsi kebiasaan wajib diisi.',
             'description.string'   => 'Deskripsi kebiasaan harus berupa teks.',
 
-            // 'type.required'        => 'Jenis kebiasaan wajib dipilih.',
-            // 'type.in'              => 'Jenis kebiasaan tidak valid. Pilih antara "self" atau "assigned".',
-
-            'assigned_by.required' => 'Pengguna yang menugaskan wajib diisi untuk kebiasaan bertipe "assigned".',
-            'assigned_by.exists'   => 'Pengguna yang menugaskan tidak ditemukan.',
-
             'category_id.required' => 'Kategori kebiasaan wajib dipilih.',
             'category_id.exists'   => 'Kategori yang dipilih tidak ditemukan.',
 
             'period.required'      => 'Periode kebiasaan wajib dipilih.',
             'period.in'            => 'Periode kebiasaan tidak valid. Pilih antara "daily" atau "weekly".',
+
+            'xp_reward.required'   => 'XP reward wajib diisi.',
+            'xp_reward.integer'    => 'XP reward harus berupa angka.',
+            'xp_reward.min'        => 'XP reward minimal 1.',
+            'xp_reward.max'        => 'XP reward maksimal 10000.',
+
+            'start_date.required'  => 'Tanggal mulai wajib diisi.',
+            'start_date.date'      => 'Format tanggal mulai tidak valid.',
+            'start_date.after_or_equal' => 'Tanggal mulai tidak boleh kurang dari hari ini.',
+
+            'end_date.required'    => 'Tanggal berakhir wajib diisi.',
+            'end_date.date'        => 'Format tanggal berakhir tidak valid.',
+            'end_date.after_or_equal'  => 'Tanggal berakhir tidak boleh kurang dari tanggal mulai.',
         ];
     }
 
-    private function isTypeAssigned(): bool
-    {
-        $type = $this->input('type');
-        return $type === 'assigned';
-    }
 }

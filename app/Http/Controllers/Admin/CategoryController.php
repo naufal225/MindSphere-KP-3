@@ -102,12 +102,6 @@ class CategoryController extends Controller
         return view('admin.categories.challenges', compact('category', 'challenges'));
     }
 
-    public function showBadges(Category $category)
-    {
-        $badges = $category->badges()->orderBy('created_at', 'desc')->paginate(20);
-        return view('admin.categories.badges', compact('category', 'badges'));
-    }
-
     public function showReflections(Category $category)
     {
         $reflections = $category->reflections()->orderBy('created_at', 'desc')->paginate(20);

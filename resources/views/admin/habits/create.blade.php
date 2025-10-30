@@ -6,6 +6,44 @@
 @section('content')
 <div class="max-w-4xl mx-auto">
     <!-- Header Section -->
+
+    @if(session('error'))
+    <div class="p-4 border border-red-300 rounded-lg bg-red-50">
+        <div class="flex items-center">
+            <div class="flex-shrink-0">
+                <i class="text-red-400 fas fa-exclamation-circle"></i>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-sm font-medium text-red-800">
+                    Terjadi Kesalahan
+                </h3>
+                <div class="mt-2 text-sm text-red-700">
+                    <p>{{ session('error') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Success Messages -->
+    @if(session('success'))
+    <div class="p-4 border border-green-300 rounded-lg bg-green-50">
+        <div class="flex items-center">
+            <div class="flex-shrink-0">
+                <i class="text-green-400 fas fa-check-circle"></i>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-sm font-medium text-green-800">
+                    Sukses
+                </h3>
+                <div class="mt-2 text-sm text-green-700">
+                    <p>{{ session('success') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <div class="mb-6">
         <div class="flex items-center space-x-3">
             <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg">
@@ -78,9 +116,10 @@
                                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('category_id') border-red-500 @enderror">
                                 <option value="">Pilih Kategori</option>
                                 @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
+                                <option value="{{ $category->id }}" {{ old('category_id')==$category->id ? 'selected' :
+                                    '' }}>
+                                    {{ $category->name }}
+                                </option>
                                 @endforeach
                             </select>
                             @error('category_id')
@@ -90,33 +129,6 @@
                             @enderror
                         </div>
 
-                        {{-- <!-- Tipe Kebiasaan -->
-                        <div>
-                            <label for="type" class="block mb-2 text-sm font-medium text-gray-700">
-                                <i class="mr-1 fa-solid fa-user"></i> Tipe Kebiasaan
-                            </label>
-                            <select name="type" id="type" required
-                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('type') border-red-500 @enderror">
-                                <option value="">Pilih Tipe</option>
-                                <option value="self" {{ old('type') == 'self' ? 'selected' : '' }}>Mandiri</option>
-                                <option value="assigned" {{ old('type') == 'assigned' ? 'selected' : '' }}>Ditugaskan</option>
-                            </select>
-                            @error('type')
-                            <p class="mt-2 text-sm text-red-600">
-                                <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
-                            </p>
-                            @enderror
-                        </div> --}}
-                    </div>
-                </div>
-
-                <!-- Pengaturan Tambahan -->
-                <div>
-                    <div class="flex items-center mb-4">
-                        <i class="mr-2 text-yellow-500 fa-solid fa-cog"></i>
-                        <h3 class="text-lg font-semibold text-gray-800">Pengaturan Tambahan</h3>
-                    </div>
-                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <!-- Periode -->
                         <div>
                             <label for="period" class="block mb-2 text-sm font-medium text-gray-700">
@@ -125,8 +137,8 @@
                             <select name="period" id="period" required
                                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('period') border-red-500 @enderror">
                                 <option value="">Pilih Periode</option>
-                                <option value="daily" {{ old('period') == 'daily' ? 'selected' : '' }}>Harian</option>
-                                <option value="weekly" {{ old('period') == 'weekly' ? 'selected' : '' }}>Mingguan</option>
+                                <option value="daily" {{ old('period')=='daily' ? 'selected' : '' }}>Harian</option>
+                                <option value="weekly" {{ old('period')=='weekly' ? 'selected' : '' }}>Mingguan</option>
                             </select>
                             @error('period')
                             <p class="mt-2 text-sm text-red-600">
@@ -134,16 +146,84 @@
                             </p>
                             @enderror
                         </div>
+                    </div>
+                </div>
 
-                        <!-- Ditugaskan Oleh (Conditional) -->
-                        <div id="assigned_by_field" class="hidden">
+                <!-- Reward & Periode -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="mr-2 text-yellow-500 fa-solid fa-gift"></i>
+                        <h3 class="text-lg font-semibold text-gray-800">Reward & Periode Waktu</h3>
+                    </div>
+                    <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+                        <!-- XP Reward -->
+                        <div>
+                            <label for="xp_reward" class="block mb-2 text-sm font-medium text-gray-700">
+                                <i class="mr-1 fa-solid fa-star"></i> XP Reward
+                            </label>
+                            <input type="number" name="xp_reward" id="xp_reward" value="{{ old('xp_reward', 10) }}"
+                                required min="1" max="10000" placeholder="Jumlah XP"
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('xp_reward') border-red-500 @enderror">
+                            @error('xp_reward')
+                            <p class="mt-2 text-sm text-red-600">
+                                <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
+                            </p>
+                            @enderror
+                        </div>
+
+                        <!-- Tanggal Mulai -->
+                        <div>
+                            <label for="start_date" class="block mb-2 text-sm font-medium text-gray-700">
+                                <i class="mr-1 fa-solid fa-calendar-plus"></i> Tanggal Mulai
+                            </label>
+                            <input type="date" name="start_date" id="start_date" value="{{ old('start_date') }}"
+                                required
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('start_date') border-red-500 @enderror">
+                            @error('start_date')
+                            <p class="mt-2 text-sm text-red-600">
+                                <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
+                            </p>
+                            @enderror
+                        </div>
+
+                        <!-- Tanggal Berakhir -->
+                        <div>
+                            <label for="end_date" class="block mb-2 text-sm font-medium text-gray-700">
+                                <i class="mr-1 fa-solid fa-calendar-check"></i> Tanggal Berakhir
+                            </label>
+                            <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}" required
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('end_date') border-red-500 @enderror">
+                            @error('end_date')
+                            <p class="mt-2 text-sm text-red-600">
+                                <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
+                            </p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Penugasan -->
+                {{-- <div>
+                    <div class="flex items-center mb-4">
+                        <i class="mr-2 text-purple-500 fa-solid fa-user-check"></i>
+                        <h3 class="text-lg font-semibold text-gray-800">Penugasan</h3>
+                    </div>
+                    <div class="grid grid-cols-1 gap-6">
+                        <!-- Ditugaskan Oleh -->
+                        <div>
                             <label for="assigned_by" class="block mb-2 text-sm font-medium text-gray-700">
                                 <i class="mr-1 fa-solid fa-user-check"></i> Ditugaskan Oleh
                             </label>
-                            <select name="assigned_by" id="assigned_by"
+                            <select name="assigned_by" id="assigned_by" required
                                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('assigned_by') border-red-500 @enderror">
                                 <option value="">Pilih Pengguna</option>
-                                <!-- Options akan diisi via JavaScript atau dari controller -->
+                                @if(isset($users))
+                                @foreach($users as $user)
+                                <option value="{{ $user->id }}" {{ old('assigned_by')==$user->id ? 'selected' : '' }}>
+                                    {{ $user->name }} ({{ $user->email }})
+                                </option>
+                                @endforeach
+                                @endif
                             </select>
                             @error('assigned_by')
                             <p class="mt-2 text-sm text-red-600">
@@ -152,11 +232,8 @@
                             @enderror
                             <p class="mt-1 text-sm text-gray-500">Pilih guru/admin yang menugaskan kebiasaan ini</p>
                         </div>
-
-                        <!-- Placeholder untuk menjaga layout -->
-                        <div id="placeholder_field"></div>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Action Buttons -->
                 <div class="flex flex-col-reverse gap-4 pt-6 border-t border-gray-200 sm:flex-row sm:justify-end">
@@ -180,118 +257,49 @@
             <div>
                 <h3 class="font-semibold text-blue-800">Panduan Membuat Kebiasaan</h3>
                 <ul class="mt-2 text-sm text-blue-700 list-disc list-inside space-y-1">
-                    <li><strong>Kebiasaan Mandiri</strong>: Dapat dipilih dan dilakukan secara sukarela oleh pengguna</li>
-                    <li><strong>Kebiasaan Ditugaskan</strong>: Harus dilakukan oleh pengguna tertentu yang ditugaskan</li>
+                    <li><strong>Kebiasaan Ditugaskan</strong>: Kebiasaan yang dibuat oleh admin otomatis bertipe
+                        "Ditugaskan"</li>
                     <li><strong>Harian</strong>: Kebiasaan yang dilakukan setiap hari</li>
                     <li><strong>Mingguan</strong>: Kebiasaan yang dilakukan sekali dalam seminggu</li>
+                    <li><strong>XP Reward</strong>: Poin pengalaman yang didapat ketika menyelesaikan kebiasaan</li>
+                    <li><strong>Periode Waktu</strong>: Tentukan kapan kebiasaan ini aktif dan berakhir</li>
                     <li>Pilih kategori yang sesuai untuk memudahkan pengelompokan</li>
                 </ul>
             </div>
         </div>
     </div>
-
-    <!-- Type Description Cards -->
-    <div class="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2">
-        <!-- Self Habit Card -->
-        <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
-            <div class="flex items-center mb-2">
-                <i class="mr-2 text-green-600 fa-solid fa-user"></i>
-                <h4 class="font-semibold text-green-800">Kebiasaan Mandiri</h4>
-            </div>
-            <p class="text-sm text-green-700">
-                Kebiasaan yang dapat dipilih secara sukarela oleh semua pengguna. Cocok untuk kebiasaan umum
-                seperti olahraga, membaca, atau meditasi yang bermanfaat untuk semua orang.
-            </p>
-        </div>
-
-        <!-- Assigned Habit Card -->
-        <div class="p-4 bg-purple-50 border border-purple-200 rounded-lg">
-            <div class="flex items-center mb-2">
-                <i class="mr-2 text-purple-600 fa-solid fa-user-check"></i>
-                <h4 class="font-semibold text-purple-800">Kebiasaan Ditugaskan</h4>
-            </div>
-            <p class="text-sm text-purple-700">
-                Kebiasaan yang ditugaskan kepada pengguna tertentu oleh guru atau admin. Cocok untuk tugas
-                khusus, pekerjaan rumah, atau aktivitas yang wajib dilakukan.
-            </p>
-        </div>
-    </div>
 </div>
-{{--
+
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const typeSelect = document.getElementById('type');
-        const assignedByField = document.getElementById('assigned_by_field');
-        const placeholderField = document.getElementById('placeholder_field');
-        const assignedBySelect = document.getElementById('assigned_by');
+        // Set minimum end date based on start date
+        const startDateInput = document.getElementById('start_date');
+        const endDateInput = document.getElementById('end_date');
 
-        // Function to toggle assigned_by field
-        function toggleAssignedByField() {
-            if (typeSelect.value === 'assigned') {
-                assignedByField.classList.remove('hidden');
-                assignedByField.classList.add('block');
-                placeholderField.classList.add('hidden');
-                // Make assigned_by required
-                assignedBySelect.required = true;
-            } else {
-                assignedByField.classList.remove('block');
-                assignedByField.classList.add('hidden');
-                placeholderField.classList.remove('hidden');
-                placeholderField.classList.add('block');
-                // Remove required attribute
-                assignedBySelect.required = false;
-                // Clear value
-                assignedBySelect.value = '';
+        // Set default dates
+        const today = new Date().toISOString().split('T')[0];
+        const nextMonth = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+        if (!startDateInput.value) {
+            startDateInput.value = today;
+        }
+        if (!endDateInput.value) {
+            endDateInput.value = nextMonth;
+        }
+
+        startDateInput.addEventListener('change', function() {
+            endDateInput.min = this.value;
+            if (endDateInput.value < this.value) {
+                endDateInput.value = this.value;
             }
-        }
+        });
 
-        // Initial toggle
-        toggleAssignedByField();
+        // Initialize min date for end date
+        endDateInput.min = startDateInput.value;
 
-        // Add event listener for type change
-        typeSelect.addEventListener('change', toggleAssignedByField);
 
-        // Load users for assigned_by select (you can fetch this from API or preload in controller)
-        function loadUsers() {
-            // This is a placeholder - you might want to fetch users via AJAX
-            // or preload them in the controller and pass to view
-            const users = {!! json_encode($users ?? []) !!};
-
-            if (users.length > 0) {
-                assignedBySelect.innerHTML = '<option value="">Pilih Pengguna</option>';
-                users.forEach(user => {
-                    const option = document.createElement('option');
-                    option.value = user.id;
-                    option.textContent = user.name + ' (' + user.email + ')';
-                    assignedBySelect.appendChild(option);
-                });
-
-                // Set old value if exists
-                const oldValue = '{{ old("assigned_by") }}';
-                if (oldValue) {
-                    assignedBySelect.value = oldValue;
-                }
-            }
-        }
-
-        // Load users if assigned_by field is visible
-        if (typeSelect.value === 'assigned') {
-            loadUsers();
-        }
-    });
-
-    // Form validation
-    document.querySelector('form').addEventListener('submit', function(e) {
-        const type = document.getElementById('type').value;
-        const assignedBy = document.getElementById('assigned_by').value;
-
-        if (type === 'assigned' && !assignedBy) {
-            e.preventDefault();
-            alert('Harap pilih pengguna yang menugaskan untuk kebiasaan bertipe "Ditugaskan"');
-            document.getElementById('assigned_by').focus();
-        }
     });
 </script>
-@endpush --}}
+@endpush
 @endsection

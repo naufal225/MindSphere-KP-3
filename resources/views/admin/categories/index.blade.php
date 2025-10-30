@@ -65,7 +65,7 @@
                 <select name="sort_field" id="sort_field"
                     class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="name" {{ request('sort_field')=='name' ? 'selected' : '' }}>Nama</option>
-                    <option value="code" {{ request('sort_field')=='code' ? 'selected' : '' }}>Kode</option>
+                    {{-- <option value="code" {{ request('sort_field')=='code' ? 'selected' : '' }}>Kode</option> --}}
                     <option value="created_at" {{ request('sort_field')=='created_at' ? 'selected' : '' }}>Tanggal
                         Dibuat</option>
                 </select>
@@ -124,17 +124,6 @@
         </div>
     </div>
 
-    <div class="p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
-        <div class="flex items-center">
-            <div class="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-lg">
-                <i class="text-xl text-orange-600 fa-solid fa-medal"></i>
-            </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Total Badges</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $stats['total_badges'] }}</p>
-            </div>
-        </div>
-    </div>
 </div>
 
 <!-- Categories Table -->
@@ -220,10 +209,6 @@
                             <div class="flex items-center space-x-2">
                                 <span class="text-gray-500">Challenges:</span>
                                 <span class="font-semibold text-purple-600">{{ $category->challenges_count }}</span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <span class="text-gray-500">Badges:</span>
-                                <span class="font-semibold text-orange-600">{{ $category->badges_count }}</span>
                             </div>
                             <div class="flex items-center space-x-2">
                                 <span class="text-gray-500">Reflections:</span>

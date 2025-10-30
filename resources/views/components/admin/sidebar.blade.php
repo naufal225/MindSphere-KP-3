@@ -56,13 +56,6 @@
             <span class="font-medium">Habits</span>
         </a>
 
-        <!-- Badges -->
-        <a href="{{ route('admin.badges.index') }}"
-            class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.badges.*') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
-            <i class="w-5 mr-3 text-center fas fa-award"></i>
-            <span class="font-medium">Badges</span>
-        </a>
-
         <!-- Reports & Analytics -->
         <div class="space-y-1"
             x-data="{ open: {{ request()->routeIs('admin.reports.*', 'admin.analytics.*') ? 'true' : 'false' }} }">

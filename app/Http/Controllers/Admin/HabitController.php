@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\HabitRequest;
 use App\Http\Services\HabitService;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,6 +34,7 @@ class HabitController extends Controller
     {
         try {
             $categories = $this->service->getCategories();
+
             return view('admin.habits.create', compact('categories'));
         } catch (Exception $e) {
             return back()->with('error', 'Gagal membuka form pembuatan kebiasaan: ' . $e->getMessage());
@@ -67,7 +69,10 @@ class HabitController extends Controller
         try {
             $habit = $this->service->findById($id)['habit'];
             $categories = $this->service->getCategories();
-            return view('admin.habits.edit', compact('habit', 'categories'));
+            $users = User::where('role', 'teacher')
+                        ->orWhere('role', 'admin')
+                        ->get();
+            return view('admin.habits.edit', compact('habit', 'categories', 'users'));
         } catch (Exception $e) {
             return back()->with('error', 'Gagal memuat kebiasaan untuk diedit: ' . $e->getMessage());
         }

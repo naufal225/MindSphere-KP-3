@@ -164,7 +164,7 @@ class UserService
                 'name' => $data['name'],
                 'username' => $data['username'],
                 'email' => $data['email'],
-                'password' => bcrypt($data['password']),
+                'password' => $data['password'],
                 'role' => $data['role'],
                 'xp' => $data['xp'] ?? 0,
                 'level' => $data['level'] ?? 1,
