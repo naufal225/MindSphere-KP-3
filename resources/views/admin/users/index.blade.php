@@ -4,6 +4,11 @@
 @section('subtitle', 'Kelola data pengguna sistem')
 
 @section('content')
+
+@php
+    use App\Http\Services\LevelService;
+@endphp
+
 <div class="mb-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
@@ -236,6 +241,29 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($users as $user)
+                @php
+
+                // Hitung progress level menggunakan LevelService
+                $currentLevel = $user->level;
+                $currentXp = $user->xp;
+
+                // XP yang dibutuhkan untuk mencapai level saat ini
+                $xpForCurrentLevel = LevelService::getXpForNextLevel($currentLevel - 1);
+
+                // XP yang dibutuhkan untuk mencapai level berikutnya
+                $xpForNextLevel = LevelService::getXpForNextLevel($currentLevel);
+
+                // XP yang sudah diperoleh di level saat ini
+                $xpInCurrentLevel = $currentXp - $xpForCurrentLevel;
+
+                // XP yang dibutuhkan untuk naik ke level berikutnya
+                $xpNeededForNextLevel = $xpForNextLevel - $xpForCurrentLevel;
+
+                // Persentase progress
+                $progressPercentage = $xpNeededForNextLevel > 0
+                ? min(round(($xpInCurrentLevel / $xpNeededForNextLevel) * 100, 1), 100)
+                : 100;
+                @endphp
                 <tr class="transition-colors hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">
                         @if($user->avatar_url)
@@ -277,15 +305,25 @@
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center space-x-2">
-                            <div class="text-sm font-bold text-gray-900">{{ number_format($user->xp) }} XP</div>
-                            <span class="px-2 py-1 text-xs font-bold text-blue-800 bg-blue-100 rounded-full">
-                                Level {{ $user->level }}
-                            </span>
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="flex items-center space-x-2">
+                                <div class="flex items-center text-sm font-bold text-gray-900">
+                                    <i class="mr-1 text-yellow-500 fa-solid fa-star"></i>
+                                    {{ number_format($user->xp) }} XP
+                                </div>
+                                <span class="px-2 py-1 text-xs font-bold text-blue-800 bg-blue-100 rounded-full">
+                                    Level {{ $user->level }}
+                                </span>
+                            </div>
+                            <span class="text-xs text-gray-500">{{ $progressPercentage }}%</span>
                         </div>
-                        <div class="w-full mt-1 bg-gray-200 rounded-full h-1.5">
-                            <div class="bg-green-600 h-1.5 rounded-full"
-                                style="width: {{ min(($user->xp % 1000) / 10, 100) }}%"></div>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5">
+                            <div class="bg-gradient-to-r from-green-400 to-blue-500 h-1.5 rounded-full transition-all duration-300 ease-out"
+                                style="width: {{ $progressPercentage }}%"></div>
+                        </div>
+                        <div class="flex justify-between mt-1 text-xs text-gray-500">
+                            <span>{{ number_format($xpInCurrentLevel) }} XP</span>
+                            <span>{{ number_format($xpNeededForNextLevel - $xpInCurrentLevel) }} XP tersisa</span>
                         </div>
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">

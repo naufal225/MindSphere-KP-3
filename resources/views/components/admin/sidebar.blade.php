@@ -139,7 +139,7 @@
             </div>
         </a>
         {{-- {{ route('logout') }} --}}
-        <form action="" method="POST">
+        <form action="/logout" method="POST">
             @csrf
             <button type="submit"
                 class="flex items-center w-full px-4 py-2 transition-all duration-200 rounded-lg text-blue-100 hover:bg-[#2563EB] hover:text-white">

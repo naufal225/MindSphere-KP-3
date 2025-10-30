@@ -18,7 +18,6 @@
         </div>
     </div>
 
-
     @if(session('success'))
     <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
         {{ session('success') }}
@@ -44,6 +43,34 @@
         </ul>
     </div>
     @endif
+
+    @php
+        use App\Http\Services\LevelService;
+
+        // Hitung XP untuk level saat ini dan level berikutnya
+        $currentLevel = $user->level;
+        $currentXp = $user->xp;
+
+        // XP yang dibutuhkan untuk mencapai level saat ini
+        $xpForCurrentLevel = LevelService::getXpForNextLevel($currentLevel - 1);
+
+        // XP yang dibutuhkan untuk mencapai level berikutnya
+        $xpForNextLevel = LevelService::getXpForNextLevel($currentLevel);
+
+        // XP yang sudah diperoleh di level saat ini
+        $xpInCurrentLevel = $currentXp - $xpForCurrentLevel;
+
+        // XP yang dibutuhkan untuk naik ke level berikutnya
+        $xpNeededForNextLevel = $xpForNextLevel - $xpForCurrentLevel;
+
+        // Persentase progress
+        $progressPercentage = $xpNeededForNextLevel > 0
+            ? min(round(($xpInCurrentLevel / $xpNeededForNextLevel) * 100, 1), 100)
+            : 100;
+
+        // XP yang tersisa untuk naik level
+        $xpRemaining = max(0, $xpForNextLevel - $currentXp);
+    @endphp
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
         <!-- Profile Card -->
@@ -102,7 +129,7 @@
                                 <i class="mr-2 text-yellow-500 fa-solid fa-star"></i>
                                 <span class="text-2xl font-bold text-gray-800">{{ number_format($user->xp) }}</span>
                             </div>
-                            <p class="text-sm text-gray-600">Experience Points</p>
+                            <p class="text-sm text-gray-600">Total Experience Points</p>
                         </div>
 
                         <!-- Level Stats -->
@@ -117,12 +144,31 @@
                         <!-- Progress Bar -->
                         <div class="mt-4">
                             <div class="flex justify-between mb-1 text-xs text-gray-600">
-                                <span>Progress ke Level {{ $user->level + 1 }}</span>
-                                <span>{{ min(($user->xp % 1000) / 10, 100) }}%</span>
+                                <span>Level {{ $currentLevel }}</span>
+                                <span>{{ $progressPercentage }}%</span>
+                                <span>Level {{ $currentLevel + 1 }}</span>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-gradient-to-r from-green-400 to-blue-500 h-2 rounded-full"
-                                    style="width: {{ min(($user->xp % 1000) / 10, 100) }}%"></div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-gradient-to-r from-green-400 to-blue-500 h-2.5 rounded-full transition-all duration-500 ease-out"
+                                    style="width: {{ $progressPercentage }}%"></div>
+                            </div>
+                            <div class="flex justify-between mt-1 text-xs text-gray-500">
+                                <span>{{ number_format($xpInCurrentLevel) }} XP</span>
+                                <span>{{ number_format($xpRemaining) }} XP tersisa</span>
+                            </div>
+                        </div>
+
+                        <!-- Next Level Info -->
+                        <div class="p-3 mt-4 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg border border-blue-100">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="mr-2 text-blue-500 fa-solid fa-arrow-up"></i>
+                                    <span class="text-sm font-medium text-blue-800">Level {{ $currentLevel + 1 }}</span>
+                                </div>
+                                <span class="text-sm font-bold text-green-600">{{ number_format($xpForNextLevel) }} XP</span>
+                            </div>
+                            <div class="mt-1 text-xs text-gray-600">
+                                {{ number_format($xpRemaining) }} XP lagi untuk naik level
                             </div>
                         </div>
                     </div>
@@ -551,10 +597,7 @@
         });
     });
 });
-
 </script>
-
-
 
 <style>
     .tab-button {

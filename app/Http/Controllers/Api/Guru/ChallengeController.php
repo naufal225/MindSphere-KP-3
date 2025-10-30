@@ -8,6 +8,7 @@ use App\Models\ChallengeParticipant;
 use App\Models\SchoolClass;
 use App\Models\User;
 use App\Enums\ChallengeStatus;
+use App\Http\Services\LevelService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -245,8 +246,8 @@ class ChallengeController extends Controller
                 'xp' => $user->xp + $xpReward
             ]);
 
-            // Update level user jika perlu (sesuaikan dengan logic level Anda)
-            $this->updateUserLevel($user);
+            // Update level user menggunakan LevelService
+            LevelService::updateUserLevel($user);
         });
 
         return response()->json([
@@ -255,7 +256,9 @@ class ChallengeController extends Controller
             'data' => [
                 'participant_id' => $participant->id,
                 'status' => ChallengeStatus::COMPLETED,
-                'xp_awarded' => $participant->challenge->xp_reward
+                'xp_awarded' => $participant->challenge->xp_reward,
+                'student_new_xp' => $participant->user->fresh()->xp,
+                'student_new_level' => $participant->user->fresh()->level
             ]
         ]);
     }
@@ -387,34 +390,5 @@ class ChallengeController extends Controller
             ChallengeStatus::SUBMITTED => 'Menunggu Validasi',
             ChallengeStatus::COMPLETED => 'Selesai'
         };
-    }
-
-    /**
-     * Helper function to update user level based on XP
-     */
-    private function updateUserLevel(User $user)
-    {
-        // Sesuaikan dengan logic level Anda
-        $levels = [
-            100 => 2,
-            300 => 3,
-            600 => 4,
-            1000 => 5,
-            1500 => 6,
-            // Tambahkan lebih banyak level sesuai kebutuhan
-        ];
-
-        $newLevel = 1;
-        foreach ($levels as $xpRequired => $level) {
-            if ($user->xp >= $xpRequired) {
-                $newLevel = $level;
-            } else {
-                break;
-            }
-        }
-
-        if ($newLevel > $user->level) {
-            $user->update(['level' => $newLevel]);
-        }
     }
 }

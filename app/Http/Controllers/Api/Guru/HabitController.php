@@ -8,6 +8,7 @@ use App\Models\HabitLog;
 use App\Models\SchoolClass;
 use App\Models\User;
 use App\Enums\HabitStatus;
+use App\Http\Services\LevelService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -295,8 +296,8 @@ class HabitController extends Controller
                 'xp' => $user->xp + $xpReward
             ]);
 
-            // Update level user jika perlu
-            $this->updateUserLevel($user);
+            // Update level user menggunakan LevelService
+            LevelService::updateUserLevel($user);
         });
 
         return response()->json([
@@ -306,6 +307,8 @@ class HabitController extends Controller
                 'log_id' => $habitLog->id,
                 'status' => HabitStatus::COMPLETED,
                 'xp_awarded' => $habitLog->habit->xp_reward,
+                'student_new_xp' => $habitLog->user->fresh()->xp,
+                'student_new_level' => $habitLog->user->fresh()->level,
                 'date' => $habitLog->date->format('d M Y')
             ]
         ]);
@@ -499,32 +502,5 @@ class HabitController extends Controller
             HabitStatus::SUBMITTED => 'Menunggu Validasi',
             HabitStatus::COMPLETED => 'Selesai'
         };
-    }
-
-    /**
-     * Helper function to update user level based on XP
-     */
-    private function updateUserLevel(User $user)
-    {
-        $levels = [
-            100 => 2,
-            300 => 3,
-            600 => 4,
-            1000 => 5,
-            1500 => 6,
-        ];
-
-        $newLevel = 1;
-        foreach ($levels as $xpRequired => $level) {
-            if ($user->xp >= $xpRequired) {
-                $newLevel = $level;
-            } else {
-                break;
-            }
-        }
-
-        if ($newLevel > $user->level) {
-            $user->update(['level' => $newLevel]);
-        }
     }
 }
