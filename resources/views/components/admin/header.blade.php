@@ -15,8 +15,8 @@
         <div class="flex items-center space-x-4">
             <div class="flex items-center px-3 py-2 rounded-full bg-[#2563EB]">
                 <div class="flex items-center justify-center w-10 h-10 mr-3 rounded-full bg-[#1E40AF]">
-                    @if(Auth::user()->url_profile)
-                    <img class="object-cover w-10 h-10 rounded-full" src="{{ Auth::user()->url_profile }}"
+                    @if(Auth::user()->avatar_url)
+                    <img class="object-cover w-10 h-10 rounded-full" src="{{ Storage::url(Auth::user()->avatar_url) }}"
                         alt="{{ Auth::user()->name }}">
                     @else
                     <div class="flex items-center justify-center w-10 h-10 bg-gray-300 rounded-full">

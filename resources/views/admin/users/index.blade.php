@@ -239,7 +239,7 @@
                 <tr class="transition-colors hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">
                         @if($user->avatar_url)
-                        <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}"
+                        <img src="{{ Storage::url($user->avatar_url) }}" alt="{{ $user->name }}"
                             class="w-10 h-10 rounded-full shadow-sm">
                         @else
                         <div

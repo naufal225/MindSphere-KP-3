@@ -197,7 +197,7 @@
                             {{ $index + 1 }}
                         </div>
                         @if($student['avatar_url'])
-                        <img src="{{ $student['avatar_url'] }}" alt="{{ $student['name'] }}"
+                        <img src="{{ Storage::url($student['avatar_url']) }}" alt="{{ $student['name'] }}"
                             class="w-8 h-8 rounded-full object-cover">
                         @else
                         <div class="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full">

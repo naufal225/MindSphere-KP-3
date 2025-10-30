@@ -411,7 +411,7 @@
                         @if($habit->createdBy)
                         <div class="flex items-center">
                             @if($habit->createdBy->avatar_url)
-                            <img class="w-6 h-6 rounded-full" src="{{ $habit->createdBy->avatar_url }}"
+                            <img class="w-6 h-6 rounded-full" src="{{ Storage::url($habit->createdBy->avatar_url) }}"
                                 alt="{{ $habit->createdBy->name }}">
                             @else
                             <div

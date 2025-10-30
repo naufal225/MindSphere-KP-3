@@ -53,7 +53,7 @@
                 <div class="p-6 text-center bg-gradient-to-r from-blue-50 to-indigo-50">
                     <div class="relative inline-block">
                         @if($user->avatar_url)
-                        <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}"
+                        <img src="{{ Storage::url($user->avatar_url)}}" alt="{{ $user->name }}"
                             class="w-32 h-32 mx-auto rounded-full shadow-lg border-4 border-white">
                         @else
                         <div
@@ -551,7 +551,7 @@
         });
     });
 });
- 
+
 </script>
 
 

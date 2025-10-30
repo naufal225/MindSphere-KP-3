@@ -122,8 +122,8 @@
     <div class="p-4 border-t border-blue-600">
         <a class="flex items-center mb-4" href="{{ route('admin.profile.index') }}">
             <div class="flex items-center justify-center w-10 h-10 mr-3 rounded-full bg-[#2563EB]">
-                @if(Auth::user()->url_profile)
-                <img class="object-cover w-10 h-10 rounded-full" src="{{ Auth::user()->url_profile }}"
+                @if(Auth::user()->avatar_url)
+                <img class="object-cover w-10 h-10 rounded-full" src="{{ Storage::url(Auth::user()->avatar_url) }}"
                     alt="{{ Auth::user()->name }}">
                 @else
                 <div class="flex items-center justify-center w-10 h-10 bg-gray-300 rounded-full">

@@ -315,7 +315,7 @@
                         @if($challenge->createdBy)
                         <div class="flex items-center">
                             @if($challenge->createdBy->avatar_url)
-                            <img class="w-6 h-6 rounded-full" src="{{ $challenge->createdBy->avatar_url }}" alt="{{ $challenge->createdBy->name }}">
+                            <img class="w-6 h-6 rounded-full" src="{{ Storage::url($challenge->createdBy->avatar_url) }}" alt="{{ $challenge->createdBy->name }}">
                             @else
                             <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                                 {{ substr($challenge->createdBy->name, 0, 1) }}

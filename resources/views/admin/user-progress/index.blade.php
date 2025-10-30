@@ -277,7 +277,7 @@
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 w-10 h-10">
                                     <img class="w-10 h-10 rounded-full"
-                                        src="{{ $progress['user']->avatar_url ?: asset('img/default-avatar.png') }}"
+                                        src="{{ Storage::url($progress['user']->avatar_url) ?: asset('img/default-avatar.png') }}"
                                         alt="{{ $progress['user']->name }}">
                                 </div>
                                 <div class="ml-4">

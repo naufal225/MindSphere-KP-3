@@ -258,7 +258,7 @@
                             <!-- Current Avatar -->
                             <div id="currentAvatar" class="mb-4">
                                 @if($user->avatar_url)
-                                <img src="{{ $user->avatar_url }}" alt="Current Avatar"
+                                <img src="{{ Storage::url($user->avatar_url) }}" alt="Current Avatar"
                                     class="w-32 h-32 rounded-full shadow-lg" id="currentAvatarImage">
                                 @else
                                 <div
