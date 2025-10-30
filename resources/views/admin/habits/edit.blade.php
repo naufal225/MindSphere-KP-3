@@ -67,7 +67,7 @@
                 <div>
                     <div class="flex items-center mb-4">
                         <i class="mr-2 text-green-500 fa-solid fa-tags"></i>
-                        <h3 class="text-lg font-semibold text-gray-800">Kategori </h3>
+                        <h3 class="text-lg font-semibold text-gray-800">Kategori & Periode</h3>
                     </div>
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <!-- Kategori -->
@@ -91,33 +91,6 @@
                             @enderror
                         </div>
 
-                        <!-- Tipe Kebiasaan -->
-                        {{-- <div>
-                            <label for="type" class="block mb-2 text-sm font-medium text-gray-700">
-                                <i class="mr-1 fa-solid fa-user"></i> Tipe Kebiasaan
-                            </label>
-                            <select name="type" id="type" required
-                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('type') border-red-500 @enderror">
-                                <option value="">Pilih Tipe</option>
-                                <option value="self" {{ (old('type', $habit->type->value ?? $habit->type) == 'self') ? 'selected' : '' }}>Mandiri</option>
-                                <option value="assigned" {{ (old('type', $habit->type->value ?? $habit->type) == 'assigned') ? 'selected' : '' }}>Ditugaskan</option>
-                            </select>
-                            @error('type')
-                            <p class="mt-2 text-sm text-red-600">
-                                <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
-                            </p>
-                            @enderror
-                        </div> --}}
-                    </div>
-                </div>
-
-                <!-- Pengaturan Tambahan -->
-                <div>
-                    <div class="flex items-center mb-4">
-                        <i class="mr-2 text-yellow-500 fa-solid fa-cog"></i>
-                        <h3 class="text-lg font-semibold text-gray-800">Pengaturan Tambahan</h3>
-                    </div>
-                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <!-- Periode -->
                         <div>
                             <label for="period" class="block mb-2 text-sm font-medium text-gray-700">
@@ -135,13 +108,75 @@
                             </p>
                             @enderror
                         </div>
+                    </div>
+                </div>
 
-                        <!-- Ditugaskan Oleh (Conditional) -->
-                        <div id="assigned_by_field" class="{{ (old('type', $habit->type->value ?? $habit->type) === 'assigned') ? 'block' : 'hidden' }}">
+                <!-- Reward & Periode Waktu -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="mr-2 text-yellow-500 fa-solid fa-gift"></i>
+                        <h3 class="text-lg font-semibold text-gray-800">Reward & Periode Waktu</h3>
+                    </div>
+                    <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+                        <!-- XP Reward -->
+                        <div>
+                            <label for="xp_reward" class="block mb-2 text-sm font-medium text-gray-700">
+                                <i class="mr-1 fa-solid fa-star"></i> XP Reward
+                            </label>
+                            <input type="number" name="xp_reward" id="xp_reward" value="{{ old('xp_reward', $habit->xp_reward) }}"
+                                required min="1" max="10000" placeholder="Jumlah XP"
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('xp_reward') border-red-500 @enderror">
+                            @error('xp_reward')
+                            <p class="mt-2 text-sm text-red-600">
+                                <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
+                            </p>
+                            @enderror
+                        </div>
+
+                        <!-- Tanggal Mulai -->
+                        <div>
+                            <label for="start_date" class="block mb-2 text-sm font-medium text-gray-700">
+                                <i class="mr-1 fa-solid fa-calendar-plus"></i> Tanggal Mulai
+                            </label>
+                            <input type="date" name="start_date" id="start_date" value="{{ old('start_date', $habit->start_date->format('Y-m-d')) }}"
+                                required
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('start_date') border-red-500 @enderror">
+                            @error('start_date')
+                            <p class="mt-2 text-sm text-red-600">
+                                <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
+                            </p>
+                            @enderror
+                        </div>
+
+                        <!-- Tanggal Berakhir -->
+                        <div>
+                            <label for="end_date" class="block mb-2 text-sm font-medium text-gray-700">
+                                <i class="mr-1 fa-solid fa-calendar-check"></i> Tanggal Berakhir
+                            </label>
+                            <input type="date" name="end_date" id="end_date" value="{{ old('end_date', $habit->end_date->format('Y-m-d')) }}" required
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('end_date') border-red-500 @enderror">
+                            @error('end_date')
+                            <p class="mt-2 text-sm text-red-600">
+                                <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
+                            </p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Penugasan -->
+                {{-- <div>
+                    <div class="flex items-center mb-4">
+                        <i class="mr-2 text-purple-500 fa-solid fa-user-check"></i>
+                        <h3 class="text-lg font-semibold text-gray-800">Penugasan</h3>
+                    </div>
+                    <div class="grid grid-cols-1 gap-6">
+                        <!-- Ditugaskan Oleh -->
+                        <div>
                             <label for="assigned_by" class="block mb-2 text-sm font-medium text-gray-700">
                                 <i class="mr-1 fa-solid fa-user-check"></i> Ditugaskan Oleh
                             </label>
-                            <select name="assigned_by" id="assigned_by"
+                            <select name="assigned_by" id="assigned_by" required
                                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('assigned_by') border-red-500 @enderror">
                                 <option value="">Pilih Pengguna</option>
                                 @if(isset($users))
@@ -159,11 +194,8 @@
                             @enderror
                             <p class="mt-1 text-sm text-gray-500">Pilih guru/admin yang menugaskan kebiasaan ini</p>
                         </div>
-
-                        <!-- Placeholder untuk menjaga layout -->
-                        <div id="placeholder_field" class="{{ (old('type', $habit->type->value ?? $habit->type) === 'assigned') ? 'hidden' : 'block' }}"></div>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Action Buttons -->
                 <div class="flex flex-col-reverse gap-4 pt-6 border-t border-gray-200 sm:flex-row sm:justify-end">
@@ -188,84 +220,33 @@
                 <h3 class="font-semibold text-blue-800">Panduan Edit Kebiasaan</h3>
                 <ul class="mt-2 text-sm text-blue-700 list-disc list-inside space-y-1">
                     <li>Perubahan pada kebiasaan akan berlaku untuk semua pengguna yang mengikuti kebiasaan ini</li>
-                    <li>Jika mengganti dari <strong>Ditugaskan</strong> ke <strong>Mandiri</strong>, data penugasan akan dihapus</li>
+                    <li>Kebiasaan yang dibuat oleh admin otomatis bertipe "Ditugaskan"</li>
                     <li>Kategori dan periode memengaruhi pelaporan dan analisis kebiasaan</li>
+                    <li>XP reward akan diberikan kepada pengguna yang menyelesaikan kebiasaan</li>
+                    <li>Periode waktu menentukan kapan kebiasaan ini aktif dan dapat dilakukan</li>
                 </ul>
             </div>
         </div>
     </div>
-
-    <!-- Type Description Cards -->
-    <div class="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2">
-        <!-- Self Habit Card -->
-        <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
-            <div class="flex items-center mb-2">
-                <i class="mr-2 text-green-600 fa-solid fa-user"></i>
-                <h4 class="font-semibold text-green-800">Kebiasaan Mandiri</h4>
-            </div>
-            <p class="text-sm text-green-700">
-                Kebiasaan yang dapat dipilih secara sukarela oleh semua pengguna. Cocok untuk kebiasaan umum
-                seperti olahraga, membaca, atau meditasi yang bermanfaat untuk semua orang.
-            </p>
-        </div>
-
-        <!-- Assigned Habit Card -->
-        <div class="p-4 bg-purple-50 border border-purple-200 rounded-lg">
-            <div class="flex items-center mb-2">
-                <i class="mr-2 text-purple-600 fa-solid fa-user-check"></i>
-                <h4 class="font-semibold text-purple-800">Kebiasaan Ditugaskan</h4>
-            </div>
-            <p class="text-sm text-purple-700">
-                Kebiasaan yang ditugaskan kepada pengguna tertentu oleh guru atau admin. Cocok untuk tugas
-                khusus, pekerjaan rumah, atau aktivitas yang wajib dilakukan.
-            </p>
-        </div>
-    </div>
 </div>
 
-{{-- @push('scripts')
+@push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const typeSelect = document.getElementById('type');
-        const assignedByField = document.getElementById('assigned_by_field');
-        const placeholderField = document.getElementById('placeholder_field');
-        const assignedBySelect = document.getElementById('assigned_by');
+        // Set minimum end date based on start date
+        const startDateInput = document.getElementById('start_date');
+        const endDateInput = document.getElementById('end_date');
 
-        // Function to toggle assigned_by field
-        function toggleAssignedByField() {
-            if (typeSelect.value === 'assigned') {
-                assignedByField.classList.remove('hidden');
-                assignedByField.classList.add('block');
-                placeholderField.classList.add('hidden');
-                assignedBySelect.required = true;
-            } else {
-                assignedByField.classList.remove('block');
-                assignedByField.classList.add('hidden');
-                placeholderField.classList.remove('hidden');
-                placeholderField.classList.add('block');
-                assignedBySelect.required = false;
-                assignedBySelect.value = '';
+        startDateInput.addEventListener('change', function() {
+            endDateInput.min = this.value;
+            if (endDateInput.value < this.value) {
+                endDateInput.value = this.value;
             }
-        }
+        });
 
-        // Initial toggle
-        toggleAssignedByField();
-
-        // Add event listener for type change
-        typeSelect.addEventListener('change', toggleAssignedByField);
-    });
-
-    // Form validation
-    document.querySelector('form').addEventListener('submit', function(e) {
-        const type = document.getElementById('type').value;
-        const assignedBy = document.getElementById('assigned_by').value;
-
-        if (type === 'assigned' && !assignedBy) {
-            e.preventDefault();
-            alert('Harap pilih pengguna yang menugaskan untuk kebiasaan bertipe "Ditugaskan"');
-            document.getElementById('assigned_by').focus();
-        }
+        // Initialize min date for end date
+        endDateInput.min = startDateInput.value;
     });
 </script>
-@endpush --}}
+@endpush
 @endsection
