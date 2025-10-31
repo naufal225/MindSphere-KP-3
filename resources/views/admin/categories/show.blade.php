@@ -176,7 +176,7 @@
                     <!-- Content Tab -->
                     <div id="content-tab" class="hidden tab-content">
                         <h3 class="mb-4 text-lg font-semibold text-gray-800">
-                            <i class="mr-2 fa-solid fa-list"></i>Konten Terkait 
+                            <i class="mr-2 fa-solid fa-list"></i>Konten Terkait
                         </h3>
 
                         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">

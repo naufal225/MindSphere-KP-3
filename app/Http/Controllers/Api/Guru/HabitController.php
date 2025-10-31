@@ -40,30 +40,38 @@ class HabitController extends Controller
         }
 
         $habits = Habit::with(['category', 'createdBy'])
-            ->whereHas('logs', function($query) use ($kelas) {
+            ->whereHas('logs', function ($query) use ($kelas) {
                 $query->whereIn('user_id', $kelas->students()->pluck('users.id'));
             })
             ->orWhere('created_by', $guru->id)
             ->orWhere('assigned_by', $guru->id)
-            ->withCount(['logs as total_participants' => function($query) use ($kelas) {
-                $query->whereIn('user_id', $kelas->students()->pluck('users.id'));
-            }])
-            ->withCount(['logs as submitted_count' => function($query) use ($kelas) {
-                $query->whereIn('user_id', $kelas->students()->pluck('users.id'))
-                      ->where('status', HabitStatus::SUBMITTED);
-            }])
-            ->withCount(['logs as completed_count' => function($query) use ($kelas) {
-                $query->whereIn('user_id', $kelas->students()->pluck('users.id'))
-                      ->where('status', HabitStatus::COMPLETED);
-            }])
-            ->withCount(['logs as today_submitted_count' => function($query) use ($kelas) {
-                $query->whereIn('user_id', $kelas->students()->pluck('users.id'))
-                      ->where('status', HabitStatus::SUBMITTED)
-                      ->whereDate('date', today());
-            }])
+            ->withCount([
+                'logs as total_participants' => function ($query) use ($kelas) {
+                    $query->whereIn('user_id', $kelas->students()->pluck('users.id'));
+                }
+            ])
+            ->withCount([
+                'logs as submitted_count' => function ($query) use ($kelas) {
+                    $query->whereIn('user_id', $kelas->students()->pluck('users.id'))
+                        ->where('status', HabitStatus::SUBMITTED);
+                }
+            ])
+            ->withCount([
+                'logs as completed_count' => function ($query) use ($kelas) {
+                    $query->whereIn('user_id', $kelas->students()->pluck('users.id'))
+                        ->where('status', HabitStatus::COMPLETED);
+                }
+            ])
+            ->withCount([
+                'logs as today_submitted_count' => function ($query) use ($kelas) {
+                    $query->whereIn('user_id', $kelas->students()->pluck('users.id'))
+                        ->where('status', HabitStatus::SUBMITTED)
+                        ->whereDate('date', today());
+                }
+            ])
             ->orderBy('created_at', 'desc')
             ->get()
-            ->map(function($habit) {
+            ->map(function ($habit) {
                 return [
                     'id' => $habit->id,
                     'title' => $habit->title,
@@ -121,12 +129,14 @@ class HabitController extends Controller
         }
 
         $habit = Habit::with(['category', 'createdBy', 'assignedBy'])
-            ->with(['logs' => function($query) use ($kelas) {
-                $query->whereIn('user_id', $kelas->students()->pluck('users.id'))
-                      ->with('user')
-                      ->orderBy('date', 'desc')
-                      ->orderBy('created_at', 'desc');
-            }])
+            ->with([
+                'logs' => function ($query) use ($kelas) {
+                    $query->whereIn('user_id', $kelas->students()->pluck('users.id'))
+                        ->with('user')
+                        ->orderBy('date', 'desc')
+                        ->orderBy('created_at', 'desc');
+                }
+            ])
             ->find($id);
 
         if (!$habit) {
@@ -185,7 +195,7 @@ class HabitController extends Controller
             ->where('date', '>=', now()->subDays(7))
             ->sortByDesc('date')
             ->values()
-            ->map(function($log) {
+            ->map(function ($log) {
                 return [
                     'id' => $log->id,
                     'student_name' => $log->user->name,
@@ -263,7 +273,7 @@ class HabitController extends Controller
 
         // Validasi bahwa siswa tersebut adalah siswa dari guru yang bersangkutan
         $kelas = SchoolClass::where('teacher_id', $guru->id)
-            ->whereHas('students', function($query) use ($habitLog) {
+            ->whereHas('students', function ($query) use ($habitLog) {
                 $query->where('users.id', $habitLog->user_id);
             })
             ->first();
@@ -282,7 +292,7 @@ class HabitController extends Controller
             ], 400);
         }
 
-        DB::transaction(function() use ($habitLog) {
+        DB::transaction(function () use ($habitLog) {
             // Update status habit log
             $habitLog->update([
                 'status' => HabitStatus::COMPLETED
@@ -295,9 +305,18 @@ class HabitController extends Controller
             $user->update([
                 'xp' => $user->xp + $xpReward
             ]);
+            
+            // Berikan setengah xp reward ke guru
+
+            $teacher = Auth::user();
+
+            $teacher->update([
+                'xp' => $teacher->xp + ($xpReward / 2)
+            ]);
 
             // Update level user menggunakan LevelService
             LevelService::updateUserLevel($user);
+            LevelService::updateUserLevel($teacher);
         });
 
         return response()->json([
@@ -341,7 +360,7 @@ class HabitController extends Controller
 
         // Validasi bahwa siswa tersebut adalah siswa dari guru yang bersangkutan
         $kelas = SchoolClass::where('teacher_id', $guru->id)
-            ->whereHas('students', function($query) use ($habitLog) {
+            ->whereHas('students', function ($query) use ($habitLog) {
                 $query->where('users.id', $habitLog->user_id);
             })
             ->first();
@@ -406,7 +425,7 @@ class HabitController extends Controller
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
             ->get()
-            ->map(function($log) {
+            ->map(function ($log) {
                 return [
                     'id' => $log->id,
                     'habit_id' => $log->habit_id,
@@ -464,7 +483,7 @@ class HabitController extends Controller
             ->whereDate('date', today())
             ->orderBy('created_at', 'desc')
             ->get()
-            ->map(function($log) {
+            ->map(function ($log) {
                 return [
                     'id' => $log->id,
                     'habit_id' => $log->habit_id,
@@ -497,7 +516,7 @@ class HabitController extends Controller
      */
     private function getStatusText(HabitStatus $status): string
     {
-        return match($status) {
+        return match ($status) {
             HabitStatus::JOINED => 'Bergabung',
             HabitStatus::SUBMITTED => 'Menunggu Validasi',
             HabitStatus::COMPLETED => 'Selesai'

@@ -246,8 +246,17 @@ class ChallengeController extends Controller
                 'xp' => $user->xp + $xpReward
             ]);
 
+            // Berikan setengah xp reward ke guru
+
+            $teacher = Auth::user();
+
+            $teacher->update([
+                'xp' => $teacher->xp + ($xpReward/2)
+            ]);
+
             // Update level user menggunakan LevelService
             LevelService::updateUserLevel($user);
+            LevelService::updateUserLevel($teacher);
         });
 
         return response()->json([

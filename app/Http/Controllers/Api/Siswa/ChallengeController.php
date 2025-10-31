@@ -18,7 +18,11 @@ class ChallengeController extends Controller
         $user = Auth::user();
         $status = $request->query('status');
 
+        $today = Carbon::today();
+
         $challenges = Challenge::with(['category'])
+            ->whereDate('start_date', '<=', $today)
+            ->whereDate('end_date', '>=', $today)
             ->withCount(['participants as total_participants'])
             ->orderBy('created_at', 'desc')
             ->get()

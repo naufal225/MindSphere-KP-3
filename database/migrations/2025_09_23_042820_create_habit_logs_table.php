@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->enum('status', ['joined', 'submitted', 'completed']);
             $table->text('note')->nullable();
             $table->string('proof_url')->nullable();
+            $table->timestamp('submitted_at')->nullable();
             $table->timestamps();
 
             $table->foreign('habit_id')->references('id')->on('habits')->onDelete('cascade');

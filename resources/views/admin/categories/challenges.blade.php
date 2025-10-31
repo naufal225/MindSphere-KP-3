@@ -104,8 +104,8 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span
                                     class="inline-flex px-2 text-xs font-semibold leading-5 rounded-full
-                                    {{ $challenge->type === App\Enums\ChallengeType::INDIVIDUAL ? 'text-green-800 bg-green-100' : 'text-blue-800 bg-blue-100' }}">
-                                    {{ $challenge->type === App\Enums\ChallengeType::INDIVIDUAL ? 'Individual' : 'Group'
+                                    {{ $challenge->type === App\Enums\ChallengeType::SELF ? 'text-green-800 bg-green-100' : 'text-blue-800 bg-blue-100' }}">
+                                    {{ $challenge->type === App\Enums\ChallengeType::SELF ? 'Mandiri' : 'Ditugaskan'
                                     }}
                                 </span>
                             </td>

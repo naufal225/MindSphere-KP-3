@@ -16,8 +16,7 @@ class ReflectionSubmissionController extends Controller
     {
         $user = Auth::user();
 
-        $reflection = Reflection::with(['category'])
-            ->where('user_id', $user->id)
+        $reflection = Reflection::where('user_id', $user->id)
             ->whereDate('date', Carbon::today())
             ->first();
 
@@ -32,9 +31,6 @@ class ReflectionSubmissionController extends Controller
             'id' => $reflection->id,
             'mood' => $reflection->mood->value,
             'content' => $reflection->content,
-            'category' => optional($reflection->category)->name,
-            'category_id' => $reflection->category_id,
-            'is_private' => $reflection->is_private,
             'date' => $reflection->date->format('Y-m-d'),
             'created_at' => $reflection->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $reflection->updated_at->format('Y-m-d H:i:s'),
@@ -84,7 +80,6 @@ class ReflectionSubmissionController extends Controller
                     'user_id' => $user->id,
                     'mood' => Mood::from($request->mood),
                     'content' => '', // Empty content for mood-only submission
-                    'is_private' => true,
                     'date' => $date,
                 ]);
             }

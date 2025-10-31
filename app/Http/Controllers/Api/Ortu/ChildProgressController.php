@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Ortu;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\LevelService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -47,7 +48,7 @@ class ChildProgressController extends Controller
             // Hitung XP untuk progress bar
             $currentLevel = $child->level;
             $currentXp = $child->xp;
-            $xpForNextLevel = $this->calculateXpForNextLevel($currentLevel);
+            $xpForNextLevel = LevelService::getXpForNextLevel($child->level + 1);
             $xpProgress = min(($currentXp / $xpForNextLevel) * 100, 100);
 
             // Data aktivitas 7 hari terakhir

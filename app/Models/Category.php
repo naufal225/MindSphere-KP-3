@@ -16,12 +16,12 @@ class Category extends Model
 
     public function habits()
     {
-        return $this->hasMany(Habit::class);
+        return $this->hasMany(Habit::class)->latest();
     }
 
     public function challenges()
     {
-        return $this->hasMany(Challenge::class);
+        return $this->hasMany(Challenge::class)->latest();
     }
 
     public function reflections()

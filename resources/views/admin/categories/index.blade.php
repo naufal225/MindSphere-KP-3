@@ -210,10 +210,10 @@
                                 <span class="text-gray-500">Challenges:</span>
                                 <span class="font-semibold text-purple-600">{{ $category->challenges_count }}</span>
                             </div>
-                            <div class="flex items-center space-x-2">
+                            {{-- <div class="flex items-center space-x-2">
                                 <span class="text-gray-500">Reflections:</span>
                                 <span class="font-semibold text-blue-600">{{ $category->reflections_count }}</span>
-                            </div>
+                            </div> --}}
                         </div>
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">

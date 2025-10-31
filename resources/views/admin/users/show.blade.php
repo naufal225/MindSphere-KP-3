@@ -186,10 +186,12 @@
                             class="tab-button flex-1 py-4 px-6 text-center border-b-2 border-blue-500 text-blue-600 font-medium">
                             <i class="mr-2 fa-solid fa-user"></i>Informasi Profil
                         </button>
+                        @if ($user->role == App\Enums\Role::SISWA->value)
                         <button type="button" data-tab="activity"
                             class="tab-button flex-1 py-4 px-6 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium">
                             <i class="mr-2 fa-solid fa-chart-line"></i>Aktivitas
                         </button>
+                        @endif
                         {{-- <button type="button" data-tab="settings"
                             class="tab-button flex-1 py-4 px-6 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium">
                             <i class="mr-2 fa-solid fa-cog"></i>Pengaturan
@@ -288,6 +290,8 @@
                             </div>
                         </div>
                     </div>
+
+                    @if($user->role == App\Enums\Role::SISWA->value)
 
                     <!-- Activity Tab -->
                     <div id="activity-tab" class="hidden tab-content">
@@ -538,6 +542,8 @@
                         </div>
                     </div>
                 </div>
+
+                @endif
             </div>
 
             <!-- Action Buttons -->

@@ -90,16 +90,18 @@
                     @if($class->students->count() > 0)
                     <div class="space-y-3">
                         @foreach($class->students as $student)
-                        <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                            <div
-                                class="flex items-center justify-center w-10 h-10 text-white bg-gradient-to-r from-green-500 to-teal-600 rounded-full">
-                                {{ substr($student->name, 0, 1) }}
+                        <a href="{{ route('admin.users.show', $student->id) }}">
+                            <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                <div
+                                    class="flex items-center justify-center w-10 h-10 text-white bg-gradient-to-r from-green-500 to-teal-600 rounded-full">
+                                    {{ substr($student->name, 0, 1) }}
+                                </div>
+                                <div class="ml-4">
+                                    <p class="font-medium text-gray-900">{{ $student->name }}</p>
+                                    <p class="text-sm text-gray-600">{{ $student->email }}</p>
+                                </div>
                             </div>
-                            <div class="ml-4">
-                                <p class="font-medium text-gray-900">{{ $student->name }}</p>
-                                <p class="text-sm text-gray-600">{{ $student->email }}</p>
-                            </div>
-                        </div>
+                        </a>
                         @endforeach
                     </div>
                     @else

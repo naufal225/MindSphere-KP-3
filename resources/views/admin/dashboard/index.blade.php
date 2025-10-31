@@ -241,7 +241,11 @@
                     </div>
                     <div class="flex-1">
                         <p class="text-sm text-gray-800">{{ $activity['message'] }}</p>
-                        <p class="text-xs text-gray-500">{{ $activity['timestamp']->diffForHumans() }}</p>
+                        <p class="text-xs text-gray-500">
+                            {{ $activity['timestamp'] ? \Carbon\Carbon::parse($activity['timestamp'])->diffForHumans() :
+                            '-' }}
+                        </p>
+
                     </div>
                 </div>
                 @empty
@@ -275,7 +279,14 @@
             <p class="text-sm text-gray-500">5 minggu terakhir</p>
         </div>
         <div class="p-6">
+            @if(empty($habitTrends))
+            <div class="text-center text-gray-500 py-8">
+                <i class="mb-2 text-4xl fa fa-chart-line"></i>
+                <p>Data tren habit belum tersedia</p>
+            </div>
+            @else
             <canvas id="habitTrendChart" width="400" height="250"></canvas>
+            @endif
         </div>
     </div>
 </div>
@@ -316,7 +327,8 @@
         }
     });
 
-    // Habit Trends Chart
+     // Habit Trends Chart - HANYA di-render jika ada data
+    @if(!empty($habitTrends))
     const habitCtx = document.getElementById('habitTrendChart').getContext('2d');
     const habitChart = new Chart(habitCtx, {
         type: 'line',
@@ -329,7 +341,8 @@
                     borderColor: '#10B981',
                     backgroundColor: 'rgba(16, 185, 129, 0.1)',
                     tension: 0.3,
-                    fill: true
+                    fill: true,
+                    borderWidth: 2
                 },
                 {
                     label: 'Habit Not Done',
@@ -337,7 +350,8 @@
                     borderColor: '#EF4444',
                     backgroundColor: 'rgba(239, 68, 68, 0.1)',
                     tension: 0.3,
-                    fill: true
+                    fill: true,
+                    borderWidth: 2
                 }
             ]
         },
@@ -346,15 +360,35 @@
             plugins: {
                 legend: {
                     position: 'bottom'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
                 }
             },
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Jumlah Habit'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Minggu'
+                    }
                 }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
             }
         }
     });
+    @endif
 </script>
 @endpush
 

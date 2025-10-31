@@ -16,10 +16,14 @@ class HabitController extends Controller
 {
     public function index(Request $request)
     {
+        $today = Carbon::today();
+
         $user = Auth::user();
         $status = $request->query('status');
 
         $habits = Habit::with(['category', 'assignedBy'])
+            ->whereDate('start_date', '<=', $today)
+            ->whereDate('end_date', '>=', $today)
             ->withCount(['logs as total_logs'])
             ->orderBy('created_at', 'desc')
             ->get()

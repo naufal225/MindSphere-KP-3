@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Siswa;
 use App\Http\Controllers\Controller;
 use App\Models\Reflection;
 use App\Enums\Mood;
+use App\Http\Services\LevelService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -18,15 +19,14 @@ class ReflectionController extends Controller
         $date = $request->query('date');
         $month = $request->query('month');
 
-        $reflections = Reflection::with(['category'])
-            ->where('user_id', $user->id)
-            ->when($date, function($query, $date) {
+        $reflections = Reflection::where('user_id', $user->id)
+            ->when($date, function ($query, $date) {
                 return $query->whereDate('date', Carbon::parse($date));
             })
-            ->when($month, function($query, $month) {
+            ->when($month, function ($query, $month) {
                 $parsedMonth = Carbon::parse($month);
                 return $query->whereYear('date', $parsedMonth->year)
-                            ->whereMonth('date', $parsedMonth->month);
+                    ->whereMonth('date', $parsedMonth->month);
             })
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
@@ -36,9 +36,6 @@ class ReflectionController extends Controller
                     'id' => $reflection->id,
                     'mood' => $reflection->mood->value,
                     'body' => $reflection->content,
-                    'category' => optional($reflection->category)->name,
-                    'category_id' => $reflection->category_id,
-                    'is_private' => $reflection->is_private,
                     'date' => $reflection->date->format('Y-m-d'),
                     'created_at' => $reflection->created_at->format('Y-m-d H:i:s'),
                     'updated_at' => $reflection->updated_at->format('Y-m-d H:i:s'),
@@ -58,8 +55,6 @@ class ReflectionController extends Controller
         $validator = Validator::make($request->all(), [
             'mood' => 'required|in:happy,neutral,sad,angry,tired',
             'body' => 'required|string|min:10|max:1000',
-            'category_id' => 'nullable|exists:categories,id',
-            'is_private' => 'boolean',
             'date' => 'required|date',
         ]);
 
@@ -90,10 +85,20 @@ class ReflectionController extends Controller
                 'user_id' => $user->id,
                 'mood' => Mood::from($request->mood),
                 'content' => $request->body,
-                'category_id' => $request->category_id,
-                'is_private' => $request->is_private ?? true,
                 'date' => $requestDate,
             ]);
+
+            // Tambahkan xp
+
+            $user = Auth::user();
+            $xpReward = 100;
+
+            $user->update([
+                'xp' => $user->xp + $xpReward
+            ]);
+
+            // Update level user menggunakan LevelService
+            LevelService::updateUserLevel($user);
 
             return response()->json([
                 'status' => 'success',
@@ -102,8 +107,6 @@ class ReflectionController extends Controller
                     'id' => $reflection->id,
                     'mood' => $reflection->mood->value,
                     'body' => $reflection->content,
-                    'category' => optional($reflection->category)->name,
-                    'is_private' => $reflection->is_private,
                     'date' => $reflection->date->format('Y-m-d'),
                 ]
             ], 201);
@@ -135,8 +138,6 @@ class ReflectionController extends Controller
         $validator = Validator::make($request->all(), [
             'mood' => 'sometimes|in:happy,neutral,sad,angry,tired',
             'body' => 'sometimes|string|min:10|max:1000',
-            'category_id' => 'nullable|exists:categories,id',
-            'is_private' => 'boolean',
             'date' => 'sometimes|date',
         ]);
 
@@ -178,14 +179,6 @@ class ReflectionController extends Controller
                 $updateData['content'] = $request->body;
             }
 
-            if ($request->has('category_id')) {
-                $updateData['category_id'] = $request->category_id;
-            }
-
-            if ($request->has('is_private')) {
-                $updateData['is_private'] = $request->is_private;
-            }
-
             if ($request->has('date')) {
                 $updateData['date'] = Carbon::parse($request->date);
             }
@@ -199,8 +192,6 @@ class ReflectionController extends Controller
                     'id' => $reflection->id,
                     'mood' => $reflection->mood->value,
                     'body' => $reflection->content,
-                    'category' => optional($reflection->category)->name,
-                    'is_private' => $reflection->is_private,
                     'date' => $reflection->date->format('Y-m-d'),
                 ]
             ]);
@@ -252,8 +243,7 @@ class ReflectionController extends Controller
         $user = Auth::user();
         $today = Carbon::today();
 
-        $reflections = Reflection::with(['category'])
-            ->where('user_id', $user->id)
+        $reflections = Reflection::where('user_id', $user->id)
             ->whereDate('date', $today)
             ->orderBy('created_at', 'desc')
             ->get()
@@ -262,9 +252,6 @@ class ReflectionController extends Controller
                     'id' => $reflection->id,
                     'mood' => $reflection->mood->value,
                     'body' => $reflection->content,
-                    'category' => optional($reflection->category)->name,
-                    'category_id' => $reflection->category_id,
-                    'is_private' => $reflection->is_private,
                     'date' => $reflection->date->format('Y-m-d'),
                     'created_at' => $reflection->created_at->format('Y-m-d H:i:s'),
                     'updated_at' => $reflection->updated_at->format('Y-m-d H:i:s'),
@@ -292,8 +279,7 @@ class ReflectionController extends Controller
         $user = Auth::user();
         $today = Carbon::today();
 
-        $reflections = Reflection::with(['category'])
-            ->where('user_id', $user->id)
+        $reflections = Reflection::where('user_id', $user->id)
             ->whereDate('date', $today)
             ->orderBy('created_at', 'desc')
             ->get()
@@ -302,9 +288,6 @@ class ReflectionController extends Controller
                     'id' => $reflection->id,
                     'mood' => $reflection->mood->value,
                     'body' => $reflection->content,
-                    'category' => optional($reflection->category)->name,
-                    'category_id' => $reflection->category_id,
-                    'is_private' => $reflection->is_private,
                     'date' => $reflection->date->format('Y-m-d'),
                     'created_at' => $reflection->created_at->format('Y-m-d H:i:s'),
                     'updated_at' => $reflection->updated_at->format('Y-m-d H:i:s'),

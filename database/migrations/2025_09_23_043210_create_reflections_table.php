@@ -15,13 +15,10 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id');
             $table->enum('mood', ['happy', 'neutral', 'sad', 'angry', 'tired']);
             $table->text('content');
-            $table->unsignedBigInteger('category_id')->nullable();
-            $table->boolean('is_private')->default(true);
             $table->date('date');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
         });
     }
 

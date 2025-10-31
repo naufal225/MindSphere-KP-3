@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -57,23 +58,6 @@ class User extends Authenticatable
     public function reflections()
     {
         return $this->hasMany(Reflection::class);
-    }
-
-    public function badges()
-    {
-        return $this->belongsToMany(Badge::class, 'user_badges')
-            ->withPivot('awarded_at')
-            ->withTimestamps();
-    }
-
-    public function appreciationsSent()
-    {
-        return $this->hasMany(Appreciation::class, 'from_user');
-    }
-
-    public function appreciationsReceived()
-    {
-        return $this->hasMany(Appreciation::class, 'to_user');
     }
 
     public function classesAsTeacher()
