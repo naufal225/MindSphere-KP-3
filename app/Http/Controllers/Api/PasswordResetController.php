@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Notifications\ResetPasswordNotification;
+use Illuminate\Support\Facades\Log;
 
 class PasswordResetController extends Controller
 {
@@ -72,7 +73,7 @@ class PasswordResetController extends Controller
             ], 200);
 
         } catch (\Exception $e) {
-            \Log::error('Email error: ' . $e->getMessage());
+            Log::error('Email error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal mengirim email reset password. Silakan coba lagi.'

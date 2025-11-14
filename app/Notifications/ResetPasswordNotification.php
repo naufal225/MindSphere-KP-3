@@ -26,9 +26,13 @@ class ResetPasswordNotification extends Notification
         return ['mail'];
     }
 
-    public function toMail($notifiable)
+    public function toMail($notifiable): MailMessage
     {
-        $resetUrl = url('/reset-password/' . $this->token);
+        // Untuk development, gunakan APP_URL dari .env
+        $baseUrl = config('app.url');
+
+        // Jika dari mobile, kita perlu URL yang accessible dari device
+        $resetUrl = $baseUrl . '/reset-password/' . $this->token;
 
         return (new MailMessage)
             ->subject('Reset Password - EduTrack')
