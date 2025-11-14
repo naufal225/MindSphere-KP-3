@@ -34,6 +34,7 @@ class ProfileController extends Controller
                 'profile' => [
                     'id' => $guru->id,
                     'name' => $guru->name,
+                    'npk' => $guru->npk ?? "-",
                     'username' => $guru->username,
                     'email' => $guru->email,
                     'avatar_url' => $guru->avatar_url,

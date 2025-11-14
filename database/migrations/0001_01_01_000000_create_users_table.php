@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->string('name');
             $table->string('username')->unique();
             $table->string('email')->unique();
+            $table->string('nis')->nullable()->unique()->comment('Untuk Siswa');
+            $table->string('npk')->nullable()->unique()->comment('Untuk Guru');
             $table->string('password');
             $table->enum('role', ['admin', 'guru', 'siswa', 'ortu']);
             $table->unsignedBigInteger('parent_id')->nullable();

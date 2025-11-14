@@ -42,7 +42,7 @@
             @csrf
 
             <div class="space-y-6">
-                
+
 
                 <!-- Name Field -->
                 <div>
@@ -94,8 +94,7 @@
             <div>
                 <h3 class="font-semibold text-blue-800">Informasi Kategori</h3>
                 <p class="mt-1 text-sm text-blue-700">
-                    Kategori digunakan untuk mengelompokkan konten seperti habits, challenges, badges, dan reflections.
-                    Pastikan kode kategori unik dan deskripsi jelas untuk memudahkan pengguna.
+                    Kategori digunakan untuk mengelompokkan konten seperti habits dan challenges.
                 </p>
             </div>
         </div>

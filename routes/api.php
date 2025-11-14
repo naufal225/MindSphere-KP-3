@@ -2,9 +2,16 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\PasswordResetController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+// Password reset routes
+Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
+Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
+Route::post('/validate-reset-token', [PasswordResetController::class, 'validateToken']);
+Route::post('/check-email', [PasswordResetController::class, 'checkEmail']);
 
 Route::get('/user', function (Request $request) {
     return response()->json(Auth::user());

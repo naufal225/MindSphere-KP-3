@@ -26,7 +26,9 @@ class UserService
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('username', 'like', "%{$search}%");
+                    ->orWhere('username', 'like', "%{$search}%")
+                    ->orWhere('nis', 'like', "%{$search}%")
+                    ->orWhere('npk', 'like', "%{$search}%");
             });
         }
 
@@ -146,36 +148,61 @@ class UserService
             'stats' => $stats
         ];
     }
+
     public function createUser(array $data)
     {
         try {
             DB::beginTransaction();
 
             $avatarUrl = null;
+
+            // Handle avatar upload dari file
             if (isset($data['avatar_file']) && $data['avatar_file'] instanceof UploadedFile) {
-                $avatarUrl = $this->uploadAvatar($data['avatar_file']);
+                // Upload avatar baru dan dapatkan path relative
+                $avatarPath = $data['avatar_file']->store('avatars', 'public');
+                $data['avatar_url'] = $avatarPath; // Simpan path relative
+
+                unset($data['avatar_file']); // Hapus dari data agar tidak diupdate ke database
             }
 
-            $data = collect($data)->except(['avatar_file'])->toArray();
-            $data['password'] = bcrypt($data['password'] ?? 'password');
-            $data['avatar_url'] = $avatarUrl ?? $data['avatar_url'] ?? null;
+            // Handle avatar URL (jika input URL)
+            if (isset($data['avatar_url']) && !empty($data['avatar_url'])) {
+                // Simpan URL baru (bisa berupa URL external atau path relative)
+                $avatarUrl = $data['avatar_url'];
+            }
 
-            $user = User::create([
+            // Prepare user data
+            $userData = [
                 'name' => $data['name'],
                 'username' => $data['username'],
                 'email' => $data['email'],
-                'password' => $data['password'],
+                'password' => bcrypt($data['password'] ?? 'password'),
                 'role' => $data['role'],
+                'avatar_url' => $avatarUrl,
                 'xp' => $data['xp'] ?? 0,
                 'level' => $data['level'] ?? 1,
-                'avatar_url' => $data['avatar_url'] ?? null,
-            ]);
+                'parent_id' => $data['parent_id'] ?? null,
+            ];
+
+            // Set NIS atau NPK berdasarkan role
+            if ($data['role'] === Role::SISWA->value && isset($data['nis'])) {
+                $userData['nis'] = $data['nis'];
+                $userData['npk'] = null;
+            } elseif ($data['role'] === Role::GURU->value && isset($data['npk'])) {
+                $userData['npk'] = $data['npk'];
+                $userData['nis'] = null;
+            } else {
+                $userData['nis'] = null;
+                $userData['npk'] = null;
+            }
+
+            $user = User::create($userData);
 
             // Handle assignment berdasarkan role
-            if ($data['role'] === 'guru' && isset($data['class_id'])) {
+            if ($data['role'] === Role::GURU->value && isset($data['class_id'])) {
                 SchoolClass::where('id', $data['class_id'])
                     ->update(['teacher_id' => $user->id]);
-            } elseif ($data['role'] === 'siswa' && isset($data['class_id'])) {
+            } elseif ($data['role'] === Role::SISWA->value && isset($data['class_id'])) {
                 $user->classAsStudent()->attach($data['class_id']);
             }
 
@@ -192,9 +219,39 @@ class UserService
         try {
             $user = User::findOrFail($id);
 
-            // Jika role bukan siswa, set parent_id ke null
-            if ($data['role'] !== 'siswa') {
-                $data['parent_id'] = null;
+            DB::beginTransaction();
+
+            // Handle remove avatar
+            if (isset($data['remove_avatar']) && $data['remove_avatar'] == '1') {
+                if ($user->avatar_url) {
+                    $this->deleteAvatar($user->avatar_url);
+                }
+                $data['avatar_url'] = null;
+                unset($data['remove_avatar']);
+            }
+
+            // Handle avatar upload dari file
+            if (isset($data['avatar_file']) && $data['avatar_file'] instanceof UploadedFile) {
+                // Hapus avatar lama jika ada
+                if ($user->avatar_url) {
+                    $this->deleteAvatar($user->avatar_url);
+                }
+
+                // Upload avatar baru dan dapatkan path relative
+                $avatarPath = $data['avatar_file']->store('avatars', 'public');
+                $data['avatar_url'] = $avatarPath; // Simpan path relative
+
+                unset($data['avatar_file']); // Hapus dari data agar tidak diupdate ke database
+            }
+
+            // Handle avatar URL (jika input URL)
+            if (isset($data['avatar_url']) && !empty($data['avatar_url'])) {
+                // Jika ada avatar lama dan user menginput URL baru, hapus file lama
+                if ($user->avatar_url && $user->avatar_url !== $data['avatar_url']) {
+                    $this->deleteAvatar($user->avatar_url);
+                }
+                // Simpan URL baru (bisa berupa URL external atau path relative)
+                $data['avatar_url'] = $data['avatar_url'];
             }
 
             // Jika password kosong, hapus dari data
@@ -204,10 +261,34 @@ class UserService
                 $data['password'] = bcrypt($data['password']);
             }
 
+            // Handle NIS/NPK berdasarkan role
+            if ($data['role'] === Role::SISWA->value) {
+                $data['nis'] = $data['nis'] ?? $data['nomor_induk'] ?? null;
+                $data['npk'] = null;
+                $data['parent_id'] = $data['parent_id'] ?? null;
+            } elseif ($data['role'] === Role::GURU->value) {
+                $data['npk'] = $data['npk'] ?? $data['nomor_induk'] ?? null;
+                $data['nis'] = null;
+                $data['parent_id'] = null;
+            } else {
+                $data['nis'] = null;
+                $data['npk'] = null;
+                $data['parent_id'] = null;
+            }
+
+            // Hapus field nomor_induk karena sudah dipindah ke nis/npk
+            unset($data['nomor_induk']);
+
+            // Update user data
             $user->update($data);
 
+            // Handle class assignment
+            $this->handleRoleAndClassAssignment($user, $data);
+
+            DB::commit();
             return $user;
         } catch (\Exception $e) {
+            DB::rollBack();
             throw new \Exception('Gagal memperbarui user: ' . $e->getMessage());
         }
     }
@@ -241,24 +322,25 @@ class UserService
     private function handleRoleAndClassAssignment(User $user, array $data)
     {
         // Jika role berubah dari guru → non-guru, lepas dari semua kelas sebagai wali
-        if ($user->wasRecentlyCreated === false && $user->role === 'guru' && $data['role'] !== 'guru') {
+        if ($user->wasChanged('role') && $user->getOriginal('role') === Role::GURU->value && $data['role'] !== Role::GURU->value) {
             SchoolClass::where('teacher_id', $user->id)->update(['teacher_id' => null]);
         }
 
         // Jika role berubah dari siswa → non-siswa, lepas dari semua kelas sebagai siswa
-        if ($user->wasRecentlyCreated === false && $user->role === 'siswa' && $data['role'] !== 'siswa') {
+        if ($user->wasChanged('role') && $user->getOriginal('role') === Role::SISWA->value && $data['role'] !== Role::SISWA->value) {
             $user->classAsStudent()->detach();
         }
 
-        // Update role
-        $user->role = $data['role'];
-        $user->save();
-
         // Assign ke kelas baru berdasarkan role
-        if ($data['role'] === 'guru' && isset($data['class_id'])) {
-            // Lepaskan guru lama dari kelas ini
+        if ($data['role'] === Role::GURU->value && isset($data['class_id'])) {
+            // Lepaskan guru lama dari kelas ini (jika ada)
+            SchoolClass::where('id', $data['class_id'])
+                ->where('teacher_id', '!=', $user->id)
+                ->update(['teacher_id' => null]);
+
+            // Assign guru baru ke kelas
             SchoolClass::where('id', $data['class_id'])->update(['teacher_id' => $user->id]);
-        } elseif ($data['role'] === 'siswa' && isset($data['class_id'])) {
+        } elseif ($data['role'] === Role::SISWA->value && isset($data['class_id'])) {
             // Ganti kelas siswa
             $user->classAsStudent()->sync([$data['class_id']]);
         }

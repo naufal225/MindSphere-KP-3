@@ -59,9 +59,9 @@
                     <!-- Nama -->
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-700">
-                            <i class="mr-1 fa-solid fa-signature"></i> Nama Lengkap
+                            <i class="mr-1 fa-solid fa-signature"></i> Nama Lengkap *
                         </label>
-                        <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}"
+                        <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required
                             class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('name') border-red-500 @enderror"
                             placeholder="Masukkan nama lengkap">
                         @error('name')
@@ -73,9 +73,9 @@
                     <!-- Username -->
                     <div>
                         <label for="username" class="block mb-2 text-sm font-medium text-gray-700">
-                            <i class="mr-1 fa-solid fa-at"></i> Username
+                            <i class="mr-1 fa-solid fa-at"></i> Username *
                         </label>
-                        <input type="text" name="username" id="username" value="{{ old('username', $user->username) }}"
+                        <input type="text" name="username" id="username" value="{{ old('username', $user->username) }}" required
                             class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('username') border-red-500 @enderror"
                             placeholder="mis. johndoe">
                         @error('username')
@@ -87,9 +87,9 @@
                     <!-- Email -->
                     <div>
                         <label for="email" class="block mb-2 text-sm font-medium text-gray-700">
-                            <i class="mr-1 fa-solid fa-envelope"></i> Alamat Email
+                            <i class="mr-1 fa-solid fa-envelope"></i> Alamat Email *
                         </label>
-                        <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}"
+                        <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" required
                             class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('email') border-red-500 @enderror"
                             placeholder="email@example.com">
                         @error('email')
@@ -119,25 +119,49 @@
                     <!-- Role -->
                     <div>
                         <label for="role" class="block mb-2 text-sm font-medium text-gray-700">
-                            <i class="mr-1 fa-solid fa-user-tag"></i> Role Pengguna
+                            <i class="mr-1 fa-solid fa-user-tag"></i> Role Pengguna *
                         </label>
-                        <select name="role" id="role"
+                        <select name="role" id="role" required
                             class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('role') border-red-500 @enderror">
                             <option value="">Pilih Role Pengguna</option>
-                            <option value="guru" {{ old('role', $user->role) === 'guru' ? 'selected' : '' }}>
-                                <i class="fa-solid fa-chalkboard-user"></i> Guru
-                            </option>
-                            <option value="siswa" {{ old('role', $user->role) === 'siswa' ? 'selected' : '' }}>
-                                <i class="fa-solid fa-graduation-cap"></i> Siswa
-                            </option>
-                            <option value="ortu" {{ old('role', $user->role) === 'ortu' ? 'selected' : '' }}>
-                                <i class="fa-solid fa-user-group"></i> Orang Tua
-                            </option>
+                            <option value="guru" {{ old('role', $user->role) === 'guru' ? 'selected' : '' }}>Guru</option>
+                            <option value="siswa" {{ old('role', $user->role) === 'siswa' ? 'selected' : '' }}>Siswa</option>
+                            <option value="ortu" {{ old('role', $user->role) === 'ortu' ? 'selected' : '' }}>Orang Tua</option>
                         </select>
                         @error('role')
                         <p class="mt-2 text-sm text-red-600"><i class="mr-1 fa-solid fa-circle-exclamation"></i> {{
                             $message }}</p>
                         @enderror
+                    </div>
+                </div>
+            </div>
+
+            <!-- NIS/NPK Section (Conditional) -->
+            <div class="mb-8" id="nomor-induk-section" style="display: none;">
+                <div class="flex items-center mb-4">
+                    <i class="mr-2 text-green-500 fa-solid fa-id-card"></i>
+                    <h3 class="text-lg font-semibold text-gray-800">Nomor Induk</h3>
+                </div>
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <label for="nomor_induk" class="block mb-2 text-sm font-medium text-gray-700">
+                            <i class="mr-1 fa-solid fa-hashtag"></i> <span id="nomor-induk-label">Nomor Induk</span> *
+                        </label>
+                        <input type="text" name="nomor_induk" id="nomor_induk" value="{{ old('nomor_induk', $user->role === 'siswa' ? $user->nis : $user->npk) }}"
+                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('nis') border-red-500 @enderror @error('npk') border-red-500 @enderror"
+                            placeholder="Masukkan nomor induk">
+                        @error('nis')
+                        <p class="mt-2 text-sm text-red-600"><i class="mr-1 fa-solid fa-circle-exclamation"></i> {{
+                            $message }}</p>
+                        @enderror
+                        @error('npk')
+                        <p class="mt-2 text-sm text-red-600"><i class="mr-1 fa-solid fa-circle-exclamation"></i> {{
+                            $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">
+                            <i class="mr-1 fa-solid fa-info-circle"></i>
+                            <span id="nomor-induk-help">Wajib diisi untuk role ini.</span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -189,8 +213,19 @@
                             class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('class_id') border-red-500 @enderror">
                             <option value="">Pilih Kelas</option>
                             @foreach($classes as $class)
-                            <option value="{{ $class->id }}" {{ (old('class_id') ?? ($user->role === 'guru' ? $class->teacher_id : $user->classAsStudent->pluck('id')->first())) == $class->id ? 'selected' : '' }}>
-                                {{ $class->name }}
+                            @php
+                                $isSelected = false;
+                                if ($user->role === 'guru') {
+                                    $isSelected = $class->teacher_id == $user->id;
+                                } elseif ($user->role === 'siswa') {
+                                    $isSelected = $user->classAsStudent->contains('id', $class->id);
+                                }
+                                $isSelected = old('class_id') ? (old('class_id') == $class->id) : $isSelected;
+                            @endphp
+                            <option value="{{ $class->id }}" {{ $isSelected ? 'selected' : '' }}>
+                                {{ $class->name }} @if($class->teacher && $class->teacher->id != $user->id)
+                                - Wali: {{ $class->teacher->name }}
+                                @endif
                             </option>
                             @endforeach
                         </select>
@@ -209,7 +244,7 @@
             <!-- Informasi Tambahan -->
             <div class="mb-8">
                 <div class="flex items-center mb-4">
-                    <i class="mr-2 text-green-500 fa-solid fa-chart-line"></i>
+                    <i class="mr-2 text-purple-500 fa-solid fa-chart-line"></i>
                     <h3 class="text-lg font-semibold text-gray-800">Informasi Tambahan</h3>
                 </div>
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -245,7 +280,7 @@
             <!-- Avatar Section -->
             <div class="mb-8">
                 <div class="flex items-center mb-4">
-                    <i class="mr-2 text-purple-500 fa-solid fa-image"></i>
+                    <i class="mr-2 text-pink-500 fa-solid fa-image"></i>
                     <h3 class="text-lg font-semibold text-gray-800">Foto Profil</h3>
                 </div>
 
@@ -275,7 +310,7 @@
                             </div>
 
                             <p class="text-sm text-center text-gray-500" id="previewText">
-                                Avatar saat ini akan diganti
+                                Avatar saat ini
                             </p>
                         </div>
                     </div>
@@ -343,15 +378,14 @@
                         <span class="font-medium">ID:</span> {{ $user->id }}
                     </div>
                     <div>
+                        <span class="font-medium">NIS/NPK:</span>
+                        {{ $user->role === 'siswa' ? ($user->nis ?? '-') : ($user->role === 'guru' ? ($user->npk ?? '-') : '-') }}
+                    </div>
+                    <div>
                         <span class="font-medium">Bergabung:</span> {{ $user->created_at ? $user->created_at->format('d M Y') : '-' }}
                     </div>
                     <div>
                         <span class="font-medium">Diperbarui:</span> {{ $user->updated_at ? $user->updated_at->format('d M Y') : '-' }}
-                    </div>
-                    <div>
-                        <span class="font-medium">Status:</span>
-                        <span
-                            class="px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Aktif</span>
                     </div>
                 </div>
             </div>
@@ -378,6 +412,10 @@
         const roleSelect = document.getElementById('role');
         const classSection = document.getElementById('class-section');
         const parentSection = document.getElementById('parent-section');
+        const nomorIndukSection = document.getElementById('nomor-induk-section');
+        const nomorIndukInput = document.getElementById('nomor_induk');
+        const nomorIndukLabel = document.getElementById('nomor-induk-label');
+        const nomorIndukHelp = document.getElementById('nomor-induk-help');
         const classHelpText = document.getElementById('class-help-text');
         const classSelect = document.getElementById('class_id');
         const parentSelect = document.getElementById('parent_id');
@@ -395,6 +433,26 @@
         // Toggle sections berdasarkan role
         function toggleSections() {
             const role = roleSelect.value;
+
+            // Toggle nomor induk section
+            if (role === 'guru' || role === 'siswa') {
+                nomorIndukSection.style.display = 'block';
+                nomorIndukInput.setAttribute('required', 'required');
+
+                if (role === 'siswa') {
+                    nomorIndukLabel.textContent = 'NIS (Nomor Induk Siswa) *';
+                    nomorIndukHelp.textContent = 'Wajib diisi untuk siswa. Contoh: NIS2024001';
+                    nomorIndukInput.placeholder = 'Masukkan NIS siswa';
+                } else if (role === 'guru') {
+                    nomorIndukLabel.textContent = 'NPK (Nomor Pokok Guru) *';
+                    nomorIndukHelp.textContent = 'Wajib diisi untuk guru. Contoh: NPK2024001';
+                    nomorIndukInput.placeholder = 'Masukkan NPK guru';
+                }
+            } else {
+                nomorIndukSection.style.display = 'none';
+                nomorIndukInput.removeAttribute('required');
+                nomorIndukInput.value = '';
+            }
 
             // Toggle class section
             if (role === 'guru' || role === 'siswa') {
@@ -424,7 +482,7 @@
         // Event listener untuk role change
         roleSelect.addEventListener('change', toggleSections);
 
-        // Panggil pada load
+        // Panggil pada load untuk menangani current role
         toggleSections();
 
         // Handle file upload preview
@@ -505,6 +563,26 @@
             currentAvatar.classList.add('hidden');
             previewText.textContent = 'Preview avatar baru dari URL';
         }
+
+        // Validasi form sebelum submit
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const role = roleSelect.value;
+            const nomorInduk = nomorIndukInput.value.trim();
+
+            if ((role === 'guru' || role === 'siswa') && !nomorInduk) {
+                e.preventDefault();
+                alert(`Harap isi ${role === 'siswa' ? 'NIS' : 'NPK'} untuk role ${role}`);
+                nomorIndukInput.focus();
+                return false;
+            }
+
+            if (role === 'siswa' && !classSelect.value) {
+                e.preventDefault();
+                alert('Harap pilih kelas untuk siswa');
+                classSelect.focus();
+                return false;
+            }
+        });
     });
 </script>
 @endpush

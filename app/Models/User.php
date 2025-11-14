@@ -6,15 +6,18 @@ use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory, HasApiTokens, Notifiable;
 
     protected $fillable = [
         'name',
         'username',
+        'nis',
+        'npk',
         'email',
         'password',
         'role',
@@ -28,13 +31,64 @@ class User extends Authenticatable
         'password'
     ];
 
-
     protected $casts = [
         'id' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
+    // Accessor untuk mendapatkan nomor induk berdasarkan role
+    public function getNomorIndukAttribute()
+    {
+        return $this->role === Role::SISWA->value ? $this->nis : $this->npk;
+    }
+
+    // Scope untuk filter berdasarkan role
+    public function scopeSiswa($query)
+    {
+        return $query->where('role', Role::SISWA->value);
+    }
+
+    public function scopeGuru($query)
+    {
+        return $query->where('role', Role::GURU->value);
+    }
+
+    public function scopeOrtu($query)
+    {
+        return $query->where('role', Role::ORTU->value);
+    }
+
+    public function scopeAdmin($query)
+    {
+        return $query->where('role', Role::ADMIN->value);
+    }
+
+    // Validasi NIS unik untuk siswa
+    public static function validateNis($nis, $ignoreId = null)
+    {
+        $query = self::where('nis', $nis)->where('role', Role::SISWA->value);
+
+        if ($ignoreId) {
+            $query->where('id', '!=', $ignoreId);
+        }
+
+        return !$query->exists();
+    }
+
+    // Validasi NPK unik untuk guru
+    public static function validateNpk($npk, $ignoreId = null)
+    {
+        $query = self::where('npk', $npk)->where('role', Role::GURU->value);
+
+        if ($ignoreId) {
+            $query->where('id', '!=', $ignoreId);
+        }
+
+        return !$query->exists();
+    }
+
+    // Relations
     public function parent()
     {
         return $this->belongsTo(User::class, 'parent_id');

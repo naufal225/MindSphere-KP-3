@@ -197,7 +197,7 @@
 
                             <!-- Additional Information -->
                             <div class="space-y-4">
-                               
+
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg">
                                     <i
                                         class="w-8 h-8 p-2 mr-3 text-orange-600 bg-orange-100 rounded-lg fa-solid fa-calendar-plus"></i>
@@ -295,7 +295,7 @@
                                             <div class="flex items-center">
                                                 @if($participant->user->avatar_url)
                                                 <img class="w-8 h-8 rounded-full"
-                                                    src="{{ $participant->user->avatar_url }}"
+                                                    src="{{ Storage::url($participant->user->avatar_url) }}"
                                                     alt="{{ $participant->user->name }}">
                                                 @else
                                                 <div

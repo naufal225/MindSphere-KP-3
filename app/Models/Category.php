@@ -24,11 +24,6 @@ class Category extends Model
         return $this->hasMany(Challenge::class)->latest();
     }
 
-    public function reflections()
-    {
-        return $this->hasMany(Reflection::class);
-    }
-
     public function getHabitsCountAttribute()
     {
         return $this->habits()->count();

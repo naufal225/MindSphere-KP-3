@@ -58,6 +58,8 @@ class HabitController extends Controller
                     'is_owner' => $habit->created_by === $user->id,
                     'is_assigned_to_me' => $habit->assigned_by === $user->id,
                     'total_logs' => $habit->total_logs,
+                    'start_date' => $habit->start_date->format('Y-m-d'),
+                    'end_date' => $habit->end_date->format('Y-m-d'),
                     'user_progress' => [
                         'total_logs' => $totalUserLogs,
                         'completed_logs' => $completedLogs,
@@ -100,8 +102,10 @@ class HabitController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'xp_reward' => 'required|integer|min:1|max:100',
+            'xp_reward' => 'required|integer|min:1|max:1000',
             'period' => 'required|in:daily,weekly',
+            'start_date' => 'required|date|after_or_equal:today',
+            'end_date' => 'required|date|after:start_date',
         ]);
 
         if ($validator->fails()) {
@@ -120,6 +124,8 @@ class HabitController extends Controller
                 'category_id' => $request->category_id,
                 'xp_reward' => $request->xp_reward,
                 'period' => Period::from($request->period),
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
                 'assigned_by' => $user->id,
                 'created_by' => $user->id,
             ]);
@@ -135,6 +141,8 @@ class HabitController extends Controller
                     'xp_reward' => $habit->xp_reward,
                     'period' => $habit->period->value,
                     'type' => $habit->type->value,
+                    'start_date' => $habit->start_date->format('Y-m-d'),
+                    'end_date' => $habit->end_date->format('Y-m-d'),
                 ]
             ], 201);
 
@@ -169,6 +177,8 @@ class HabitController extends Controller
             'category_id' => 'sometimes|exists:categories,id',
             'xp_reward' => 'sometimes|integer|min:1|max:100',
             'period' => 'sometimes|in:daily,weekly',
+            'start_date' => 'sometimes|date|after_or_equal:today',
+            'end_date' => 'sometimes|date|after:start_date',
         ]);
 
         if ($validator->fails()) {
@@ -191,6 +201,14 @@ class HabitController extends Controller
                 $updateData['period'] = Period::from($request->period);
             }
 
+            if ($request->has('start_date')) {
+                $updateData['start_date'] = $request->start_date;
+            }
+
+            if ($request->has('end_date')) {
+                $updateData['end_date'] = $request->end_date;
+            }
+
             $habit->update($updateData);
 
             return response()->json([
@@ -204,6 +222,8 @@ class HabitController extends Controller
                     'xp_reward' => $habit->xp_reward,
                     'period' => $habit->period->value,
                     'type' => $habit->type->value,
+                    'start_date' => $habit->start_date->format('Y-m-d'),
+                    'end_date' => $habit->end_date->format('Y-m-d'),
                 ]
             ]);
 

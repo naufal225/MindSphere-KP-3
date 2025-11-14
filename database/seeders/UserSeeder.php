@@ -18,7 +18,9 @@ class UserSeeder extends Seeder
         $admin = DB::table('users')->insertGetId([
             'name' => 'Naufal Ma\'ruf Ashrori',
             'username' => 'nma225',
-            'email' => 'nma225@gmail.com',
+            'nis' => null,
+            'npk' => null,
+            'email' => 'naufalmarufashrori225@gmail.com',
             'password' => Hash::make('password'),
             'role' => 'admin',
             'parent_id' => null,
@@ -42,13 +44,15 @@ class UserSeeder extends Seeder
             ]);
         }
 
-        // Create Teachers
+        // Create Teachers dengan NPK
         $teachers = [];
         foreach ($classNames as $index => $className) {
             $teacherNumber = $index + 1;
             $teachers[$className] = DB::table('users')->insertGetId([
                 'name' => "Guru {$teacherNumber}",
                 'username' => "guru{$teacherNumber}",
+                'nis' => null,
+                'npk' => "NPK{$teacherNumber}",
                 'email' => "guru{$teacherNumber}@gmail.com",
                 'password' => Hash::make('password'),
                 'role' => 'guru',
@@ -66,7 +70,7 @@ class UserSeeder extends Seeder
                 ->update(['teacher_id' => $teachers[$className]]);
         }
 
-        // Create Students and Parents
+        // Create Students dengan NIS dan Parents
         $allStudents = [];
         $parents = [];
 
@@ -79,6 +83,8 @@ class UserSeeder extends Seeder
                 $studentId = DB::table('users')->insertGetId([
                     'name' => "Siswa {$studentNumber}",
                     'username' => "siswa{$studentNumber}",
+                    'nis' => "NIS{$studentNumber}",
+                    'npk' => null,
                     'email' => "siswa{$studentNumber}@gmail.com",
                     'password' => Hash::make('password'),
                     'role' => 'siswa',
@@ -104,11 +110,14 @@ class UserSeeder extends Seeder
         }
 
         // Create Parents
-        // Parent 1 - for 2 children (first 2 students)
         $studentIds = array_keys($allStudents);
+
+        // Parent 1 - for 2 children (first 2 students)
         $parent1 = DB::table('users')->insertGetId([
             'name' => 'Ortu 1',
             'username' => 'ortu1',
+            'nis' => null,
+            'npk' => null,
             'email' => 'ortu1@gmail.com',
             'password' => Hash::make('password'),
             'role' => 'ortu',
@@ -129,6 +138,8 @@ class UserSeeder extends Seeder
         $parent2 = DB::table('users')->insertGetId([
             'name' => 'Ortu 2',
             'username' => 'ortu2',
+            'nis' => null,
+            'npk' => null,
             'email' => 'ortu2@gmail.com',
             'password' => Hash::make('password'),
             'role' => 'ortu',
@@ -149,6 +160,8 @@ class UserSeeder extends Seeder
         $parent3 = DB::table('users')->insertGetId([
             'name' => 'Ortu 3',
             'username' => 'ortu3',
+            'nis' => null,
+            'npk' => null,
             'email' => 'ortu3@gmail.com',
             'password' => Hash::make('password'),
             'role' => 'ortu',

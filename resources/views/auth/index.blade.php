@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - KeepItGrow</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+     @vite('resources/css/app.css')
     <link rel="icon" type="image/x-icon" href="{{ asset('yaztech-icon.jpg') }}">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
         body {
             font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         .orbit {
@@ -71,35 +72,86 @@
             transform: translateY(0);
         }
 
+        .btn-secondary {
+            background: linear-gradient(135deg, #6B7280 0%, #9CA3AF 100%);
+            box-shadow: 0 4px 12px rgba(107, 114, 128, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(107, 114, 128, 0.3);
+        }
+
         .capslock-warning {
             animation: fadeIn 0.3s ease;
+        }
+
+        .card-glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-5px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4 bg-[#F3F4F6]">
+<body class="flex items-center justify-center min-h-screen p-4">
+    <!-- Background Elements -->
+    <div class="fixed top-10 left-10 floating-element">
+        <div class="relative">
+            <div class="orbit orbit-1"></div>
+            <div class="leaf"></div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-10 right-10 floating-element" style="animation-delay: 2s;">
+        <div class="relative">
+            <div class="orbit orbit-2"></div>
+            <div class="star"></div>
+        </div>
+    </div>
+
     <!-- Main Container -->
     <div class="w-full max-w-md">
-        <div class="overflow-hidden bg-white border border-gray-200 shadow-sm rounded-xl">
+        <div class="overflow-hidden card-glass rounded-2xl">
             <!-- Header Section -->
-            <div class="px-8 py-10 text-center bg-white">
+            <div class="px-8 pt-10 pb-6 text-center">
                 <!-- Logo with KeepItGrow branding -->
                 <div class="flex justify-center mb-4">
-                    <img src="{{ asset('img/logo.png') }}" alt="KeepItGrow Logo" class="w-24 h-24">
+                    <div class="relative">
+                        <img src="{{ asset('img/logo.png') }}" alt="KeepItGrow Logo" class="w-20 h-20">
+                        <div class="absolute -inset-2 bg-blue-100 rounded-full blur-sm opacity-50 -z-10"></div>
+                    </div>
                 </div>
-                <h1 class="mb-2 text-2xl font-bold text-[#111827]">KeepItGrow</h1>
-                {{-- <p class="text-gray-600">Welcome back to your knowledge hub</p> --}}
+                <h1 class="mb-2 text-3xl font-bold gradient-text">KeepItGrow</h1>
             </div>
 
             <!-- Form Section -->
-            <div class="px-8 py-8">
+            <div class="px-8 pb-8">
                 <!-- Error Messages -->
                 @if ($errors->any())
-                    <div class="p-4 mb-6 border border-red-200 rounded-lg bg-red-50">
+                    <div class="p-4 mb-6 border border-red-200 rounded-xl bg-red-50">
                         <div class="flex">
                             <div class="flex-shrink-0">
                                 <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -124,7 +176,7 @@
 
                 <!-- Success Message -->
                 @if(session('success'))
-                    <div class="p-4 mb-6 border border-green-200 rounded-lg bg-green-50">
+                    <div class="p-4 mb-6 border border-green-200 rounded-xl bg-green-50">
                         <div class="flex items-center">
                             <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -139,7 +191,7 @@
 
                     <!-- Email Field -->
                     <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-[#111827]">
+                        <label for="email" class="block mb-2 text-sm font-semibold text-gray-700">
                             Email Address
                         </label>
                         <div class="relative">
@@ -148,7 +200,7 @@
                                 id="email"
                                 name="email"
                                 value="{{ old('email') }}"
-                                class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-lg input-focus-effect transition-all duration-200 @error('email') border-red-500 @enderror"
+                                class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-xl input-focus-effect transition-all duration-200 bg-white/80 backdrop-blur-sm @error('email') border-red-500 @enderror"
                                 placeholder="Enter your email"
                                 required
                             >
@@ -163,7 +215,7 @@
 
                     <!-- Password Field with Toggle -->
                     <div>
-                        <label for="password" class="block mb-2 text-sm font-medium text-[#111827]">
+                        <label for="password" class="block mb-2 text-sm font-semibold text-gray-700">
                             Password
                         </label>
                         <div class="relative">
@@ -171,7 +223,7 @@
                                 type="password"
                                 id="password"
                                 name="password"
-                                class="w-full px-4 py-3 pl-11 pr-11 border border-gray-300 rounded-lg input-focus-effect transition-all duration-200 @error('password') border-red-500 @enderror"
+                                class="w-full px-4 py-3 pl-11 pr-11 border border-gray-300 rounded-xl input-focus-effect transition-all duration-200 bg-white/80 backdrop-blur-sm @error('password') border-red-500 @enderror"
                                 placeholder="Enter your password"
                                 required
                             >
@@ -201,7 +253,7 @@
                         </div>
                     </div>
 
-                    <!-- Remember Me -->
+                    <!-- Remember Me & Forgot Password -->
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <input
@@ -216,16 +268,16 @@
                             </label>
                         </div>
 
-                        {{-- <a href="#" class="text-sm font-medium text-[#2563EB] hover:underline">
+                        <a href="{{ route('password.request') }}" class="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors duration-200">
                             Forgot password?
-                        </a> --}}
+                        </a>
                     </div>
 
                     <!-- Login Button -->
                     <button
                         type="submit"
                         id="loginBtn"
-                        class="w-full btn-primary text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        class="w-full btn-primary text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     >
                         <span id="loginBtnContent" class="flex items-center justify-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -244,13 +296,7 @@
                     </button>
                 </form>
 
-                <!-- Sign Up Link -->
-                {{-- <div class="mt-6 text-center">
-                    <p class="text-sm text-gray-600">
-                        Don't have an account?
-                        <a href="#" class="font-medium text-[#2563EB] hover:underline">Sign up</a>
-                    </p>
-                </div> --}}
+                
             </div>
         </div>
     </div>
@@ -289,10 +335,12 @@
             inputs.forEach(input => {
                 input.addEventListener('focus', function() {
                     this.classList.add('input-focus-effect');
+                    this.parentElement.classList.add('ring-2', 'ring-blue-100');
                 });
 
                 input.addEventListener('blur', function() {
                     this.classList.remove('input-focus-effect');
+                    this.parentElement.classList.remove('ring-2', 'ring-blue-100');
                 });
             });
 
@@ -389,6 +437,17 @@
                     capsLockWarning.remove();
                     capsLockWarning = null;
                 }
+            });
+
+            // Add hover effects to buttons
+            const buttons = document.querySelectorAll('button, a');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-1px)';
+                });
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
             });
         });
     </script>

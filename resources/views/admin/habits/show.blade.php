@@ -92,7 +92,7 @@
                         <!-- Completion Rate -->
                         @php
                         $totalLogs = $logs->count();
-                        $completedLogs = $logs->where('status', 'done')->count();
+                        $completedLogs = $logs->where('status', 'completed')->count();
                         $completionRate = $totalLogs > 0 ? ($completedLogs / $totalLogs) * 100 : 0;
                         @endphp
                         <div class="text-center">
@@ -182,7 +182,7 @@
 
                             <!-- Additional Information -->
                             <div class="space-y-4">
-                               
+
 
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg">
                                     <i
@@ -264,7 +264,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 @if($log->user->avatar_url)
-                                                <img class="w-8 h-8 rounded-full" src="{{ $log->user->avatar_url }}" alt="{{ $log->user->name }}">
+                                                <img class="w-8 h-8 rounded-full" src="{{ Storage::url($log->user->avatar_url) }}" alt="{{ $log->user->name }}">
                                                 @else
                                                 <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
                                                     {{ substr($log->user->name, 0, 1) }}
@@ -279,12 +279,12 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             @php
                                             $statusColors = [
-                                                'done' => 'bg-green-100 text-green-800',
-                                                'not_done' => 'bg-red-100 text-red-800'
+                                                'completed' => 'bg-green-100 text-green-800',
+                                                'joined' => 'bg-red-100 text-red-800'
                                             ];
                                             @endphp
                                             <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $statusColors[$log->status->value] }}">
-                                                {{ $log->status->value === 'done' ? 'Selesai' : 'Belum Selesai' }}
+                                                {{ $log->status->value === 'completed' ? 'Selesai' : 'Belum Selesai' }}
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-500 max-w-xs">

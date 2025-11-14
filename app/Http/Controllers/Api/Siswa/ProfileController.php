@@ -188,6 +188,7 @@ class ProfileController extends Controller
                     'profile' => [
                         'id' => $siswa->id,
                         'name' => $siswa->name,
+                        'nis' => $siswa->nis ?? "-",
                         'username' => $siswa->username,
                         'email' => $siswa->email,
                         'avatar_url' => $fullAvatarUrl,

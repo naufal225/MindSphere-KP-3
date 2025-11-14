@@ -6,7 +6,7 @@
 @section('content')
 
 @php
-    use App\Http\Services\LevelService;
+use App\Http\Services\LevelService;
 @endphp
 
 <div class="mb-6">
@@ -21,7 +21,6 @@
         </a>
     </div>
 </div>
-
 
 @if(session('success'))
 <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
@@ -59,7 +58,7 @@
                     <i class="mr-1 fa-solid fa-search"></i> Cari Pengguna
                 </label>
                 <input type="text" name="search" id="search" value="{{ request('search') }}"
-                    placeholder="Nama, email, atau username..."
+                    placeholder="Nama, email, NIS, NPK..."
                     class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
             </div>
 
@@ -71,18 +70,10 @@
                 <select name="role" id="role"
                     class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Semua Role</option>
-                    <option value="admin" {{ request('role')==='admin' ? 'selected' : '' }}>
-                        <i class="fa-solid fa-user-shield"></i> Admin
-                    </option>
-                    <option value="guru" {{ request('role')==='guru' ? 'selected' : '' }}>
-                        <i class="fa-solid fa-chalkboard-user"></i> Guru
-                    </option>
-                    <option value="siswa" {{ request('role')==='siswa' ? 'selected' : '' }}>
-                        <i class="fa-solid fa-graduation-cap"></i> Siswa
-                    </option>
-                    <option value="ortu" {{ request('role')==='ortu' ? 'selected' : '' }}>
-                        <i class="fa-solid fa-user-group"></i> Orang Tua
-                    </option>
+                    <option value="admin" {{ request('role')==='admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="guru" {{ request('role')==='guru' ? 'selected' : '' }}>Guru</option>
+                    <option value="siswa" {{ request('role')==='siswa' ? 'selected' : '' }}>Siswa</option>
+                    <option value="ortu" {{ request('role')==='ortu' ? 'selected' : '' }}>Orang Tua</option>
                 </select>
             </div>
 
@@ -101,23 +92,6 @@
                     @endforeach
                 </select>
             </div>
-
-            <!-- Status Filter -->
-            {{-- <div>
-                <label for="status" class="block mb-2 text-sm font-medium text-gray-700">
-                    <i class="mr-1 fa-solid fa-circle-check"></i> Status
-                </label>
-                <select name="status" id="status"
-                    class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Semua Status</option>
-                    <option value="active" {{ request('status')==='active' ? 'selected' : '' }}>
-                        <i class="fa-solid fa-circle-check text-green-500"></i> Aktif
-                    </option>
-                    <option value="inactive" {{ request('status')==='inactive' ? 'selected' : '' }}>
-                        <i class="fa-solid fa-circle-pause text-gray-500"></i> Non-Aktif
-                    </option>
-                </select>
-            </div> --}}
 
             <!-- Action Buttons -->
             <div class="flex items-end space-x-3">
@@ -223,6 +197,10 @@
                     </th>
                     <th scope="col"
                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                        <i class="mr-1 fa-solid fa-id-card"></i> NIS/NPK
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                         <i class="mr-1 fa-solid fa-shield"></i> Role
                     </th>
                     <th scope="col"
@@ -242,7 +220,6 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($users as $user)
                 @php
-
                 // Hitung progress level menggunakan LevelService
                 $currentLevel = $user->level;
                 $currentXp = $user->xp;
@@ -263,12 +240,15 @@
                 $progressPercentage = $xpNeededForNextLevel > 0
                 ? min(round(($xpInCurrentLevel / $xpNeededForNextLevel) * 100, 1), 100)
                 : 100;
+
+                // Tentukan NIS/NPK berdasarkan role
+                $nomorInduk = $user->role === 'siswa' ? $user->nis : ($user->role === 'guru' ? $user->npk : null);
                 @endphp
                 <tr class="transition-colors hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">
                         @if($user->avatar_url)
                         <img src="{{ Storage::url($user->avatar_url) }}" alt="{{ $user->name }}"
-                            class="w-10 h-10 rounded-full shadow-sm">
+                            class="object-cover w-10 h-10 rounded-full shadow-sm">
                         @else
                         <div
                             class="flex items-center justify-center w-10 h-10 text-lg font-bold text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-full shadow-sm">
@@ -279,17 +259,44 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm font-semibold text-gray-900">{{ $user->name }}</div>
                         <div class="text-sm text-gray-500">{{ $user->email }}</div>
+                        @if($user->role === 'siswa' && $user->parent)
+                        <div class="text-xs text-gray-400">
+                            <i class="mr-1 fa-solid fa-user-group"></i>Orang Tua: {{ $user->parent->name }}
+                        </div>
+                        @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">{{ $user->username ? '@'.$user->username : '-' }}</div>
+                        <div class="text-sm font-medium text-gray-900">
+                            @if($user->username)
+                            <span class="text-blue-600">@</span>{{ $user->username }}
+                            @else
+                            <span class="text-gray-400">-</span>
+                            @endif
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        @if($nomorInduk)
+                        <div class="text-sm font-medium text-gray-900">
+                            {{ $nomorInduk }}
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            @if($user->role === 'siswa')
+                            <i class="mr-1 fa-solid fa-graduation-cap"></i>NIS
+                            @elseif($user->role === 'guru')
+                            <i class="mr-1 fa-solid fa-chalkboard-user"></i>NPK
+                            @endif
+                        </div>
+                        @else
+                        <span class="text-sm text-gray-400">-</span>
+                        @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         @php
                         $roleColors = [
-                        'admin' => 'bg-red-100 text-red-800',
-                        'guru' => 'bg-purple-100 text-purple-800',
-                        'siswa' => 'bg-green-100 text-green-800',
-                        'ortu' => 'bg-orange-100 text-orange-800'
+                        'admin' => 'bg-red-100 text-red-800 border-red-200',
+                        'guru' => 'bg-purple-100 text-purple-800 border-purple-200',
+                        'siswa' => 'bg-green-100 text-green-800 border-green-200',
+                        'ortu' => 'bg-orange-100 text-orange-800 border-orange-200'
                         ];
                         $roleIcons = [
                         'admin' => 'fa-user-shield',
@@ -298,11 +305,24 @@
                         'ortu' => 'fa-user-group'
                         ];
                         @endphp
-                        <span
-                            class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full {{ $roleColors[$user->role] ?? 'bg-gray-100 text-gray-800' }}">
-                            <i class="mr-1 fa-solid {{ $roleIcons[$user->role] ?? 'fa-user' }}"></i>
-                            {{ ucfirst($user->role) }}
-                        </span>
+                        <div class="flex flex-col space-y-1">
+                            <span
+                                class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full border {{ $roleColors[$user->role] ?? 'bg-gray-100 text-gray-800 border-gray-200' }}">
+                                <i class="mr-1 fa-solid {{ $roleIcons[$user->role] ?? 'fa-user' }}"></i>
+                                {{ ucfirst($user->role) }}
+                            </span>
+                            @if($user->role === 'siswa' && $user->classAsStudent->count() > 0)
+                            <div class="text-xs text-gray-600">
+                                <i class="mr-1 fa-solid fa-chalkboard"></i>
+                                {{ $user->classAsStudent->first()->name ?? '-' }}
+                            </div>
+                            @elseif($user->role === 'guru' && $user->classesAsTeacher->count() > 0)
+                            <div class="text-xs text-gray-600">
+                                <i class="mr-1 fa-solid fa-school"></i>
+                                {{ $user->classesAsTeacher->first()->name ?? '-' }}
+                            </div>
+                            @endif
+                        </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center justify-between mb-1">
@@ -327,27 +347,30 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                        {{ $user->created_at->format('d M Y') }}
+                        <div class="flex flex-col">
+                            <span>{{ $user->created_at->format('d M Y') }}</span>
+                            <span class="text-xs text-gray-400">{{ $user->created_at->format('H:i') }}</span>
+                        </div>
                     </td>
                     <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
-                        <div class="flex items-center justify-center space-x-2">
+                        <div class="flex items-center justify-center space-x-1">
                             <a href="{{ route('admin.users.show', $user->id) }}"
-                                class="p-2 text-blue-600 transition-colors rounded-lg hover:bg-blue-50"
-                                title="Lihat Detail">
+                                class="p-2 text-blue-600 transition-colors rounded-lg hover:bg-blue-50 group"
+                                title="Lihat Detail" data-tooltip="Lihat Detail">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
                             <a href="{{ route('admin.users.edit', $user->id) }}"
-                                class="p-2 text-yellow-600 transition-colors rounded-lg hover:bg-yellow-50"
-                                title="Edit Pengguna">
+                                class="p-2 text-yellow-600 transition-colors rounded-lg hover:bg-yellow-50 group"
+                                title="Edit Pengguna" data-tooltip="Edit">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </a>
                             <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                    class="p-2 text-red-600 transition-colors rounded-lg hover:bg-red-50"
-                                    title="Hapus Pengguna"
-                                    onclick="return confirm('Yakin ingin menghapus user {{ $user->name }}?')">
+                                    class="p-2 text-red-600 transition-colors rounded-lg hover:bg-red-50 group"
+                                    title="Hapus Pengguna" data-tooltip="Hapus"
+                                    onclick="return confirm('Yakin ingin menghapus user {{ addslashes($user->name) }}?')">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </form>
@@ -356,11 +379,15 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="px-6 py-8 text-center">
+                    <td colspan="8" class="px-6 py-12 text-center">
                         <div class="flex flex-col items-center justify-center text-gray-400">
-                            <i class="mb-3 text-4xl fa-solid fa-users-slash"></i>
-                            <p class="text-lg font-medium text-gray-600">Tidak ada data pengguna</p>
-                            <p class="text-sm text-gray-500">Coba ubah filter pencarian Anda</p>
+                            <i class="mb-4 text-5xl fa-solid fa-users-slash"></i>
+                            <p class="mb-2 text-lg font-medium text-gray-600">Tidak ada data pengguna</p>
+                            <p class="text-sm text-gray-500">Coba ubah filter pencarian atau tambah pengguna baru</p>
+                            <a href="{{ route('admin.users.create') }}"
+                                class="inline-flex items-center px-4 py-2 mt-4 text-sm font-medium text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700">
+                                <i class="mr-2 fa-solid fa-plus"></i> Tambah Pengguna
+                            </a>
                         </div>
                     </td>
                 </tr>
@@ -368,13 +395,42 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Table Footer -->
+    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+        <div class="flex items-center justify-between">
+            <div class="text-sm text-gray-600">
+                Menampilkan {{ $users->firstItem() ?? 0 }} - {{ $users->lastItem() ?? 0 }} dari {{ $users->total() }}
+                hasil
+            </div>
+            @if($users->hasPages())
+            <div class="flex space-x-2">
+                {{ $users->links() }}
+            </div>
+            @endif
+        </div>
+    </div>
 </div>
 
-<!-- Pagination -->
-@if($users->hasPages())
-<div class="mt-6">
-    {{ $users->links() }}
-</div>
-@endif
+<style>
+    .group:hover [data-tooltip]::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #374151;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 10;
+    }
+
+    .group {
+        position: relative;
+    }
+</style>
 
 @endsection
