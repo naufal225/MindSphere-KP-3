@@ -45,8 +45,8 @@ class DashboardController extends Controller
 
         $reflectionCount = Reflection::where('user_id', $user->id)->count();
 
-        // Hitung streak (berapa hari berturut-turut habit dilakukan)
-        $streak = $this->calculateHabitStreak($user->id);
+        // Hitung streak (berdasarkan aktivitas habit/challenge/refleksi)
+        $streak = $this->calculateProgressStreak($user->id, $today);
 
         // --- 3. 5 Habit Terbaru (Sesuai periode dan belum selesai) ---
         $latestHabits = Habit::select('habits.id', 'habits.title', 'habits.period')
@@ -169,33 +169,50 @@ class DashboardController extends Controller
     }
 
     /**
-     * Hitung streak habit (berapa hari berturut-turut user melakukan habit)
+     * Hitung streak aktivitas (habit completed, challenge completed, refleksi dibuat).
+     * Basis perhitungan: hari ini, putus jika ada sehari tanpa aktivitas.
+     * Rumus strike: jika 2 hari berturut, 1; 3 hari -> 2; 4 hari -> 3; dst (streak = max(0, consecutive-1)).
      */
-    private function calculateHabitStreak($userId)
+    private function calculateProgressStreak($userId, Carbon $today)
     {
-        $dates = HabitLog::where('user_id', $userId)
+        // Habit progress dates (completed)
+        $habitDates = HabitLog::where('user_id', $userId)
             ->where('status', 'completed')
-            ->orderBy('date', 'desc')
             ->pluck('date')
-            ->map(fn($d) => Carbon::parse($d)->toDateString())
+            ->map(fn($d) => Carbon::parse($d)->toDateString());
+
+        // Challenge progress dates (completed)
+        $challengeDates = ChallengeParticipant::where('user_id', $userId)
+            ->where('status', 'completed')
+            ->pluck('updated_at')
+            ->map(fn($d) => Carbon::parse($d)->toDateString());
+
+        // Reflection dates (any submission counted)
+        $reflectionDates = Reflection::where('user_id', $userId)
+            ->pluck('date')
+            ->map(fn($d) => Carbon::parse($d)->toDateString());
+
+        $allDates = $habitDates
+            ->merge($challengeDates)
+            ->merge($reflectionDates)
             ->unique()
+            ->filter() // remove null
             ->values();
 
-        if ($dates->isEmpty())
+        // Harus punya aktivitas hari ini, jika tidak streak = 0
+        if (!$allDates->contains($today->toDateString())) {
             return 0;
-
-        $streak = 1;
-        for ($i = 0; $i < $dates->count() - 1; $i++) {
-            $current = Carbon::parse($dates[$i]);
-            $next = Carbon::parse($dates[$i + 1]);
-            if ($current->diffInDays($next) == 1) {
-                $streak++;
-            } else {
-                break;
-            }
         }
 
-        return $streak;
+        $consecutive = 0;
+        $cursor = $today->copy();
+        while ($allDates->contains($cursor->toDateString())) {
+            $consecutive++;
+            $cursor->subDay();
+        }
+
+        // Mapping: 1 hari -> 0, 2 hari -> 1, 3 hari -> 2, dst
+        return max(0, $consecutive - 1);
     }
 
     /**

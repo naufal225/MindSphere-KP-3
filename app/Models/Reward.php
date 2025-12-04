@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Reward extends Model
 {
@@ -60,13 +61,27 @@ class Reward extends Model
         return $query->where('coin_cost', '<=', $userCoin);
     }
 
-    // Accessor untuk URL gambar lengkap
+    // Accessor: kembalikan path/URL apa adanya (tanpa prefix /storage)
     public function getImageUrlAttribute($value)
     {
-        if ($value) {
-            return Storage::url($value);
+        return $value;
+    }
+
+    // Helper: URL siap pakai (apply Storage::url untuk path lokal)
+    public function getImageFullUrlAttribute()
+    {
+        if (!$this->image_url) {
+            return asset('images/default-reward.png');
         }
-        return asset('images/default-reward.png');
+
+        if (Str::startsWith($this->image_url, ['http://', 'https://', '//'])) {
+            return $this->image_url;
+        }
+
+        $path = ltrim($this->image_url, '/');
+        $path = Str::startsWith($path, 'storage/') ? Str::after($path, 'storage/') : $path;
+
+        return Storage::disk('public')->url($path);
     }
 
     // Accessor untuk mengecek apakah reward masih tersedia

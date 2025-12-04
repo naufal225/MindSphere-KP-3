@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Siswa\DashboardController;
 use App\Http\Controllers\Api\Siswa\HabitSubmissionController;
 use App\Http\Controllers\Api\Siswa\ParentSupportController;
 use App\Http\Controllers\Api\Siswa\ProfileController;
+use App\Http\Controllers\Api\Siswa\RewardController;
 use App\Http\Controllers\Api\Siswa\ReflectionController;
 use App\Http\Controllers\Api\Siswa\ReflectionSubmissionController;
 use App\Http\Controllers\Api\Siswa\StudentLeaderboardController;
@@ -68,4 +69,11 @@ Route::middleware('auth:sanctum')->prefix('siswa')->name('siswa.')->group(functi
     Route::get('/parent-supports/latest', [ParentSupportController::class, 'getLatestSupports']);
     Route::post('/parent-supports/mark-all-read', [ParentSupportController::class, 'markAllAsRead']);
     Route::post('/parent-supports/{id}/mark-read', [ParentSupportController::class, 'markAsRead']);
+
+    // Rewards
+    Route::get('/rewards', [RewardController::class, 'index']);
+    Route::get('/rewards/{id}', [RewardController::class, 'show']);
+    Route::post('/rewards/{id}/request', [RewardController::class, 'requestReward']);
+    Route::get('/reward-requests', [RewardController::class, 'myRequests']);
+    Route::get('/reward-requests/{id}', [RewardController::class, 'requestDetail']);
 });

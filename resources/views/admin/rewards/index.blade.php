@@ -232,8 +232,16 @@
                 @endphp
                 <tr class="transition-colors hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">
-                        @if($reward->image_url)
-                        <img src="{{ $reward->image_url }}" alt="{{ $reward->name }}"
+                        @php
+                            $imageSrc = null;
+                            if ($reward->image_url) {
+                                $imageSrc = \Illuminate\Support\Str::startsWith($reward->image_url, ['http://', 'https://', '//'])
+                                    ? $reward->image_url
+                                    : \Illuminate\Support\Facades\Storage::url($reward->image_url);
+                            }
+                        @endphp
+                        @if($imageSrc)
+                        <img src="{{ $imageSrc }}" alt="{{ $reward->name }}"
                             class="object-cover w-12 h-12 rounded-lg shadow-sm">
                         @else
                         <div
@@ -247,9 +255,6 @@
                         @if($reward->description)
                         <div class="text-xs text-gray-500 truncate max-w-xs">{{ $reward->description }}</div>
                         @endif
-                        <div class="flex items-center mt-1 text-xs text-gray-400">
-                            <i class="mr-1 fa-solid fa-hashtag"></i>ID: {{ $reward->id }}
-                        </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center">

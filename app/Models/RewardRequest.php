@@ -178,9 +178,6 @@ class RewardRequest extends Model
                 $this->reward->decrement('stock', $this->quantity);
             }
 
-            // Kurangi koin user
-            $this->user->decrement('coin', $this->total_coin_cost);
-
             // Generate code jika reward digital/voucher
             if (in_array($this->reward->type, ['digital', 'voucher'])) {
                 $this->code = $this->generateCode();
@@ -202,11 +199,17 @@ class RewardRequest extends Model
             throw new \Exception('Request tidak dalam status pending');
         }
 
-        $this->status = self::STATUS_REJECTED;
-        $this->approved_at = now();
-        $this->approved_by = $rejector->id;
-        $this->rejection_reason = $reason;
-        $this->save();
+        DB::transaction(function () use ($rejector, $reason) {
+            // Kembalikan koin
+            $this->user->increment('coin', $this->total_coin_cost);
+
+            // Update status
+            $this->status = self::STATUS_REJECTED;
+            $this->approved_at = now();
+            $this->approved_by = $rejector->id;
+            $this->rejection_reason = $reason;
+            $this->save();
+        });
     }
 
     // Method untuk complete request
@@ -229,9 +232,14 @@ class RewardRequest extends Model
             throw new \Exception('Hanya request pending yang bisa dibatalkan');
         }
 
-        $this->status = self::STATUS_REJECTED;
-        $this->rejection_reason = 'Dibatalkan oleh siswa';
-        $this->save();
+        DB::transaction(function () {
+            // Refund koin
+            $this->user->increment('coin', $this->total_coin_cost);
+
+            $this->status = self::STATUS_REJECTED;
+            $this->rejection_reason = 'Dibatalkan oleh siswa';
+            $this->save();
+        });
     }
 
     // Generate unique code untuk reward digital/voucher
@@ -270,31 +278,41 @@ class RewardRequest extends Model
     // Method untuk membuat snapshot saat create
     public static function createWithSnapshot(array $data)
     {
-        $user = User::findOrFail($data['user_id']);
-        $reward = Reward::findOrFail($data['reward_id']);
+        return DB::transaction(function () use ($data) {
+            $user = User::findOrFail($data['user_id']);
+            $reward = Reward::findOrFail($data['reward_id']);
 
-        $data['total_coin_cost'] = $reward->coin_cost * ($data['quantity'] ?? 1);
+            $data['total_coin_cost'] = $reward->coin_cost * ($data['quantity'] ?? 1);
 
-        // Buat snapshot
-        $data['reward_snapshot'] = [
-            'id' => $reward->id,
-            'name' => $reward->name,
-            'coin_cost' => $reward->coin_cost,
-            'stock' => $reward->stock,
-            'image_url' => $reward->image_url,
-            'type' => $reward->type,
-            'validity_days' => $reward->validity_days
-        ];
+            // Validasi koin
+            if ($user->coin < $data['total_coin_cost']) {
+                throw new \Exception('Koin tidak mencukupi');
+            }
 
-        $data['user_snapshot'] = [
-            'id' => $user->id,
-            'name' => $user->name,
-            'coin' => $user->coin,
-            'xp' => $user->xp,
-            'level' => $user->level,
-            'nis' => $user->nis
-        ];
+            // Buat snapshot
+            $data['reward_snapshot'] = [
+                'id' => $reward->id,
+                'name' => $reward->name,
+                'coin_cost' => $reward->coin_cost,
+                'stock' => $reward->stock,
+                'image_url' => $reward->image_url,
+                'type' => $reward->type,
+                'validity_days' => $reward->validity_days
+            ];
 
-        return self::create($data);
+            $data['user_snapshot'] = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'coin' => $user->coin,
+                'xp' => $user->xp,
+                'level' => $user->level,
+                'nis' => $user->nis
+            ];
+
+            // Potong koin saat request dibuat
+            $user->decrement('coin', $data['total_coin_cost']);
+
+            return self::create($data);
+        });
     }
 }

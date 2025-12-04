@@ -154,7 +154,6 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Siswa</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reward</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
@@ -167,9 +166,6 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($requests as $request)
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                #{{ str_pad($request->id, 6, '0', STR_PAD_LEFT) }}
-                            </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10">
@@ -339,9 +335,11 @@
 
 @push('scripts')
 <script>
+    const rejectUrlTemplate = @json(route('admin.requests.reject', ['rewardRequest' => '__ID__']));
+
     function showRejectModal(requestId) {
         const form = document.getElementById('rejectForm');
-        form.action = "{{ route('admin.requests.reject', "+requestId+") }}/";
+        form.action = rejectUrlTemplate.replace('__ID__', requestId);
         document.getElementById('rejectModal').classList.remove('hidden');
         document.getElementById('rejection_reason').focus();
     }

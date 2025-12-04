@@ -9,6 +9,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Enums\Role;
 
 class RewardService
@@ -129,6 +130,8 @@ class RewardService
             // Handle external image URL - hanya set jika tidak empty
             if (isset($data['image_url']) && empty(trim($data['image_url']))) {
                 unset($data['image_url']);
+            } elseif (isset($data['image_url'])) {
+                $data['image_url'] = $this->normalizeImagePath($data['image_url']);
             }
 
             // Pastikan additional_info adalah array jika ada
@@ -206,6 +209,8 @@ class RewardService
             // Handle external image URL
             if (isset($data['image_url']) && empty(trim($data['image_url']))) {
                 $data['image_url'] = null;
+            } elseif (isset($data['image_url'])) {
+                $data['image_url'] = $this->normalizeImagePath($data['image_url']);
             }
 
             // Handle additional_info
@@ -318,6 +323,23 @@ class RewardService
         $path = $image->store('rewards', 'public');
 
         return $path;
+    }
+
+    private function normalizeImagePath(string $path): string
+    {
+        $trimmed = trim($path);
+
+        if (Str::startsWith($trimmed, ['http://', 'https://', '//'])) {
+            return $trimmed;
+        }
+
+        $normalized = ltrim($trimmed, '/');
+
+        if (Str::startsWith($normalized, 'storage/')) {
+            $normalized = Str::after($normalized, 'storage/');
+        }
+
+        return $normalized;
     }
 
     private function deleteImage(?string $imageUrl): void

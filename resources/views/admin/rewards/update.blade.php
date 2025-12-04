@@ -160,20 +160,18 @@
 
                     <!-- Image Preview -->
                     <div class="mb-4">
+                        @php
+                            $imageSrc = null;
+                            if ($reward->image_url) {
+                                $imageSrc = \Illuminate\Support\Str::startsWith($reward->image_url, ['http://', 'https://', '//'])
+                                    ? $reward->image_url
+                                    : \Illuminate\Support\Facades\Storage::url($reward->image_url);
+                            }
+                        @endphp
                         <div id="image-preview" class="{{ $reward->image_url ? '' : 'hidden' }}">
                             <div class="relative inline-block">
-                                @if($reward->image_url)
-                                    @if(str_starts_with($reward->image_url, 'http'))
-                                        <img id="preview-image" src="{{ $reward->image_url }}"
-                                            class="w-48 h-48 object-cover rounded-lg border border-gray-200 shadow-sm">
-                                    @else
-                                        <img id="preview-image" src="{{ ($reward->image_url) }}"
-                                            class="w-48 h-48 object-cover rounded-lg border border-gray-200 shadow-sm">
-                                    @endif
-                                @else
-                                    <img id="preview-image" src=""
-                                        class="w-48 h-48 object-cover rounded-lg border border-gray-200 shadow-sm">
-                                @endif
+                                <img id="preview-image" src="{{ $imageSrc ?? '' }}"
+                                    class="w-48 h-48 object-cover rounded-lg border border-gray-200 shadow-sm">
                                 <button type="button" id="remove-image"
                                     class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600">
                                     <i class="fa-solid fa-times text-xs"></i>
