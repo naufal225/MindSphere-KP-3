@@ -45,31 +45,31 @@
     @endif
 
     @php
-        use App\Http\Services\LevelService;
+    use App\Http\Services\LevelService;
 
-        // Hitung XP untuk level saat ini dan level berikutnya
-        $currentLevel = $user->level;
-        $currentXp = $user->xp;
+    // Hitung XP untuk level saat ini dan level berikutnya
+    $currentLevel = $user->level;
+    $currentXp = $user->xp;
 
-        // XP yang dibutuhkan untuk mencapai level saat ini
-        $xpForCurrentLevel = LevelService::getXpForNextLevel($currentLevel - 1);
+    // XP yang dibutuhkan untuk mencapai level saat ini
+    $xpForCurrentLevel = LevelService::getXpForNextLevel($currentLevel - 1);
 
-        // XP yang dibutuhkan untuk mencapai level berikutnya
-        $xpForNextLevel = LevelService::getXpForNextLevel($currentLevel);
+    // XP yang dibutuhkan untuk mencapai level berikutnya
+    $xpForNextLevel = LevelService::getXpForNextLevel($currentLevel);
 
-        // XP yang sudah diperoleh di level saat ini
-        $xpInCurrentLevel = $currentXp - $xpForCurrentLevel;
+    // XP yang sudah diperoleh di level saat ini
+    $xpInCurrentLevel = $currentXp - $xpForCurrentLevel;
 
-        // XP yang dibutuhkan untuk naik ke level berikutnya
-        $xpNeededForNextLevel = $xpForNextLevel - $xpForCurrentLevel;
+    // XP yang dibutuhkan untuk naik ke level berikutnya
+    $xpNeededForNextLevel = $xpForNextLevel - $xpForCurrentLevel;
 
-        // Persentase progress
-        $progressPercentage = $xpNeededForNextLevel > 0
-            ? min(round(($xpInCurrentLevel / $xpNeededForNextLevel) * 100, 1), 100)
-            : 100;
+    // Persentase progress
+    $progressPercentage = $xpNeededForNextLevel > 0
+    ? min(round(($xpInCurrentLevel / $xpNeededForNextLevel) * 100, 1), 100)
+    : 100;
 
-        // XP yang tersisa untuk naik level
-        $xpRemaining = max(0, $xpForNextLevel - $currentXp);
+    // XP yang tersisa untuk naik level
+    $xpRemaining = max(0, $xpForNextLevel - $currentXp);
     @endphp
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
@@ -132,6 +132,17 @@
                             <p class="text-sm text-gray-600">Total Experience Points</p>
                         </div>
 
+                        @if($user->role == App\Enums\Role::SISWA->value)
+                        <div class="text-center">
+                            <div class="flex items-center justify-center mb-2">
+                                <i class="mr-2 text-yellow-400 fa-solid fa-coins"></i>
+                                <span class="text-2xl font-bold text-gray-800">{{ number_format($user->coin ?? 0)
+                                    }}</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Total Koin</p>
+                        </div>
+                        @endif
+
                         <!-- Level Stats -->
                         <div class="text-center">
                             <div class="flex items-center justify-center mb-2">
@@ -159,13 +170,15 @@
                         </div>
 
                         <!-- Next Level Info -->
-                        <div class="p-3 mt-4 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg border border-blue-100">
+                        <div
+                            class="p-3 mt-4 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg border border-blue-100">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center">
                                     <i class="mr-2 text-blue-500 fa-solid fa-arrow-up"></i>
                                     <span class="text-sm font-medium text-blue-800">Level {{ $currentLevel + 1 }}</span>
                                 </div>
-                                <span class="text-sm font-bold text-green-600">{{ number_format($xpForNextLevel) }} XP</span>
+                                <span class="text-sm font-bold text-green-600">{{ number_format($xpForNextLevel) }}
+                                    XP</span>
                             </div>
                             <div class="mt-1 text-xs text-gray-600">
                                 {{ number_format($xpRemaining) }} XP lagi untuk naik level
@@ -249,6 +262,19 @@
                                     </div>
                                 </div>
 
+                                @if($user->role == App\Enums\Role::SISWA->value)
+                                <!-- Coin Information (Hanya untuk Siswa) -->
+                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                    <i
+                                        class="w-8 h-8 p-2 mr-3 text-yellow-600 bg-yellow-100 rounded-lg fa-solid fa-coins"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Jumlah Koin</p>
+                                        <p class="font-medium text-gray-900">{{ number_format($user->coin ?? 0) }} koin
+                                        </p>
+                                    </div>
+                                </div>
+                                @endif
+
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg">
                                     <i
                                         class="w-8 h-8 p-2 mr-3 text-orange-600 bg-orange-100 rounded-lg fa-solid fa-calendar-plus"></i>
@@ -315,19 +341,6 @@
 
                             <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
                                 <div class="flex items-center">
-                                    <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
-                                        <i class="text-green-600 fa-solid fa-check-circle"></i>
-                                    </div>
-                                    <div class="ml-4">
-                                        <p class="text-sm font-medium text-gray-600">Challenges Selesai</p>
-                                        <p class="text-2xl font-bold text-gray-900">{{ $stats['completed_challenges'] }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
-                                <div class="flex items-center">
                                     <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg">
                                         <i class="text-purple-600 fa-solid fa-tasks"></i>
                                     </div>
@@ -347,6 +360,20 @@
                                         <p class="text-sm font-medium text-gray-600">XP Diperoleh</p>
                                         <p class="text-2xl font-bold text-gray-900">{{
                                             number_format($stats['total_xp_earned']) }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Coin Statistics (Hanya untuk Siswa) -->
+                            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                <div class="flex items-center">
+                                    <div class="flex items-center justify-center w-12 h-12 bg-yellow-100 rounded-lg">
+                                        <i class="text-yellow-600 fa-solid fa-coins"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-600">Total Koin</p>
+                                        <p class="text-2xl font-bold text-gray-900">{{ number_format($user->coin ?? 0)
+                                            }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -541,9 +568,9 @@
                             <p>Pengaturan khusus pengguna akan ditampilkan di sini</p>
                         </div>
                     </div>
-                </div>
 
-                @endif
+                    @endif
+                </div>
             </div>
 
             <!-- Action Buttons -->

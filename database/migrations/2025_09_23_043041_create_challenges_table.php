@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->enum('type', ['self', 'assigned']);
             $table->unsignedBigInteger('category_id');
             $table->integer('xp_reward');
+            $table->integer('coin_reward')->default(200);
             $table->unsignedBigInteger('created_by');
             $table->date('start_date');
             $table->date('end_date');

@@ -20,6 +20,7 @@ class HabitRequest extends FormRequest
             'category_id'  => 'required|exists:categories,id',
             'period'       => ['required', Rule::in(['daily', 'weekly'])],
             'xp_reward'    => 'required|integer|min:1|max:10000',
+            'coin_reward' => 'required|integer|min:100',
             'start_date'   => 'required|date|after_or_equal:today',
             'end_date'     => 'required|date|after_or_equal:start_date',
         ];
@@ -45,6 +46,10 @@ class HabitRequest extends FormRequest
             'xp_reward.integer'    => 'XP reward harus berupa angka.',
             'xp_reward.min'        => 'XP reward minimal 1.',
             'xp_reward.max'        => 'XP reward maksimal 10000.',
+
+            'coin_reward.required'   => 'Coin reward wajib diisi.',
+            'coin_reward.integer'    => 'Coin reward harus berupa angka.',
+            'coin_reward.min'        => 'Coin reward minimal 100.',
 
             'start_date.required'  => 'Tanggal mulai wajib diisi.',
             'start_date.date'      => 'Format tanggal mulai tidak valid.',

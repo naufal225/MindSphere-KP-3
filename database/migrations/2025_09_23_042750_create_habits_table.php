@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('assigned_by')->nullable();
             $table->unsignedBigInteger('category_id');
             $table->enum('period', ['daily', 'weekly']);
+            $table->integer('coin_reward')->default(100);
             $table->integer('xp_reward');
             $table->date('start_date');
             $table->date('end_date');

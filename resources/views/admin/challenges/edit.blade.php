@@ -142,6 +142,22 @@
                             @enderror
                         </div>
 
+                        <!-- Coin Reward -->
+                        <div>
+                            <label for="coin_reward" class="block mb-2 text-sm font-medium text-gray-700">
+                                <i class="mr-1 fa-solid fa-coins"></i> Coin Reward
+                            </label>
+                            <input type="number" name="coin_reward" id="coin_reward"
+                                value="{{ old('coin_reward', $challenge->coin_reward) }}" required min="0" placeholder="Jumlah Koin"
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('coin_reward') border-red-500 @enderror">
+                            @error('coin_reward')
+                            <p class="mt-2 text-sm text-red-600">
+                                <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
+                            </p>
+                            @enderror
+                            <p class="mt-1 text-xs text-gray-500">Koin untuk ditukarkan hadiah</p>
+                        </div>
+
                         <!-- Tanggal Mulai -->
                         <div>
                             <label for="start_date" class="block mb-2 text-sm font-medium text-gray-700">

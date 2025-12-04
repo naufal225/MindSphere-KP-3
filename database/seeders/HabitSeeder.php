@@ -31,8 +31,10 @@ class HabitSeeder extends Seeder
             'category_id' => $categoryId,
             'period' => 'daily',
             'xp_reward' => 50,
+            'coin_reward' => 100,
             'start_date' => $today->copy()->subDays(2)->format('Y-m-d'),
             'end_date' => $today->copy()->subDay()->format('Y-m-d'),
+            'created_by' => $adminId,
             'created_at' => now(),
             'updated_at' => now(),
         ];
@@ -47,8 +49,10 @@ class HabitSeeder extends Seeder
                 'category_id' => $categoryId,
                 'period' => $i % 2 == 0 ? 'daily' : 'weekly',
                 'xp_reward' => 50 + ($i * 10),
+                'coin_reward' => 100 + ($i * 10),
                 'start_date' => $today->copy()->subDay()->format('Y-m-d'),
                 'end_date' => $today->copy()->addDays(6)->format('Y-m-d'),
+                'created_by' => $adminId,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -63,8 +67,10 @@ class HabitSeeder extends Seeder
             'category_id' => $categoryId,
             'period' => 'weekly',
             'xp_reward' => 100,
+            'coin_reward' => 120,
             'start_date' => $today->copy()->addDay()->format('Y-m-d'),
             'end_date' => $today->copy()->addDays(8)->format('Y-m-d'),
+            'created_by' => $adminId,
             'created_at' => now(),
             'updated_at' => now(),
         ];

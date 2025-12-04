@@ -199,16 +199,6 @@
                 <p class="text-sm text-gray-600">Menampilkan {{ $challenges->count() }} dari {{ $challenges->total() }}
                     tantangan</p>
             </div>
-            <div class="flex items-center space-x-2">
-                <span class="text-sm text-gray-500">Urutkan:</span>
-                <select name="sort_field" onchange="this.form.submit()"
-                    class="text-sm border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500">
-                    <option value="created_at" {{ request('sort_field', 'created_at' )=='created_at' ? 'selected' : '' }}>Terbaru</option>
-                    <option value="title" {{ request('sort_field')=='title' ? 'selected' : '' }}>Judul A-Z</option>
-                    <option value="start_date" {{ request('sort_field')=='start_date' ? 'selected' : '' }}>Tanggal Mulai</option>
-                    <option value="end_date" {{ request('sort_field')=='end_date' ? 'selected' : '' }}>Tanggal Berakhir</option>
-                </select>
-            </div>
         </div>
     </div>
 
@@ -226,7 +216,7 @@
                         <i class="mr-1 fa-solid fa-calendar"></i> Periode & Status
                     </th>
                     <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                        <i class="mr-1 fa-solid fa-star"></i> XP Reward
+                        <i class="mr-1 fa-solid fa-star"></i> Reward
                     </th>
                     <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                         <i class="mr-1 fa-solid fa-users"></i> Partisipan
@@ -301,15 +291,40 @@
                             <i class="mr-1 fa-solid {{ $statusIcon }}"></i> {{ $statusText }}
                         </span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center text-sm font-bold text-yellow-600">
-                            <i class="mr-1 fa-solid fa-star"></i>
-                            {{ number_format($challenge->xp_reward) }} XP
+                    <td class="px-6 py-4">
+                        <div class="flex flex-col space-y-2">
+                            <!-- XP Reward -->
+                            <div class="flex items-center">
+                                <div class="flex items-center justify-center w-8 h-8 bg-yellow-100 rounded-lg">
+                                    <i class="text-sm text-yellow-600 fa-solid fa-star"></i>
+                                </div>
+                                <div class="ml-2">
+                                    <div class="text-sm font-bold text-yellow-600">
+                                        {{ number_format($challenge->xp_reward) }} XP
+                                    </div>
+                                    <div class="text-xs text-gray-500">Experience Points</div>
+                                </div>
+                            </div>
+
+                            <!-- Coin Reward -->
+                            <div class="flex items-center">
+                                <div class="flex items-center justify-center w-8 h-8 bg-amber-100 rounded-lg">
+                                    <i class="text-sm text-amber-600 fa-solid fa-coins"></i>
+                                </div>
+                                <div class="ml-2">
+                                    <div class="text-sm font-bold text-amber-600">
+                                        {{ number_format($challenge->coin_reward) }} Koin
+                                    </div>
+                                    <div class="text-xs text-gray-500">Digital Coins</div>
+                                </div>
+                            </div>
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-900">{{ $challenge->participants_count ?? 0 }}</div>
-                        <div class="text-xs text-gray-500">Partisipan</div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-gray-900">{{ $challenge->participants_count ?? 0 }}</div>
+                            <div class="text-xs text-gray-500">Partisipan</div>
+                        </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         @if($challenge->createdBy)

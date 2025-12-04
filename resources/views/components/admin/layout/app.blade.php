@@ -84,6 +84,7 @@
     @stack('scripts')
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
         // Sidebar Toggle Functionality - Fixed
         const sidebarToggle = document.getElementById('sidebar-toggle');
         const sidebar = document.getElementById('sidebar');
@@ -112,18 +113,26 @@
         }
 
         // Event listeners
-        sidebarToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleSidebar();
-        });
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleSidebar();
+            });
+        } else {
+            console.error('Sidebar toggle button not found!');
+        }
 
-        sidebarOverlay.addEventListener('click', function(e) {
-            e.stopPropagation();
-            closeSidebar();
-        });
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeSidebar();
+            });
+        }
 
         // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(event) {
+            if (!sidebar || !sidebarToggle) return;
+
             const isClickInsideSidebar = sidebar.contains(event.target);
             const isClickOnToggle = sidebarToggle.contains(event.target);
             const isMobile = window.innerWidth < 1024;
@@ -138,14 +147,23 @@
         window.addEventListener('resize', function() {
             if (window.innerWidth >= 1024) {
                 // Desktop view - ensure overlay is hidden and body scroll is enabled
-                sidebarOverlay.classList.add('hidden');
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.add('hidden');
+                }
                 document.body.classList.remove('overflow-hidden');
             }
         });
 
-        function toggleDropdown(id) {
+        // Pastikan fungsi tersedia secara global untuk onclick di sidebar
+        window.toggleSidebar = toggleSidebar;
+        window.closeSidebar = closeSidebar;
+    });
+
+    function toggleDropdown(id) {
         const dropdown = document.getElementById(id);
         const icon = document.getElementById(id + '-icon');
+        if (!dropdown || !icon) return;
+
         const isOpen = dropdown.classList.contains('max-h-40');
 
         if (isOpen) {
@@ -158,7 +176,6 @@
             icon.classList.add('rotate-180');
         }
     }
-
     </script>
 </body>
 

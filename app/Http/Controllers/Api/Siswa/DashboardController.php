@@ -31,6 +31,7 @@ class DashboardController extends Controller
             'name' => $user->name,
             'message' => "Keep growing every day!!",
             'xp' => $user->xp,
+            'coin' => $user->coin,
         ];
 
         // --- 2. Statistik Habit, Challenge, Reflection ---

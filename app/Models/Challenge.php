@@ -17,6 +17,7 @@ class Challenge extends Model
         'type',
         'category_id',
         'xp_reward',
+        'coin_reward',
         'created_by',
         'updated_by',
         'start_date',

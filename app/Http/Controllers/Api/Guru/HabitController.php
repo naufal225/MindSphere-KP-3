@@ -301,22 +301,15 @@ class HabitController extends Controller
             // Tambahkan XP ke user
             $user = $habitLog->user;
             $xpReward = $habitLog->habit->xp_reward;
+            $coinReward = $habitLog->habit->coin_reward;
 
             $user->update([
-                'xp' => $user->xp + $xpReward
-            ]);
-            
-            // Berikan setengah xp reward ke guru
-
-            $teacher = Auth::user();
-
-            $teacher->update([
-                'xp' => $teacher->xp + ($xpReward / 2)
+                'xp' => $user->xp + $xpReward,
+                'coin' => $user->coin + $coinReward
             ]);
 
             // Update level user menggunakan LevelService
             LevelService::updateUserLevel($user);
-            LevelService::updateUserLevel($teacher);
         });
 
         return response()->json([

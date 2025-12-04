@@ -160,6 +160,7 @@ use App\Http\Services\LevelService;
 </div>
 
 <!-- Users Table -->
+<!-- Users Table -->
 <div class="overflow-hidden bg-white rounded-lg shadow-sm border border-gray-100">
     <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex items-center justify-between">
@@ -168,14 +169,7 @@ use App\Http\Services\LevelService;
                 <p class="text-sm text-gray-600">Menampilkan {{ $users->count() }} dari {{ $users->total() }} pengguna
                 </p>
             </div>
-            <div class="flex items-center space-x-2">
-                <span class="text-sm text-gray-500">Sortir:</span>
-                <select class="text-sm border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500">
-                    <option>Terbaru</option>
-                    <option>Nama A-Z</option>
-                    <option>XP Tertinggi</option>
-                </select>
-            </div>
+            
         </div>
     </div>
 
@@ -205,6 +199,10 @@ use App\Http\Services\LevelService;
                     </th>
                     <th scope="col"
                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                        <i class="mr-1 fa-solid fa-coins"></i> Koin
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                         <i class="mr-1 fa-solid fa-chart-line"></i> XP & Level
                     </th>
                     <th scope="col"
@@ -223,6 +221,9 @@ use App\Http\Services\LevelService;
                 // Hitung progress level menggunakan LevelService
                 $currentLevel = $user->level;
                 $currentXp = $user->xp;
+
+                // Mendapatkan jumlah koin
+                $coinAmount = $user->coin ?? 0;
 
                 // XP yang dibutuhkan untuk mencapai level saat ini
                 $xpForCurrentLevel = LevelService::getXpForNextLevel($currentLevel - 1);
@@ -325,6 +326,17 @@ use App\Http\Services\LevelService;
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center space-x-2">
+                            <div class="flex items-center justify-center w-10 h-10 bg-yellow-100 rounded-full">
+                                <i class="text-xl text-yellow-600 fa-solid fa-coins"></i>
+                            </div>
+                            <div>
+                                <div class="text-lg font-bold text-gray-900">{{ number_format($coinAmount) }}</div>
+                                <div class="text-xs text-gray-500">Koin</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center justify-between mb-1">
                             <div class="flex items-center space-x-2">
                                 <div class="flex items-center text-sm font-bold text-gray-900">
@@ -379,7 +391,7 @@ use App\Http\Services\LevelService;
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8" class="px-6 py-12 text-center">
+                    <td colspan="9" class="px-6 py-12 text-center">
                         <div class="flex flex-col items-center justify-center text-gray-400">
                             <i class="mb-4 text-5xl fa-solid fa-users-slash"></i>
                             <p class="mb-2 text-lg font-medium text-gray-600">Tidak ada data pengguna</p>

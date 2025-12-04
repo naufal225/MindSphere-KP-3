@@ -57,20 +57,6 @@
                     class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
             </div>
 
-            <!-- Sort Field -->
-            <div>
-                <label for="sort_field" class="block mb-2 text-sm font-medium text-gray-700">
-                    <i class="mr-1 fa-solid fa-sort"></i> Urutkan Berdasarkan
-                </label>
-                <select name="sort_field" id="sort_field"
-                    class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="name" {{ request('sort_field')=='name' ? 'selected' : '' }}>Nama</option>
-                    {{-- <option value="code" {{ request('sort_field')=='code' ? 'selected' : '' }}>Kode</option> --}}
-                    <option value="created_at" {{ request('sort_field')=='created_at' ? 'selected' : '' }}>Tanggal
-                        Dibuat</option>
-                </select>
-            </div>
-
             <!-- Action Buttons -->
             <div class="flex items-end space-x-3">
                 <button type="submit"
@@ -135,14 +121,7 @@
                 <p class="text-sm text-gray-600">Menampilkan {{ $categories->count() }} dari {{ $categories->total() }}
                     kategori</p>
             </div>
-            <div class="flex items-center space-x-2">
-                <span class="text-sm text-gray-500">Sortir:</span>
-                <select name="sort_direction" onchange="this.form.submit()"
-                    class="text-sm border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500">
-                    <option value="asc" {{ request('sort_direction', 'asc' )=='asc' ? 'selected' : '' }}>A-Z</option>
-                    <option value="desc" {{ request('sort_direction')=='desc' ? 'selected' : '' }}>Z-A</option>
-                </select>
-            </div>
+
         </div>
     </div>
 

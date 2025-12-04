@@ -7,10 +7,7 @@
 <div class="max-w-6xl mx-auto">
     <!-- Header Section -->
     <div class="mb-6">
-        <div class="flex items-center space-x-3">
-            <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg">
-                <i class="text-xl text-blue-600 fa-solid fa-repeat"></i>
-            </div>
+        <div class="flex items-start space-x-3">
             <div>
                 <h1 class="text-2xl font-bold text-gray-800">Detail Kebiasaan</h1>
                 <p class="text-gray-600">Informasi lengkap tentang {{ $habit->title }}</p>
@@ -49,32 +46,46 @@
         <div class="lg:col-span-1">
             <div class="overflow-hidden bg-white rounded-lg shadow-sm border border-gray-100">
                 <!-- Habit Header -->
-                <div class="p-6 text-center bg-gradient-to-r from-blue-50 to-indigo-50">
-                    <div class="relative inline-block">
-                        <div
-                            class="flex items-center justify-center w-32 h-32 mx-auto text-4xl font-bold text-white bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-lg border-4 border-white">
-                            <i class="fa-solid fa-repeat"></i>
-                        </div>
-                        <!-- Type Indicator -->
-                        @php
-                        $typeColor = $habit->type->value === 'assigned' ? 'bg-purple-500' : 'bg-green-500';
+                <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50">
+                    @php
+                        $typeColor = $habit->type->value === 'assigned' ? 'text-purple-800 bg-purple-100 border border-purple-200' : 'text-green-800 bg-green-100 border border-green-200';
                         $typeIcon = $habit->type->value === 'assigned' ? 'fa-user-check' : 'fa-user';
-                        @endphp
-                        <div
-                            class="absolute bottom-0 right-0 flex items-center justify-center w-8 h-8 {{ $typeColor }} border-4 border-white rounded-full">
-                            <i class="text-white fa-solid {{ $typeIcon }} text-xs"></i>
+                        $periodColor = $habit->period->value === 'daily' ? 'text-blue-800 bg-blue-100 border border-blue-200' : 'text-orange-800 bg-orange-100 border border-orange-200';
+                        $periodIcon = $habit->period->value === 'daily' ? 'fa-sun' : 'fa-calendar-week';
+                        $now = now();
+                        if ($now->between($habit->start_date, $habit->end_date)) {
+                            $statusColor = 'bg-emerald-100 text-emerald-800';
+                            $statusIcon = 'fa-play-circle';
+                            $statusText = 'Aktif';
+                        } elseif ($now->lt($habit->start_date)) {
+                            $statusColor = 'bg-cyan-100 text-cyan-800';
+                            $statusIcon = 'fa-clock';
+                            $statusText = 'Akan Datang';
+                        } else {
+                            $statusColor = 'bg-gray-100 text-gray-800';
+                            $statusIcon = 'fa-check-circle';
+                            $statusText = 'Berakhir';
+                        }
+                    @endphp
+                    <div class="flex flex-col items-start gap-2">
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-xl font-bold text-gray-800">{{ $habit->title }}</h3>
+                            <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full {{ $statusColor }}">
+                                <i class="mr-1 fa-solid {{ $statusIcon }}"></i>{{ $statusText }}
+                            </span>
+                        </div>
+                        <p class="text-sm text-gray-600">{{ $habit->category->name ?? 'Tidak ada kategori' }}</p>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full {{ $typeColor }}">
+                                <i class="mr-2 fa-solid {{ $typeIcon }}"></i>
+                                {{ $habit->type->value === 'self' ? 'Mandiri' : 'Ditugaskan' }}
+                            </span>
+                            <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full {{ $periodColor }}">
+                                <i class="mr-2 fa-solid {{ $periodIcon }}"></i>
+                                {{ $habit->period->value === 'daily' ? 'Harian' : 'Mingguan' }}
+                            </span>
                         </div>
                     </div>
-
-                    <h3 class="mt-4 text-xl font-bold text-gray-800">{{ $habit->title }}</h3>
-                    <p class="text-gray-600">{{ $habit->category->name ?? 'Tidak ada kategori' }}</p>
-
-                    <!-- Period Badge -->
-                    <span
-                        class="inline-flex items-center px-4 py-2 mt-3 text-sm font-medium {{ $habit->period->value === 'daily' ? 'text-blue-800 bg-blue-100 border border-blue-200' : 'text-orange-800 bg-orange-100 border border-orange-200' }} rounded-full">
-                        <i class="mr-2 fa-solid {{ $habit->period->value === 'daily' ? 'fa-sun' : 'fa-calendar-week' }}"></i>
-                        {{ $habit->period->value === 'daily' ? 'Harian' : 'Mingguan' }}
-                    </span>
                 </div>
 
                 <!-- Stats -->
@@ -98,9 +109,28 @@
                         <div class="text-center">
                             <div class="flex items-center justify-center mb-2">
                                 <i class="mr-2 text-green-500 fa-solid fa-check-circle"></i>
-                                <span class="text-2xl font-bold text-gray-800">{{ number_format($completionRate, 1) }}%</span>
+                                <span class="text-2xl font-bold text-gray-800">{{ number_format($completionRate, 1)
+                                    }}%</span>
                             </div>
                             <p class="text-sm text-gray-600">Tingkat Penyelesaian</p>
+                        </div>
+
+                        <!-- Waktu Progress -->
+                        @php
+                        $totalDays = $habit->start_date->diffInDays($habit->end_date);
+                        $daysPassed = $habit->start_date->diffInDays(min($now, $habit->end_date));
+                        $timeProgress = $totalDays > 0 ? ($daysPassed / $totalDays) * 100 : 0;
+                        $timeProgress = min($timeProgress, 100);
+                        @endphp
+                        <div>
+                            <div class="flex items-center justify-between mb-1 text-xs text-gray-600">
+                                <span>Progress Waktu</span>
+                                <span>{{ number_format($timeProgress, 1) }}%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-green-400 to-blue-500 h-2 rounded-full"
+                                    style="width: {{ $timeProgress }}%"></div>
+                            </div>
                         </div>
 
                         <!-- Assigned Info -->
@@ -175,7 +205,8 @@
                                         class="w-8 h-8 p-2 mr-3 text-purple-600 bg-purple-100 rounded-lg fa-solid fa-tags"></i>
                                     <div>
                                         <p class="text-sm text-gray-600">Kategori</p>
-                                        <p class="font-medium text-gray-900">{{ $habit->category->name ?? 'Tidak ada kategori' }}</p>
+                                        <p class="font-medium text-gray-900">{{ $habit->category->name ?? 'Tidak ada
+                                            kategori' }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -195,13 +226,34 @@
                                     </div>
                                 </div>
 
+                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                    <i
+                                        class="w-8 h-8 p-2 mr-3 text-yellow-600 bg-yellow-100 rounded-lg fa-solid fa-star"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">XP Reward</p>
+                                        <p class="font-medium text-gray-900">{{ number_format($habit->xp_reward) }} XP
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                    <i
+                                        class="w-8 h-8 p-2 mr-3 text-amber-600 bg-amber-100 rounded-lg fa-solid fa-coins"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Coin Reward</p>
+                                        <p class="font-medium text-gray-900">{{ number_format($habit->coin_reward) }}
+                                            Koin</p>
+                                    </div>
+                                </div>
+
                                 @if($habit->type->value === 'assigned')
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg">
                                     <i
                                         class="w-8 h-8 p-2 mr-3 text-indigo-600 bg-indigo-100 rounded-lg fa-solid fa-user-tie"></i>
                                     <div>
                                         <p class="text-sm text-gray-600">Ditugaskan Oleh</p>
-                                        <p class="font-medium text-gray-900">{{ $habit->assignedBy?->name ?? 'Tidak diketahui' }}</p>
+                                        <p class="font-medium text-gray-900">{{ $habit->assignedBy?->name ?? 'Tidak
+                                            diketahui' }}</p>
                                     </div>
                                 </div>
                                 @endif
@@ -214,7 +266,8 @@
                                 <i class="mt-1 mr-3 text-blue-600 fa-solid fa-align-left"></i>
                                 <div>
                                     <h4 class="font-medium text-blue-900">Deskripsi Kebiasaan</h4>
-                                    <p class="mt-2 text-sm text-blue-700 whitespace-pre-line">{{ $habit->description }}</p>
+                                    <p class="mt-2 text-sm text-blue-700 whitespace-pre-line">{{ $habit->description }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -228,11 +281,13 @@
                             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div>
                                     <p class="text-sm text-gray-600">Dibuat pada</p>
-                                    <p class="font-semibold text-gray-900">{{ $habit->created_at->format('d M Y H:i') }}</p>
+                                    <p class="font-semibold text-gray-900">{{ $habit->created_at->format('d M Y H:i') }}
+                                    </p>
                                 </div>
                                 <div>
                                     <p class="text-sm text-gray-600">Terakhir diperbarui</p>
-                                    <p class="font-semibold text-gray-900">{{ $habit->updated_at->format('d M Y H:i') }}</p>
+                                    <p class="font-semibold text-gray-900">{{ $habit->updated_at->format('d M Y H:i') }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -249,29 +304,42 @@
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Tanggal</th>
-                                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Pengguna</th>
-                                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Status</th>
-                                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Catatan</th>
+                                        <th
+                                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                            Tanggal</th>
+                                        <th
+                                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                            Pengguna</th>
+                                        <th
+                                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                            Status</th>
+                                        <th
+                                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                            Catatan</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach($logs as $log)
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ $log->date->format('d M Y') }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ $log->date->format('d M
+                                                Y') }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 @if($log->user->avatar_url)
-                                                <img class="w-8 h-8 rounded-full" src="{{ Storage::url($log->user->avatar_url) }}" alt="{{ $log->user->name }}">
+                                                <img class="w-8 h-8 rounded-full"
+                                                    src="{{ Storage::url($log->user->avatar_url) }}"
+                                                    alt="{{ $log->user->name }}">
                                                 @else
-                                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                                                <div
+                                                    class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
                                                     {{ substr($log->user->name, 0, 1) }}
                                                 </div>
                                                 @endif
                                                 <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">{{ $log->user->name }}</div>
+                                                    <div class="text-sm font-medium text-gray-900">{{ $log->user->name
+                                                        }}</div>
                                                     <div class="text-sm text-gray-500">{{ $log->user->email }}</div>
                                                 </div>
                                             </div>
@@ -279,19 +347,20 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             @php
                                             $statusColors = [
-                                                'completed' => 'bg-green-100 text-green-800',
-                                                'joined' => 'bg-red-100 text-red-800'
+                                            'completed' => 'bg-green-100 text-green-800',
+                                            'joined' => 'bg-red-100 text-red-800'
                                             ];
                                             @endphp
-                                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $statusColors[$log->status->value] }}">
+                                            <span
+                                                class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $statusColors[$log->status->value] }}">
                                                 {{ $log->status->value === 'completed' ? 'Selesai' : 'Belum Selesai' }}
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-500 max-w-xs">
                                             @if($log->note)
-                                                <p class="truncate">{{ $log->note }}</p>
+                                            <p class="truncate">{{ $log->note }}</p>
                                             @else
-                                                <span class="text-gray-400">-</span>
+                                            <span class="text-gray-400">-</span>
                                             @endif
                                         </td>
                                     </tr>
@@ -337,10 +406,12 @@
 
                             <!-- Completion Rate -->
                             <div class="p-4 text-center bg-purple-50 border border-purple-200 rounded-lg">
-                                <div class="text-2xl font-bold text-purple-600">{{ number_format($completionRate, 1) }}%</div>
+                                <div class="text-2xl font-bold text-purple-600">{{ number_format($completionRate, 1) }}%
+                                </div>
                                 <div class="text-sm font-medium text-purple-800">Tingkat Penyelesaian</div>
                                 <i class="mt-2 text-purple-500 fa-solid fa-percentage"></i>
                             </div>
+
                         </div>
 
                         <!-- Completion Trend -->
@@ -351,7 +422,8 @@
                             </p>
                             <div class="flex items-center justify-between mt-3">
                                 <span class="text-sm text-gray-600">Progress</span>
-                                <span class="text-sm font-medium text-gray-900">{{ number_format($completionRate, 1) }}%</span>
+                                <span class="text-sm font-medium text-gray-900">{{ number_format($completionRate, 1)
+                                    }}%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-3 mt-2">
                                 <div class="bg-green-500 h-3 rounded-full" style="width: {{ $completionRate }}%"></div>

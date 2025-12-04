@@ -26,6 +26,7 @@ class ChallengeRequest extends FormRequest
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'xp_reward' => 'required|integer|min:1',
+            'coin_reward' => 'required|integer|min:200',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ];
@@ -59,6 +60,10 @@ class ChallengeRequest extends FormRequest
             'xp_reward.required' => 'Hadiah XP wajib diisi.',
             'xp_reward.integer' => 'Hadiah XP harus berupa angka.',
             'xp_reward.min' => 'Hadiah XP minimal 1.',
+
+            'coin_reward.required'   => 'Coin reward wajib diisi.',
+            'coin_reward.integer'    => 'Coin reward harus berupa angka.',
+            'coin_reward.min'        => 'Coin reward minimal 200.',
 
             'start_date.required' => 'Tanggal mulai wajib diisi.',
             'start_date.date' => 'Format tanggal mulai tidak valid.',

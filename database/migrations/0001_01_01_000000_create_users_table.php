@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->string('avatar_url')->nullable();
             $table->integer('xp')->default(0);
+            $table->integer('coin')->default(0);
             $table->integer('level')->default(1);
             $table->rememberToken();
             $table->timestamps();

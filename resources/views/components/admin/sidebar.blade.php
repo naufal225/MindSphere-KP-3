@@ -1,5 +1,5 @@
 <!-- Sidebar -->
-<div class="fixed inset-y-0 left-0 z-30 flex flex-col w-64 text-white transition-transform duration-300 ease-in-out transform -translate-x-full sidebar-container bg-[#1E40AF] shadow-medium lg:relative lg:translate-x-0"
+<div class="fixed inset-y-0 left-0 z-50 flex flex-col w-64 text-white transition-transform duration-300 ease-in-out transform -translate-x-full sidebar-container bg-[#1E40AF] shadow-medium lg:relative lg:translate-x-0"
     id="sidebar">
     <div class="flex items-center justify-between px-6 py-4 bg-[#2563EB]">
         <div class="w-full">
@@ -55,6 +55,32 @@
             <i class="w-5 mr-3 text-center fas fa-sync-alt"></i>
             <span class="font-medium">Habits</span>
         </a>
+
+        <!-- Reward -->
+        <div class="space-y-1"
+            x-data="{ open: {{ request()->routeIs('admin.rewards.*', 'admin.requests.*') ? 'true' : 'false' }} }">
+            <button type="button"
+                class="flex items-center w-full px-4 py-3 text-left transition-all duration-200 rounded-lg"
+                :class="open ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white'"
+                @click="open = !open">
+                <i class="w-5 mr-3 text-center fas fa-gift"></i>
+                <span class="flex-1 font-medium">Reward</span>
+                <i class="text-xs transition-transform duration-200 fas fa-chevron-down"
+                    :class="{'rotate-180': open}"></i>
+            </button>
+            <div class="pl-4 space-y-1 overflow-hidden" x-show="open" x-collapse>
+                <a href="{{ route('admin.rewards.index') }}"
+                    class="flex items-center px-4 py-2 rounded-lg text-sm transition-all duration-200 {{ request()->routeIs('admin.rewards.index') ? 'bg-[#3B82F6] text-white' : 'text-blue-200 hover:bg-[#2563EB] hover:text-white' }}">
+                    <i class="w-4 mr-2 text-center fas fa-list"></i>
+                    <span>Manage Rewards</span>
+                </a>
+                <a href="{{ route('admin.requests.index') }}"
+                    class="flex items-center px-4 py-2 rounded-lg text-sm transition-all duration-200 {{ request()->routeIs('admin.requests.*') ? 'bg-[#3B82F6] text-white' : 'text-blue-200 hover:bg-[#2563EB] hover:text-white' }}">
+                    <i class="w-4 mr-2 text-center fas fa-hand-paper"></i>
+                    <span>Reward Requests</span>
+                </a>
+            </div>
+        </div>
 
         <!-- Reports & Analytics -->
         <div class="space-y-1"

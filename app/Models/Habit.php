@@ -19,6 +19,7 @@ class Habit extends Model
         'category_id',
         'period',
         'xp_reward',
+        'coin_reward',
         'start_date',
         'end_date',
         'created_by',

@@ -18,7 +18,6 @@
         </div>
     </div>
 
-
     @if(session('success'))
     <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
         {{ session('success') }}
@@ -93,7 +92,6 @@
                             </p>
                             @enderror
                         </div>
-
                     </div>
                 </div>
 
@@ -124,7 +122,7 @@
                         <i class="mr-2 text-yellow-500 fa-solid fa-gift"></i>
                         <h3 class="text-lg font-semibold text-gray-800">Reward & Periode</h3>
                     </div>
-                    <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+                    <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
                         <!-- XP Reward -->
                         <div>
                             <label for="xp_reward" class="block mb-2 text-sm font-medium text-gray-700">
@@ -138,6 +136,23 @@
                                 <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
                             </p>
                             @enderror
+                            <p class="mt-1 text-xs text-gray-500">Pengalaman poin untuk pengguna</p>
+                        </div>
+
+                        <!-- Coin Reward -->
+                        <div>
+                            <label for="coin_reward" class="block mb-2 text-sm font-medium text-gray-700">
+                                <i class="mr-1 fa-solid fa-coins"></i> Coin Reward
+                            </label>
+                            <input type="number" name="coin_reward" id="coin_reward"
+                                value="{{ old('coin_reward', 50) }}" required min="0" placeholder="Jumlah Koin"
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('coin_reward') border-red-500 @enderror">
+                            @error('coin_reward')
+                            <p class="mt-2 text-sm text-red-600">
+                                <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
+                            </p>
+                            @enderror
+                            <p class="mt-1 text-xs text-gray-500">Koin untuk ditukarkan hadiah</p>
                         </div>
 
                         <!-- Tanggal Mulai -->
@@ -196,7 +211,7 @@
                     <li>Buat judul yang menarik dan jelas</li>
                     <li>Deskripsi harus detail dan mudah dipahami</li>
                     <li>Atur periode waktu yang realistis</li>
-                    <li>Berikan XP reward yang sesuai dengan tingkat kesulitan</li>
+                    <li>Berikan XP dan Coin reward yang sesuai dengan tingkat kesulitan</li>
                     <li>Pilih kategori yang relevan dengan konten tantangan</li>
                 </ul>
             </div>

@@ -24,6 +24,7 @@ class User extends Authenticatable
         'parent_id',
         'avatar_url',
         'xp',
+        'coin',
         'level'
     ];
 

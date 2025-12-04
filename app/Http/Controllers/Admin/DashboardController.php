@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 
 class DashboardController extends Controller
 {
+    private const ALLOWED_RANGES = ['semua', 'minggu ini', 'bulan ini', 'tahun ini'];
     private string $goApiUrl;
 
     public function __construct()
@@ -15,22 +16,27 @@ class DashboardController extends Controller
         $this->goApiUrl = config('services.go_admin.url', 'http://localhost:8080');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $response = Http::get("{$this->goApiUrl}/api/v1/admin/dashboard");
+        $selectedRange = $this->resolveRange($request->query('range'));
+
+        $response = Http::get("{$this->goApiUrl}/api/v1/admin/dashboard", [
+            'range' => $selectedRange,
+        ]);
 
         if (!$response->successful()) {
             // Jika API Go gagal, kirim data default
-            return view('admin.dashboard.index', $this->getDefaultData());
+            return view('admin.dashboard.index', $this->getDefaultData($selectedRange));
         }
 
-        $data = $response->json()['data'];
+        $data = $response->json('data') ?? [];
 
         // Format habit trends untuk memastikan konsistensi
         $habitTrends = $this->formatHabitTrends($data['habit_trends'] ?? []);
 
         // Pastikan semua key ada di data
         return view('admin.dashboard.index', [
+            'selectedRange' => $selectedRange,
             'totalActiveUsers' => $data['total_active_users'] ?? 0,
             'totalStudents' => $data['total_students'] ?? 0,
             'totalTeachers' => $data['total_teachers'] ?? 0,
@@ -54,49 +60,23 @@ class DashboardController extends Controller
      */
     private function formatHabitTrends(array $habitTrends): array
     {
-        // Jika data kosong, buat data dummy untuk testing
         if (empty($habitTrends)) {
-            return $this->getDefaultHabitTrends();
+            return [];
         }
 
-        // Pastikan setiap item memiliki struktur yang benar
-        $formatted = [];
-        foreach ($habitTrends as $trend) {
-            $formatted[] = [
+        return collect($habitTrends)->map(function ($trend) {
+            return [
                 'week' => $trend['week'] ?? 'Minggu',
                 'done' => (int) ($trend['done'] ?? 0),
                 'not_done' => (int) ($trend['not_done'] ?? 0),
             ];
-        }
-
-        return $formatted;
+        })->toArray();
     }
 
-    /**
-     * Data default untuk habit trends (5 minggu terakhir)
-     */
-    private function getDefaultHabitTrends(): array
-    {
-        $weeks = [];
-        $today = now();
-
-        for ($i = 4; $i >= 0; $i--) {
-            $startWeek = $today->copy()->subWeeks($i)->startOfWeek();
-            $endWeek = $startWeek->copy()->endOfWeek();
-
-            $weeks[] = [
-                'week' => $startWeek->format('M j') . ' - ' . $endWeek->format('M j'),
-                'done' => rand(50, 100),
-                'not_done' => rand(10, 40),
-            ];
-        }
-
-        return $weeks;
-    }
-
-    private function getDefaultData(): array
+    private function getDefaultData(string $selectedRange): array
     {
         return [
+            'selectedRange' => $selectedRange,
             'totalActiveUsers' => 0,
             'totalStudents' => 0,
             'totalTeachers' => 0,
@@ -117,7 +97,16 @@ class DashboardController extends Controller
                 'sad' => 0,
                 'tired' => 0,
             ],
-            'habitTrends' => $this->getDefaultHabitTrends(),
+            'habitTrends' => [],
         ];
+    }
+
+    private function resolveRange(?string $range): string
+    {
+        $normalizedRange = strtolower(trim($range ?? ''));
+
+        return in_array($normalizedRange, self::ALLOWED_RANGES, true)
+            ? $normalizedRange
+            : 'semua';
     }
 }

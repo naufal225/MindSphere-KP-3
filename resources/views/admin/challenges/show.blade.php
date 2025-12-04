@@ -7,10 +7,7 @@
 <div class="max-w-6xl mx-auto">
     <!-- Header Section -->
     <div class="mb-6">
-        <div class="flex items-center space-x-3">
-            <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg">
-                <i class="text-xl text-blue-600 fa-solid fa-flag"></i>
-            </div>
+        <div class="flex items-start space-x-3">
             <div>
                 <h1 class="text-2xl font-bold text-gray-800">Detail Tantangan</h1>
                 <p class="text-gray-600">Informasi lengkap tentang {{ $challenge->title }}</p>
@@ -50,43 +47,40 @@
         <div class="lg:col-span-1">
             <div class="overflow-hidden bg-white rounded-lg shadow-sm border border-gray-100">
                 <!-- Challenge Header -->
-                <div class="p-6 text-center bg-gradient-to-r from-blue-50 to-indigo-50">
-                    <div class="relative inline-block">
-                        <div
-                            class="flex items-center justify-center w-32 h-32 mx-auto text-4xl font-bold text-white bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-lg border-4 border-white">
-                            <i class="fa-solid fa-flag"></i>
+                <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50">
+                    @php
+                    $now = now();
+                    $statusColor = '';
+                    $statusIcon = '';
+                    $statusText = '';
+                    if ($now->between($challenge->start_date, $challenge->end_date)) {
+                    $statusColor = 'bg-green-100 text-green-800';
+                    $statusIcon = 'fa-play-circle';
+                    $statusText = 'Aktif';
+                    } elseif ($now->lt($challenge->start_date)) {
+                    $statusColor = 'bg-blue-100 text-blue-800';
+                    $statusIcon = 'fa-clock';
+                    $statusText = 'Akan Datang';
+                    } else {
+                    $statusColor = 'bg-gray-100 text-gray-800';
+                    $statusIcon = 'fa-check-circle';
+                    $statusText = 'Berakhir';
+                    }
+                    @endphp
+                    <div class="flex flex-col items-start gap-2">
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-xl font-bold text-gray-800">{{ $challenge->title }}</h3>
+                            <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full {{ $statusColor }}">
+                                <i class="mr-1 fa-solid {{ $statusIcon }}"></i>{{ $statusText }}
+                            </span>
                         </div>
-                        <!-- Status Indicator -->
-                        @php
-                        $now = now();
-                        $statusColor = '';
-                        $statusIcon = '';
-                        if ($now->between($challenge->start_date, $challenge->end_date)) {
-                        $statusColor = 'bg-green-500';
-                        $statusIcon = 'fa-play-circle';
-                        } elseif ($now->lt($challenge->start_date)) {
-                        $statusColor = 'bg-blue-500';
-                        $statusIcon = 'fa-clock';
-                        } else {
-                        $statusColor = 'bg-gray-500';
-                        $statusIcon = 'fa-check-circle';
-                        }
-                        @endphp
-                        <div
-                            class="absolute bottom-0 right-0 flex items-center justify-center w-8 h-8 {{ $statusColor }} border-4 border-white rounded-full">
-                            <i class="text-white fa-solid {{ $statusIcon }} text-xs"></i>
-                        </div>
+                        <p class="text-sm text-gray-600">{{ $challenge->category->name ?? 'No Category' }}</p>
+                        <span
+                            class="inline-flex items-center px-3 py-1 text-xs font-medium text-purple-800 bg-purple-100 border border-purple-200 rounded-full">
+                            <i class="mr-2 fa-solid fa-users"></i>
+                            {{ ucfirst($challenge->type->value) }}
+                        </span>
                     </div>
-
-                    <h3 class="mt-4 text-xl font-bold text-gray-800">{{ $challenge->title }}</h3>
-                    <p class="text-gray-600">{{ $challenge->category->name ?? 'No Category' }}</p>
-
-                    <!-- Type Badge -->
-                    <span
-                        class="inline-flex items-center px-4 py-2 mt-3 text-sm font-medium text-purple-800 bg-purple-100 border border-purple-200 rounded-full">
-                        <i class="mr-2 fa-solid fa-users"></i>
-                        {{ ucfirst($challenge->type->value) }}
-                    </span>
                 </div>
 
                 <!-- Stats -->
@@ -100,6 +94,15 @@
                                     }}</span>
                             </div>
                             <p class="text-sm text-gray-600">XP Reward</p>
+                        </div>
+
+                        <!-- Coin Reward -->
+                        <div class="text-center">
+                            <div class="flex items-center justify-center mb-2">
+                                <i class="mr-2 text-amber-600 fa-solid fa-coins"></i>
+                                <span class="text-2xl font-bold text-gray-800">{{ number_format($challenge->coin_reward) }}</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Coin Reward</p>
                         </div>
 
                         <!-- Participants Stats -->
@@ -215,6 +218,16 @@
                                         <p class="text-sm text-gray-600">XP Reward</p>
                                         <p class="font-medium text-gray-900">{{ number_format($challenge->xp_reward) }}
                                             XP</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                    <i
+                                        class="w-8 h-8 p-2 mr-3 text-amber-600 bg-amber-100 rounded-lg fa-solid fa-coins"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Coin Reward</p>
+                                        <p class="font-medium text-gray-900">{{ number_format($challenge->coin_reward) }}
+                                            Koin</p>
                                     </div>
                                 </div>
                             </div>

@@ -40,20 +40,24 @@ class ChallengeController extends Controller
         }
 
         $challenges = Challenge::with(['category', 'createdBy'])
-            ->whereHas('participants', function($query) use ($kelas) {
+            ->whereHas('participants', function ($query) use ($kelas) {
                 $query->whereIn('user_id', $kelas->students()->pluck('users.id'));
             })
             ->orWhere('created_by', $guru->id)
             ->withCount(['participants as total_participants'])
-            ->withCount(['participants as submitted_count' => function($query) {
-                $query->where('status', ChallengeStatus::SUBMITTED);
-            }])
-            ->withCount(['participants as completed_count' => function($query) {
-                $query->where('status', ChallengeStatus::COMPLETED);
-            }])
+            ->withCount([
+                'participants as submitted_count' => function ($query) {
+                    $query->where('status', ChallengeStatus::SUBMITTED);
+                }
+            ])
+            ->withCount([
+                'participants as completed_count' => function ($query) {
+                    $query->where('status', ChallengeStatus::COMPLETED);
+                }
+            ])
             ->orderBy('created_at', 'desc')
             ->get()
-            ->map(function($challenge) use ($kelas) {
+            ->map(function ($challenge) use ($kelas) {
                 return [
                     'id' => $challenge->id,
                     'title' => $challenge->title,
@@ -111,10 +115,12 @@ class ChallengeController extends Controller
         }
 
         $challenge = Challenge::with(['category', 'createdBy'])
-            ->with(['participants' => function($query) use ($kelas) {
-                $query->whereIn('user_id', $kelas->students()->pluck('users.id'))
-                      ->with('user');
-            }])
+            ->with([
+                'participants' => function ($query) use ($kelas) {
+                    $query->whereIn('user_id', $kelas->students()->pluck('users.id'))
+                        ->with('user');
+                }
+            ])
             ->find($id);
 
         if (!$challenge) {
@@ -132,7 +138,7 @@ class ChallengeController extends Controller
         $joinedCount = $challenge->participants->where('status', ChallengeStatus::JOINED)->count();
 
         // Format data peserta
-        $participants = $challenge->participants->map(function($participant) {
+        $participants = $challenge->participants->map(function ($participant) {
             return [
                 'id' => $participant->id,
                 'student_id' => $participant->user_id,
@@ -213,7 +219,7 @@ class ChallengeController extends Controller
 
         // Validasi bahwa siswa tersebut adalah siswa dari guru yang bersangkutan
         $kelas = SchoolClass::where('teacher_id', $guru->id)
-            ->whereHas('students', function($query) use ($participant) {
+            ->whereHas('students', function ($query) use ($participant) {
                 $query->where('users.id', $participant->user_id);
             })
             ->first();
@@ -232,7 +238,7 @@ class ChallengeController extends Controller
             ], 400);
         }
 
-        DB::transaction(function() use ($participant) {
+        DB::transaction(function () use ($participant) {
             // Update status participant
             $participant->update([
                 'status' => ChallengeStatus::COMPLETED
@@ -241,22 +247,15 @@ class ChallengeController extends Controller
             // Tambahkan XP ke user
             $user = $participant->user;
             $xpReward = $participant->challenge->xp_reward;
+            $coinReward = $participant->challenge->coin_reward;
 
             $user->update([
-                'xp' => $user->xp + $xpReward
-            ]);
-
-            // Berikan setengah xp reward ke guru
-
-            $teacher = Auth::user();
-
-            $teacher->update([
-                'xp' => $teacher->xp + ($xpReward/2)
+                'xp' => $user->xp + $xpReward,
+                'coin' => $user->coin + $coinReward
             ]);
 
             // Update level user menggunakan LevelService
             LevelService::updateUserLevel($user);
-            LevelService::updateUserLevel($teacher);
         });
 
         return response()->json([
@@ -299,7 +298,7 @@ class ChallengeController extends Controller
 
         // Validasi bahwa siswa tersebut adalah siswa dari guru yang bersangkutan
         $kelas = SchoolClass::where('teacher_id', $guru->id)
-            ->whereHas('students', function($query) use ($participant) {
+            ->whereHas('students', function ($query) use ($participant) {
                 $query->where('users.id', $participant->user_id);
             })
             ->first();
@@ -362,7 +361,7 @@ class ChallengeController extends Controller
             ->where('status', ChallengeStatus::SUBMITTED)
             ->orderBy('submitted_at', 'desc')
             ->get()
-            ->map(function($participant) {
+            ->map(function ($participant) {
                 return [
                     'id' => $participant->id,
                     'challenge_id' => $participant->challenge_id,
@@ -394,7 +393,7 @@ class ChallengeController extends Controller
      */
     private function getStatusText(ChallengeStatus $status): string
     {
-        return match($status) {
+        return match ($status) {
             ChallengeStatus::JOINED => 'Bergabung',
             ChallengeStatus::SUBMITTED => 'Menunggu Validasi',
             ChallengeStatus::COMPLETED => 'Selesai'

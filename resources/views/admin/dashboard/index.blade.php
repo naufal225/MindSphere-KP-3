@@ -5,9 +5,26 @@
 
 @section('content')
 
+@php
+    $currentRange = $selectedRange ?? 'semua';
+@endphp
 <!-- Stats Cards -->
-<div class="mb-6">
-    <p class="text-gray-600">Data terkini {{ now()->translatedFormat('F Y') }}</p>
+<div class="flex flex-col gap-4 mb-6 md:flex-row md:items-center md:justify-between">
+    <div>
+        <p class="text-gray-600">Data terkini {{ now()->translatedFormat('F Y') }}</p>
+        <p class="text-sm text-gray-500">Rentang: {{ ucwords($currentRange) }}</p>
+    </div>
+    <form method="GET" action="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
+        <label for="range" class="text-sm font-medium text-gray-700 whitespace-nowrap">Filter Waktu</label>
+        <select name="range" id="range"
+            class="px-3 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onchange="this.form.submit()">
+            <option value="semua" {{ $currentRange === 'semua' ? 'selected' : '' }}>Semua</option>
+            <option value="minggu ini" {{ $currentRange === 'minggu ini' ? 'selected' : '' }}>Minggu Ini</option>
+            <option value="bulan ini" {{ $currentRange === 'bulan ini' ? 'selected' : '' }}>Bulan Ini</option>
+            <option value="tahun ini" {{ $currentRange === 'tahun ini' ? 'selected' : '' }}>Tahun Ini</option>
+        </select>
+    </form>
 </div>
 
 
@@ -176,7 +193,16 @@
         </div>
     </a>
 
-
+    <a href="{{ route('admin.rewards.index') }}"
+        class="p-4 text-white transition-all rounded-lg bg-[#F59E0B] hover:bg-[#D97706] hover:shadow-md">
+        <div class="flex flex-col items-center text-center">
+            <div class="flex items-center justify-center w-12 h-12 mb-3  rounded-full bg-opacity-20">
+                <i class="text-xl fa fa-gift"></i>
+            </div>
+            <h3 class="mb-1 font-semibold">Kelola Reward</h3>
+            <p class="text-sm text-amber-100">Reward yang bisa diredeem oleh siswa</p>
+        </div>
+    </a>
 </div>
 
 <!-- Main Content Grid -->
@@ -185,7 +211,6 @@
     <div class="bg-white border border-gray-200 rounded-xl shadow-soft">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-semibold text-gray-800">Top 10 Leaderboard</h3>
-            <p class="text-sm text-gray-500">Siswa dengan XP tertinggi</p>
         </div>
         <div class="p-6">
             <div class="space-y-4">
@@ -222,7 +247,6 @@
     <div class="bg-white border border-gray-200 rounded-xl shadow-soft">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-semibold text-gray-800">Aktivitas Terbaru</h3>
-            <p class="text-sm text-gray-500">Update terbaru dari sistem</p>
         </div>
         <div class="p-6">
             <div class="space-y-4">
@@ -260,15 +284,25 @@
 </div>
 
 <!-- Charts Section -->
+@php
+    $moodTotal = array_sum($moodDistribution ?? []);
+    $hasHabitTrends = !empty($habitTrends);
+@endphp
 <div class="grid grid-cols-1 gap-6 mt-6 lg:grid-cols-2">
     <!-- Mood Distribution -->
     <div class="bg-white border border-gray-200 rounded-xl shadow-soft">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-semibold text-gray-800">Distribusi Mood Siswa</h3>
-            <p class="text-sm text-gray-500">Minggu terakhir</p>
         </div>
         <div class="p-6">
+            @if($moodTotal > 0)
             <canvas id="moodChart" width="400" height="250"></canvas>
+            @else
+            <div class="py-8 text-center text-gray-500">
+                <i class="mb-2 text-4xl fa fa-smile"></i>
+                <p>Data mood belum tersedia</p>
+            </div>
+            @endif
         </div>
     </div>
 
@@ -276,10 +310,9 @@
     <div class="bg-white border border-gray-200 rounded-xl shadow-soft">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-semibold text-gray-800">Tren Habit Completion</h3>
-            <p class="text-sm text-gray-500">5 minggu terakhir</p>
         </div>
         <div class="p-6">
-            @if(empty($habitTrends))
+            @if(!$hasHabitTrends)
             <div class="text-center text-gray-500 py-8">
                 <i class="mb-2 text-4xl fa fa-chart-line"></i>
                 <p>Data tren habit belum tersedia</p>
@@ -299,6 +332,7 @@
     Chart.defaults.color = "#6B7280";
 
     // Mood Distribution Chart
+    @if($moodTotal > 0)
     const moodCtx = document.getElementById('moodChart').getContext('2d');
     const moodChart = new Chart(moodCtx, {
         type: 'doughnut',
@@ -326,9 +360,10 @@
             }
         }
     });
+    @endif
 
      // Habit Trends Chart - HANYA di-render jika ada data
-    @if(!empty($habitTrends))
+    @if($hasHabitTrends)
     const habitCtx = document.getElementById('habitTrendChart').getContext('2d');
     const habitChart = new Chart(habitCtx, {
         type: 'line',
