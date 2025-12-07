@@ -1,18 +1,18 @@
 @extends('components.admin.layout.app')
 
-@section('header', 'Manajemen Kelas')
-@section('subtitle', 'Kelola data kelas sekolah')
+@section('header', 'Manajemen Divisi')
+@section('subtitle', 'Kelola data divisi')
 
 @section('content')
 <div class="mb-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Daftar Kelas</h1>
-            <p class="text-gray-600">Total: {{ $classes->total() }} kelas</p>
+            <h1 class="text-2xl font-bold text-gray-800">Daftar Divisi</h1>
+            <p class="text-gray-600">Total: {{ $classes->total() }} divisi</p>
         </div>
-        <a href="{{ route('admin.school_classes.create') }}"
+        <a href="{{ route('admin.divisions.create') }}"
             class="inline-flex items-center px-4 py-2 text-sm font-medium text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700">
-            <i class="mr-2 fa-solid fa-plus"></i> Tambah Kelas
+            <i class="mr-2 fa-solid fa-plus"></i> Tambah Divisi
         </a>
     </div>
 </div>
@@ -45,13 +45,13 @@
 
 <!-- Search -->
 <div class="p-6 mb-6 bg-white rounded-lg shadow-sm border border-gray-100">
-    <form method="GET" action="{{ route('admin.school_classes.index') }}">
+    <form method="GET" action="{{ route('admin.divisions.index') }}">
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
             <div>
                 <label for="search" class="block mb-2 text-sm font-medium text-gray-700">
-                    <i class="mr-1 fa-solid fa-search"></i> Cari Kelas
+                    <i class="mr-1 fa-solid fa-search"></i> Cari Divisi
                 </label>
-                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Nama kelas..."
+                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Nama divisi..."
                     class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
             </div>
             <div class="flex items-end">
@@ -61,7 +61,7 @@
                 </button>
             </div>
             <div class="flex items-end">
-                <a href="{{ route('admin.school_classes.index') }}"
+                <a href="{{ route('admin.divisions.index') }}"
                     class="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 transition-colors bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200">
                     <i class="mr-2 fa-solid fa-refresh"></i> Reset
                 </a>
@@ -78,7 +78,7 @@
                 <i class="text-xl text-blue-600 fa-solid fa-school"></i>
             </div>
             <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Total Kelas</p>
+                <p class="text-sm font-medium text-gray-600">Total Divisi</p>
                 <p class="text-2xl font-bold text-gray-900">{{ $classes->total() }}</p>
             </div>
         </div>
@@ -90,7 +90,7 @@
                 <i class="text-xl text-purple-600 fa-solid fa-chalkboard-user"></i>
             </div>
             <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Kelas Ber-Wali Kelas</p>
+                <p class="text-sm font-medium text-gray-600">Divisi dengan PIC</p>
                 <p class="text-2xl font-bold text-gray-900">{{ $classes->whereNotNull('teacher_id')->count() }}</p>
             </div>
         </div>
@@ -102,7 +102,7 @@
                 <i class="text-xl text-green-600 fa-solid fa-users"></i>
             </div>
             <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Rata-rata Siswa/Kelas</p>
+                <p class="text-sm font-medium text-gray-600">Rata-rata Member/Divisi</p>
                 <p class="text-2xl font-bold text-gray-900">
                     {{ $classes->count() ? number_format($totalStudents / $classes->count(), 1) : 0 }}
                 </p>
@@ -116,8 +116,8 @@
     <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex items-center justify-between">
             <div>
-                <h3 class="text-lg font-semibold text-gray-800">Daftar Kelas Sekolah</h3>
-                <p class="text-sm text-gray-600">Menampilkan {{ $classes->count() }} dari {{ $classes->total() }} kelas
+                <h3 class="text-lg font-semibold text-gray-800">Daftar Divisi</h3>
+                <p class="text-sm text-gray-600">Menampilkan {{ $classes->count() }} dari {{ $classes->total() }} divisi
                 </p>
             </div>
         </div>
@@ -129,15 +129,15 @@
                 <tr>
                     <th scope="col"
                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                        <i class="mr-1 fa-solid fa-tag"></i> Nama Kelas
+                        <i class="mr-1 fa-solid fa-tag"></i> Nama Divisi
                     </th>
                     <th scope="col"
                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                        <i class="mr-1 fa-solid fa-chalkboard-user"></i> Wali Kelas
+                        <i class="mr-1 fa-solid fa-chalkboard-user"></i> Penanggung Jawab
                     </th>
                     <th scope="col"
                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                        <i class="mr-1 fa-solid fa-users"></i> Jumlah Siswa
+                        <i class="mr-1 fa-solid fa-users"></i> Jumlah Member
                     </th>
                     <th scope="col"
                         class="px-6 py-3 text-xs font-medium tracking-wider text-center text-gray-500 uppercase">
@@ -160,28 +160,28 @@
                         @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        {{ $class->students->count() }} siswa
+                        {{ $class->students->count() }} member
                     </td>
                     <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
                         <div class="flex items-center justify-center space-x-2">
-                            <a href="{{ route('admin.school_classes.show', $class->id) }}"
+                            <a href="{{ route('admin.divisions.show', $class->id) }}"
                                 class="p-2 text-blue-600 transition-colors rounded-lg hover:bg-blue-50"
                                 title="Lihat Detail">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
-                            <a href="{{ route('admin.school_classes.edit', $class->id) }}"
+                            <a href="{{ route('admin.divisions.edit', $class->id) }}"
                                 class="p-2 text-yellow-600 transition-colors rounded-lg hover:bg-yellow-50"
-                                title="Edit Kelas">
+                                title="Edit Divisi">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </a>
-                            <form action="{{ route('admin.school_classes.destroy', $class->id) }}" method="POST"
+                            <form action="{{ route('admin.divisions.destroy', $class->id) }}" method="POST"
                                 class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
                                     class="p-2 text-red-600 transition-colors rounded-lg hover:bg-red-50"
-                                    title="Hapus Kelas"
-                                    onclick="return confirm('Yakin ingin menghapus kelas {{ $class->name }}?')">
+                                    title="Hapus Divisi"
+                                    onclick="return confirm('Yakin ingin menghapus divisi {{ $class->name }}?')">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </form>
@@ -193,7 +193,7 @@
                     <td colspan="4" class="px-6 py-8 text-center">
                         <div class="flex flex-col items-center justify-center text-gray-400">
                             <i class="mb-3 text-4xl fa-solid fa-school-circle-xmark"></i>
-                            <p class="text-lg font-medium text-gray-600">Tidak ada data kelas</p>
+                            <p class="text-lg font-medium text-gray-600">Tidak ada data divisi</p>
                             <p class="text-sm text-gray-500">Coba ubah filter pencarian Anda</p>
                         </div>
                     </td>

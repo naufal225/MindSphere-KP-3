@@ -1,7 +1,7 @@
 @extends('components.admin.layout.app')
 
-@section('header', 'Tambah Kelas Baru')
-@section('subtitle', 'Buat data kelas baru untuk sekolah')
+@section('header', 'Tambah Divisi Baru')
+@section('subtitle', 'Buat data divisi baru')
 
 @section('content')
 <div class="max-w-4xl mx-auto">
@@ -11,8 +11,8 @@
                 <i class="text-xl text-blue-600 fa-solid fa-school"></i>
             </div>
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">Tambah Kelas Baru</h1>
-                <p class="text-gray-600">Buat data kelas baru untuk sistem</p>
+                <h1 class="text-2xl font-bold text-gray-800">Tambah Divisi Baru</h1>
+                <p class="text-gray-600">Buat data divisi baru untuk sistem</p>
             </div>
         </div>
     </div>
@@ -45,19 +45,19 @@
     @endif
 
     <div class="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-        <form method="POST" action="{{ route('admin.school_classes.store') }}">
+        <form method="POST" action="{{ route('admin.divisions.store') }}">
             @csrf
 
             <div class="mb-8">
                 <div class="flex items-center mb-4">
                     <i class="mr-2 text-blue-500 fa-solid fa-tag"></i>
-                    <h3 class="text-lg font-semibold text-gray-800">Informasi Kelas</h3>
+                    <h3 class="text-lg font-semibold text-gray-800">Informasi Divisi</h3>
                 </div>
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <!-- Nama Kelas -->
+                    <!-- Nama Divisi -->
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-700">
-                            <i class="mr-1 fa-solid fa-signature"></i> Nama Kelas
+                            <i class="mr-1 fa-solid fa-signature"></i> Nama Divisi
                         </label>
                         <input type="text" name="name" id="name" value="{{ old('name') }}"
                             class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('name') border-red-500 @enderror"
@@ -68,14 +68,14 @@
                         @enderror
                     </div>
 
-                    <!-- Wali Kelas -->
+                    <!-- Penanggung Jawab -->
                     <div>
                         <label for="teacher_id" class="block mb-2 text-sm font-medium text-gray-700">
-                            <i class="mr-1 fa-solid fa-chalkboard-user"></i> Wali Kelas (Opsional)
+                            <i class="mr-1 fa-solid fa-chalkboard-user"></i> Penanggung Jawab (Opsional)
                         </label>
                         <select name="teacher_id" id="teacher_id"
                             class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('teacher_id') border-red-500 @enderror">
-                            <option value="">Pilih Guru</option>
+                            <option value="">Pilih Monitor</option>
                             @foreach($teachers as $teacher)
                             <option value="{{ $teacher->id }}" {{ old('teacher_id')==$teacher->id ? 'selected' : '' }}>
                                 {{ $teacher->name }}
@@ -91,13 +91,13 @@
             </div>
 
             <div class="flex flex-col-reverse gap-4 pt-6 border-t border-gray-200 sm:flex-row sm:justify-end">
-                <a href="{{ route('admin.school_classes.index') }}"
+                <a href="{{ route('admin.divisions.index') }}"
                     class="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-gray-700 transition-colors bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200">
                     <i class="mr-2 fa-solid fa-arrow-left"></i> Kembali ke Daftar
                 </a>
                 <button type="submit"
                     class="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <i class="mr-2 fa-solid fa-save"></i> Simpan Kelas
+                    <i class="mr-2 fa-solid fa-save"></i> Simpan Divisi
                 </button>
             </div>
         </form>

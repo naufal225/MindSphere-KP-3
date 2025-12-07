@@ -1,7 +1,7 @@
 @extends('components.admin.layout.app')
 
 @section('header', 'Detail User')
-@section('subtitle', 'Informasi lengkap tentang pengguna')
+@section('subtitle', 'Informasi lengkap tentang user')
 
 @section('content')
 <div class="max-w-6xl mx-auto">
@@ -12,7 +12,7 @@
                 <i class="text-xl text-blue-600 fa-solid fa-user-circle"></i>
             </div>
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">Detail Pengguna</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Detail User</h1>
                 <p class="text-gray-600">Informasi lengkap tentang {{ $user->name }}</p>
             </div>
         </div>
@@ -70,6 +70,13 @@
 
     // XP yang tersisa untuk naik level
     $xpRemaining = max(0, $xpForNextLevel - $currentXp);
+
+    $roleLabels = [
+        'admin' => 'Admin',
+        'guru' => 'Monitor',
+        'siswa' => 'Member',
+        'ortu' => 'Family'
+    ];
     @endphp
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
@@ -116,7 +123,7 @@
                     <span
                         class="inline-flex items-center px-4 py-2 mt-3 text-sm font-medium border rounded-full {{ $roleColors[$user->role] ?? 'bg-gray-100 text-gray-800 border-gray-200' }}">
                         <i class="mr-2 fa-solid {{ $roleIcons[$user->role] ?? 'fa-user' }}"></i>
-                        {{ ucfirst($user->role) }}
+                        {{ $roleLabels[$user->role] ?? ucfirst($user->role) }}
                     </span>
                 </div>
 
@@ -257,13 +264,13 @@
                                     <i
                                         class="w-8 h-8 p-2 mr-3 text-red-600 bg-red-100 rounded-lg fa-solid fa-user-tag"></i>
                                     <div>
-                                        <p class="text-sm text-gray-600">Role</p>
-                                        <p class="font-medium text-gray-900 capitalize">{{ $user->role }}</p>
-                                    </div>
-                                </div>
+                                <p class="text-sm text-gray-600">Role</p>
+                                <p class="font-medium text-gray-900">{{ $roleLabels[$user->role] ?? ucfirst($user->role) }}</p>
+                            </div>
+                        </div>
 
                                 @if($user->role == App\Enums\Role::SISWA->value)
-                                <!-- Coin Information (Hanya untuk Siswa) -->
+                                <!-- Coin Information (Hanya untuk Member) -->
                                 <div class="flex items-center p-3 bg-gray-50 rounded-lg">
                                     <i
                                         class="w-8 h-8 p-2 mr-3 text-yellow-600 bg-yellow-100 rounded-lg fa-solid fa-coins"></i>
@@ -304,11 +311,11 @@
                                 <div>
                                     <h4 class="font-medium text-blue-900">Avatar Profile</h4>
                                     @if($user->avatar_url)
-                                    <p class="text-sm text-blue-700">Avatar tersedia</p>
-                                    <a href="{{ $user->avatar_url }}" target="_blank"
-                                        class="inline-flex items-center mt-1 text-sm text-blue-600 hover:text-blue-800">
-                                        <i class="mr-1 fa-solid fa-external-link"></i> Lihat gambar lengkap
-                                    </a>
+                            <p class="text-sm text-blue-700">Avatar tersedia</p>
+                            <a href="{{ $user->avatar_url }}" target="_blank"
+                                class="inline-flex items-center mt-1 text-sm text-blue-600 hover:text-blue-800">
+                                <i class="mr-1 fa-solid fa-external-link"></i> Lihat gambar lengkap
+                            </a>
                                     @else
                                     <p class="text-sm text-blue-700">Menggunakan avatar default</p>
                                     @endif
@@ -364,7 +371,7 @@
                                 </div>
                             </div>
 
-                            <!-- Coin Statistics (Hanya untuk Siswa) -->
+                            <!-- Coin Statistics (Hanya untuk Member) -->
                             <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
                                 <div class="flex items-center">
                                     <div class="flex items-center justify-center w-12 h-12 bg-yellow-100 rounded-lg">
@@ -565,7 +572,7 @@
                     <div id="settings-tab" class="hidden tab-content">
                         <div class="text-center py-8 text-gray-500">
                             <i class="mb-4 text-4xl fa-solid fa-sliders-h"></i>
-                            <p>Pengaturan khusus pengguna akan ditampilkan di sini</p>
+                            <p>Pengaturan khusus user akan ditampilkan di sini</p>
                         </div>
                     </div>
 
@@ -581,7 +588,7 @@
                 </a>
                 <a href="{{ route('admin.users.edit', $user->id) }}"
                     class="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white transition-colors bg-yellow-600 rounded-lg hover:bg-yellow-700">
-                    <i class="mr-2 fa-solid fa-edit"></i> Edit Pengguna
+                    <i class="mr-2 fa-solid fa-edit"></i> Edit User
                 </a>
                 <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline">
                     @csrf
@@ -589,7 +596,7 @@
                     <button type="submit"
                         class="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white transition-colors bg-red-600 rounded-lg hover:bg-red-700"
                         onclick="return confirm('Yakin ingin menghapus user {{ $user->name }}? Tindakan ini tidak dapat dibatalkan.')">
-                        <i class="mr-2 fa-solid fa-trash"></i> Hapus Pengguna
+                        <i class="mr-2 fa-solid fa-trash"></i> Hapus User
                     </button>
                 </form>
             </div>

@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th style="background-color: #3498DB; color: white; font-weight: bold;">Nama</th>
-            <th style="background-color: #3498DB; color: white; font-weight: bold;">Kelas</th>
+            <th style="background-color: #3498DB; color: white; font-weight: bold;">Divisi</th>
             <th style="background-color: #3498DB; color: white; font-weight: bold;">XP Total</th>
             <th style="background-color: #3498DB; color: white; font-weight: bold;">Habit Done</th>
             <th style="background-color: #3498DB; color: white; font-weight: bold;">Challenge Done</th>

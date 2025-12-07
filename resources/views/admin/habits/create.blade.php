@@ -1,7 +1,7 @@
 @extends('components.admin.layout.app')
 
 @section('header', 'Buat Kebiasaan Baru')
-@section('subtitle', 'Buat kebiasaan baru untuk pengguna')
+@section('subtitle', 'Buat kebiasaan baru untuk users')
 
 @section('content')
 <div class="max-w-4xl mx-auto">
@@ -231,7 +231,7 @@
                             </label>
                             <select name="assigned_by" id="assigned_by" required
                                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('assigned_by') border-red-500 @enderror">
-                                <option value="">Pilih Pengguna</option>
+                                <option value="">Pilih Users</option>
                                 @if(isset($users))
                                 @foreach($users as $user)
                                 <option value="{{ $user->id }}" {{ old('assigned_by')==$user->id ? 'selected' : '' }}>
@@ -245,7 +245,7 @@
                                 <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
                             </p>
                             @enderror
-                            <p class="mt-1 text-sm text-gray-500">Pilih guru/admin yang menugaskan kebiasaan ini</p>
+                            <p class="mt-1 text-sm text-gray-500">Pilih monitor/admin yang menugaskan kebiasaan ini</p>
                         </div>
                     </div>
                 </div> --}}

@@ -1,7 +1,7 @@
 @extends('components.admin.layout.app')
 
 @section('header', 'Buat Tantangan Baru')
-@section('subtitle', 'Buat tantangan baru untuk pengguna')
+@section('subtitle', 'Buat tantangan baru untuk users')
 
 @section('content')
 <div class="max-w-4xl mx-auto">
@@ -136,7 +136,7 @@
                                 <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
                             </p>
                             @enderror
-                            <p class="mt-1 text-xs text-gray-500">Pengalaman poin untuk pengguna</p>
+                            <p class="mt-1 text-xs text-gray-500">Pengalaman poin untuk users</p>
                         </div>
 
                         <!-- Coin Reward -->

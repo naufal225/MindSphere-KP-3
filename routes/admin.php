@@ -20,6 +20,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('users', UserController::class);
 
     Route::resource('school_classes', SchoolClassController::class);
+    // Alias divisi (penamaan baru)
+    Route::resource('divisions', SchoolClassController::class)
+        ->parameters(['divisions' => 'school_class'])
+        ->names('divisions');
 
     Route::resource('categories', CategoryController::class);
 

@@ -193,7 +193,7 @@
                             </label>
                             <select name="assigned_by" id="assigned_by" required
                                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('assigned_by') border-red-500 @enderror">
-                                <option value="">Pilih Pengguna</option>
+                                <option value="">Pilih Users</option>
                                 @if(isset($users))
                                     @foreach($users as $user)
                                         <option value="{{ $user->id }}" {{ (old('assigned_by', $habit->assigned_by) == $user->id) ? 'selected' : '' }}>
@@ -207,7 +207,7 @@
                                 <i class="mr-1 fa-solid fa-circle-exclamation"></i> {{ $message }}
                             </p>
                             @enderror
-                            <p class="mt-1 text-sm text-gray-500">Pilih guru/admin yang menugaskan kebiasaan ini</p>
+                            <p class="mt-1 text-sm text-gray-500">Pilih monitor/admin yang menugaskan kebiasaan ini</p>
                         </div>
                     </div>
                 </div> --}}
@@ -234,10 +234,10 @@
             <div>
                 <h3 class="font-semibold text-blue-800">Panduan Edit Kebiasaan</h3>
                 <ul class="mt-2 text-sm text-blue-700 list-disc list-inside space-y-1">
-                    <li>Perubahan pada kebiasaan akan berlaku untuk semua pengguna yang mengikuti kebiasaan ini</li>
+                    <li>Perubahan pada kebiasaan akan berlaku untuk semua users yang mengikuti kebiasaan ini</li>
                     <li>Kebiasaan yang dibuat oleh admin otomatis bertipe "Ditugaskan"</li>
                     <li>Kategori dan periode memengaruhi pelaporan dan analisis kebiasaan</li>
-                    <li>XP reward akan diberikan kepada pengguna yang menyelesaikan kebiasaan</li>
+                    <li>XP reward akan diberikan kepada users yang menyelesaikan kebiasaan</li>
                     <li>Periode waktu menentukan kapan kebiasaan ini aktif dan dapat dilakukan</li>
                 </ul>
             </div>

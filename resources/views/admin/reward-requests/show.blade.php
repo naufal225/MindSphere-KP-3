@@ -51,7 +51,7 @@
 
                 <div class="grid gap-4 sm:grid-cols-2">
                     <div class="p-4 border border-gray-100 rounded-lg">
-                        <h3 class="text-sm font-semibold text-gray-800 mb-2">Siswa</h3>
+                        <h3 class="text-sm font-semibold text-gray-800 mb-2">Member</h3>
                         <div class="flex items-center space-x-3">
                             <div class="h-12 w-12">
                                 @if($request->user->avatar_url)

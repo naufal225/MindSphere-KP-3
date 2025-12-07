@@ -28,11 +28,11 @@
             <span class="font-medium">Data Users</span>
         </a>
 
-        <!-- Kelas -->
-        <a href="{{ route('admin.school_classes.index') }}"
-            class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.school_classes.*') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
+        <!-- Divisi -->
+        <a href="{{ route('admin.divisions.index') }}"
+            class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.divisions.*') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
             <i class="w-5 mr-3 text-center fas fa-graduation-cap"></i>
-            <span class="font-medium">Kelas</span>
+            <span class="font-medium">Divisi</span>
         </a>
 
         <!-- Categories -->

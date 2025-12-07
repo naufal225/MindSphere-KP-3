@@ -1,7 +1,7 @@
 @extends('components.admin.layout.app')
 
 @section('header', 'Edit User')
-@section('subtitle', 'Perbarui informasi pengguna')
+@section('subtitle', 'Perbarui informasi user')
 
 @section('content')
 <div class="max-w-4xl mx-auto">
@@ -119,14 +119,14 @@
                     <!-- Role -->
                     <div>
                         <label for="role" class="block mb-2 text-sm font-medium text-gray-700">
-                            <i class="mr-1 fa-solid fa-user-tag"></i> Role Pengguna *
+                            <i class="mr-1 fa-solid fa-user-tag"></i> Role User *
                         </label>
                         <select name="role" id="role" required
                             class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('role') border-red-500 @enderror">
-                            <option value="">Pilih Role Pengguna</option>
-                            <option value="guru" {{ old('role', $user->role) === 'guru' ? 'selected' : '' }}>Guru</option>
-                            <option value="siswa" {{ old('role', $user->role) === 'siswa' ? 'selected' : '' }}>Siswa</option>
-                            <option value="ortu" {{ old('role', $user->role) === 'ortu' ? 'selected' : '' }}>Orang Tua</option>
+                            <option value="">Pilih Role User</option>
+                            <option value="guru" {{ old('role', $user->role) === 'guru' ? 'selected' : '' }}>Monitor</option>
+                            <option value="siswa" {{ old('role', $user->role) === 'siswa' ? 'selected' : '' }}>Member</option>
+                            <option value="ortu" {{ old('role', $user->role) === 'ortu' ? 'selected' : '' }}>Family</option>
                         </select>
                         @error('role')
                         <p class="mt-2 text-sm text-red-600"><i class="mr-1 fa-solid fa-circle-exclamation"></i> {{
@@ -166,20 +166,20 @@
                 </div>
             </div>
 
-            <!-- Parent Selection (Conditional for Siswa) -->
+            <!-- Parent Selection (Conditional for Member) -->
             <div class="mb-8" id="parent-section" style="display: none;">
                 <div class="flex items-center mb-4">
                     <i class="mr-2 text-orange-500 fa-solid fa-user-group"></i>
-                    <h3 class="text-lg font-semibold text-gray-800">Penunjukan Orang Tua</h3>
+                    <h3 class="text-lg font-semibold text-gray-800">Penunjukan Family</h3>
                 </div>
                 <div class="grid grid-cols-1 gap-6">
                     <div>
                         <label for="parent_id" class="block mb-2 text-sm font-medium text-gray-700">
-                            <i class="mr-1 fa-solid fa-users"></i> Pilih Orang Tua
+                            <i class="mr-1 fa-solid fa-users"></i> Pilih Family
                         </label>
                         <select name="parent_id" id="parent_id"
                             class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('parent_id') border-red-500 @enderror">
-                            <option value="">Pilih Orang Tua (Opsional)</option>
+                            <option value="">Pilih Family (Opsional)</option>
                             @foreach($parents as $parent)
                             <option value="{{ $parent->id }}" {{ (old('parent_id') ?? $user->parent_id) == $parent->id ? 'selected' : '' }}>
                                 {{ $parent->name }} ({{ $parent->email }})
@@ -192,26 +192,26 @@
                         @enderror
                         <p class="mt-1 text-xs text-gray-500">
                             <i class="mr-1 fa-solid fa-info-circle"></i>
-                            Pilih orang tua yang akan terhubung dengan siswa ini (opsional)
+                            Pilih family yang akan terhubung dengan member ini (opsional)
                         </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Penugasan Kelas (Conditional) -->
+            <!-- Penugasan Divisi (Conditional) -->
             <div class="mb-8" id="class-section" style="display: none;">
                 <div class="flex items-center mb-4">
                     <i class="mr-2 text-indigo-500 fa-solid fa-school"></i>
-                    <h3 class="text-lg font-semibold text-gray-800">Penugasan Kelas</h3>
+                    <h3 class="text-lg font-semibold text-gray-800">Penugasan Divisi</h3>
                 </div>
                 <div class="grid grid-cols-1 gap-6">
                     <div>
                         <label for="class_id" class="block mb-2 text-sm font-medium text-gray-700">
-                            <i class="mr-1 fa-solid fa-building-columns"></i> Kelas
+                            <i class="mr-1 fa-solid fa-building-columns"></i> Divisi
                         </label>
                         <select name="class_id" id="class_id"
                             class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('class_id') border-red-500 @enderror">
-                            <option value="">Pilih Kelas</option>
+                            <option value="">Pilih Divisi</option>
                             @foreach($classes as $class)
                             @php
                                 $isSelected = false;
@@ -224,7 +224,7 @@
                             @endphp
                             <option value="{{ $class->id }}" {{ $isSelected ? 'selected' : '' }}>
                                 {{ $class->name }} @if($class->teacher && $class->teacher->id != $user->id)
-                                - Wali: {{ $class->teacher->name }}
+                                - PIC: {{ $class->teacher->name }}
                                 @endif
                             </option>
                             @endforeach
@@ -235,7 +235,7 @@
                         @enderror
                         <p class="mt-1 text-xs text-gray-500">
                             <i class="mr-1 fa-solid fa-info-circle"></i>
-                            <span id="class-help-text">Pilih kelas yang sesuai dengan role pengguna.</span>
+                            <span id="class-help-text">Pilih divisi yang sesuai dengan role user.</span>
                         </p>
                     </div>
                 </div>
@@ -419,6 +419,12 @@
         const classHelpText = document.getElementById('class-help-text');
         const classSelect = document.getElementById('class_id');
         const parentSelect = document.getElementById('parent_id');
+        const roleLabels = {
+            admin: 'Admin',
+            guru: 'Monitor',
+            siswa: 'Member',
+            ortu: 'Family'
+        };
 
         const nameInput = document.getElementById('name');
         const avatarFileInput = document.getElementById('avatar_file');
@@ -440,13 +446,13 @@
                 nomorIndukInput.setAttribute('required', 'required');
 
                 if (role === 'siswa') {
-                    nomorIndukLabel.textContent = 'NIS (Nomor Induk Siswa) *';
-                    nomorIndukHelp.textContent = 'Wajib diisi untuk siswa. Contoh: NIS2024001';
-                    nomorIndukInput.placeholder = 'Masukkan NIS siswa';
+                    nomorIndukLabel.textContent = 'NIS (Nomor Induk Member) *';
+                    nomorIndukHelp.textContent = 'Wajib diisi untuk member. Contoh: NIS2024001';
+                    nomorIndukInput.placeholder = 'Masukkan NIS member';
                 } else if (role === 'guru') {
-                    nomorIndukLabel.textContent = 'NPK (Nomor Pokok Guru) *';
-                    nomorIndukHelp.textContent = 'Wajib diisi untuk guru. Contoh: NPK2024001';
-                    nomorIndukInput.placeholder = 'Masukkan NPK guru';
+                    nomorIndukLabel.textContent = 'NPK (Nomor Pokok Monitor) *';
+                    nomorIndukHelp.textContent = 'Wajib diisi untuk monitor. Contoh: NPK2024001';
+                    nomorIndukInput.placeholder = 'Masukkan NPK monitor';
                 }
             } else {
                 nomorIndukSection.style.display = 'none';
@@ -458,10 +464,10 @@
             if (role === 'guru' || role === 'siswa') {
                 classSection.style.display = 'block';
                 if (role === 'siswa') {
-                    classHelpText.textContent = 'Wajib dipilih untuk siswa.';
+                    classHelpText.textContent = 'Wajib dipilih untuk member.';
                     classSelect.setAttribute('required', 'required');
                 } else if (role === 'guru') {
-                    classHelpText.textContent = 'Opsional untuk guru (akan menjadi wali kelas).';
+                    classHelpText.textContent = 'Opsional untuk monitor (sebagai PIC divisi).';
                     classSelect.removeAttribute('required');
                 }
             } else {
@@ -571,14 +577,15 @@
 
             if ((role === 'guru' || role === 'siswa') && !nomorInduk) {
                 e.preventDefault();
-                alert(`Harap isi ${role === 'siswa' ? 'NIS' : 'NPK'} untuk role ${role}`);
+                const roleName = roleLabels[role] || role;
+                alert(`Harap isi ${role === 'siswa' ? 'NIS' : 'NPK'} untuk role ${roleName}`);
                 nomorIndukInput.focus();
                 return false;
             }
 
             if (role === 'siswa' && !classSelect.value) {
                 e.preventDefault();
-                alert('Harap pilih kelas untuk siswa');
+                alert('Harap pilih divisi untuk member');
                 classSelect.focus();
                 return false;
             }

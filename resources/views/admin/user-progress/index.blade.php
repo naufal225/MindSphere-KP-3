@@ -45,7 +45,7 @@
     <div class="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
         <div>
             <h1 class="text-2xl font-bold text-gray-900">User Progress Report</h1>
-            <p class="text-gray-600">Monitor and analyze student progress and activities</p>
+            <p class="text-gray-600">Monitor and analyze member progress and activities</p>
         </div>
         <div class="flex gap-3">
             <button id="export-btn" class="px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700">
@@ -59,15 +59,15 @@
         <div class="flex flex-col gap-6">
             <!-- Main Filters Row -->
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
-                <!-- Class Filter -->
+                <!-- Divisi Filter -->
                 <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-700">Kelas</label>
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Divisi</label>
                     <select id="class-filter"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Semua Kelas</option>
+                        <option value="">Semua Divisi</option>
                         @foreach($classes as $class)
                         <option value="{{ $class->id }}" {{ $filters['class_id']==$class->id ? 'selected' : '' }}>
-                            {{ $class->name }} ({{ $class->students_count }} siswa)
+                            {{ $class->name }} ({{ $class->students_count }} member)
                         </option>
                         @endforeach
                     </select>
@@ -132,7 +132,7 @@
                     <label class="flex items-center space-x-2">
                         <input type="checkbox" id="include-inactive" {{ $filters['include_inactive'] ? 'checked' : '' }}
                             class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="text-sm text-gray-700">Sertakan siswa tanpa aktivitas</span>
+                        <span class="text-sm text-gray-700">Sertakan member tanpa aktivitas</span>
                     </label>
                 </div>
             </div>
@@ -158,7 +158,7 @@
                     <i class="text-blue-600 fas fa-users"></i>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Total Siswa</p>
+                    <p class="text-sm font-medium text-gray-600">Total Member</p>
                     <p class="text-2xl font-bold text-gray-900">{{ $userProgressData->count() }}</p>
                 </div>
             </div>
@@ -212,7 +212,7 @@
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <!-- Top 10 Students Chart -->
         <div class="p-6 bg-white rounded-xl shadow-soft">
-            <h3 class="mb-4 text-lg font-semibold text-gray-900">Top 10 Siswa (XP Tertinggi)</h3>
+            <h3 class="mb-4 text-lg font-semibold text-gray-900">Top 10 Member (XP Tertinggi)</h3>
             <div class="h-80">
                 <canvas id="topStudentsChart"></canvas>
             </div>
@@ -220,7 +220,7 @@
 
         <!-- Class Comparison Chart -->
         <div class="p-6 bg-white rounded-xl shadow-soft">
-            <h3 class="mb-4 text-lg font-semibold text-gray-900">Perbandingan Rata-rata Aktivitas per Kelas</h3>
+            <h3 class="mb-4 text-lg font-semibold text-gray-900">Perbandingan Rata-rata Aktivitas per Divisi</h3>
             <div class="h-80">
                 <canvas id="classComparisonChart"></canvas>
             </div>
@@ -228,7 +228,7 @@
 
         <!-- Mood Distribution Chart -->
         <div class="p-6 bg-white rounded-xl shadow-soft lg:col-span-2">
-            <h3 class="mb-4 text-lg font-semibold text-gray-900">Distribusi Mood Siswa</h3>
+            <h3 class="mb-4 text-lg font-semibold text-gray-900">Distribusi Mood Member</h3>
             <div class="h-80">
                 <canvas id="moodDistributionChart"></canvas>
             </div>
@@ -238,9 +238,9 @@
     <!-- Data Table -->
     <div class="p-6 bg-white rounded-xl shadow-soft">
         <div class="flex flex-col justify-between gap-4 mb-6 sm:flex-row sm:items-center">
-            <h3 class="text-lg font-semibold text-gray-900">Data Progress Siswa</h3>
+            <h3 class="text-lg font-semibold text-gray-900">Data Progress Member</h3>
             <div class="text-sm text-gray-600">
-                Menampilkan {{ $userProgressData->count() }} siswa
+                Menampilkan {{ $userProgressData->count() }} member
             </div>
         </div>
 
@@ -248,9 +248,9 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead>
                     <tr class="bg-gray-50">
-                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Siswa
+                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Member
                         </th>
-                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Kelas
+                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Divisi
                         </th>
                         <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Level
                         </th>

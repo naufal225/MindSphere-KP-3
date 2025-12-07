@@ -1,7 +1,7 @@
 @extends('components.admin.layout.app')
 
-@section('header', 'Manajemen Pengguna')
-@section('subtitle', 'Kelola data pengguna sistem')
+@section('header', 'Manajemen Users')
+@section('subtitle', 'Kelola data users sistem')
 
 @section('content')
 
@@ -12,8 +12,8 @@ use App\Http\Services\LevelService;
 <div class="mb-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Daftar Pengguna</h1>
-            <p class="text-gray-600">Total: {{ $users->total() }} pengguna</p>
+            <h1 class="text-2xl font-bold text-gray-800">Daftar Users</h1>
+            <p class="text-gray-600">Total: {{ $users->total() }} users</p>
         </div>
         <a href="{{ route('admin.users.create') }}"
             class="inline-flex items-center px-4 py-2 text-sm font-medium text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700">
@@ -55,7 +55,7 @@ use App\Http\Services\LevelService;
             <!-- Search Input -->
             <div>
                 <label for="search" class="block mb-2 text-sm font-medium text-gray-700">
-                    <i class="mr-1 fa-solid fa-search"></i> Cari Pengguna
+                    <i class="mr-1 fa-solid fa-search"></i> Cari Users
                 </label>
                 <input type="text" name="search" id="search" value="{{ request('search') }}"
                     placeholder="Nama, email, NIS, NPK..."
@@ -71,23 +71,23 @@ use App\Http\Services\LevelService;
                     class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Semua Role</option>
                     <option value="admin" {{ request('role')==='admin' ? 'selected' : '' }}>Admin</option>
-                    <option value="guru" {{ request('role')==='guru' ? 'selected' : '' }}>Guru</option>
-                    <option value="siswa" {{ request('role')==='siswa' ? 'selected' : '' }}>Siswa</option>
-                    <option value="ortu" {{ request('role')==='ortu' ? 'selected' : '' }}>Orang Tua</option>
+                    <option value="guru" {{ request('role')==='guru' ? 'selected' : '' }}>Monitor</option>
+                    <option value="siswa" {{ request('role')==='siswa' ? 'selected' : '' }}>Member</option>
+                    <option value="ortu" {{ request('role')==='ortu' ? 'selected' : '' }}>Family</option>
                 </select>
             </div>
 
             <!-- Class Filter -->
             <div>
                 <label for="class_id" class="block mb-2 text-sm font-medium text-gray-700">
-                    <i class="mr-1 fa-solid fa-chalkboard"></i> Filter Kelas
+                    <i class="mr-1 fa-solid fa-chalkboard"></i> Filter Divisi
                 </label>
                 <select name="class_id" id="class_id"
                     class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Semua Kelas</option>
+                    <option value="">Semua Divisi</option>
                     @foreach($classes as $class)
                     <option value="{{ $class->id }}" {{ request('class_id')==$class->id ? 'selected' : '' }}>
-                        {{ $class->name }} - {{ $class->teacher->name ?? 'Tidak ada guru' }}
+                        {{ $class->name }} - {{ $class->teacher->name ?? 'Tidak ada monitor' }}
                     </option>
                     @endforeach
                 </select>
@@ -116,7 +116,7 @@ use App\Http\Services\LevelService;
                 <i class="text-xl text-blue-600 fa-solid fa-users"></i>
             </div>
             <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Total Pengguna</p>
+                <p class="text-sm font-medium text-gray-600">Total Users</p>
                 <p class="text-2xl font-bold text-gray-900">{{ $users->total() }}</p>
             </div>
         </div>
@@ -128,7 +128,7 @@ use App\Http\Services\LevelService;
                 <i class="text-xl text-green-600 fa-solid fa-graduation-cap"></i>
             </div>
             <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Siswa</p>
+                <p class="text-sm font-medium text-gray-600">Member</p>
                 <p class="text-2xl font-bold text-gray-900">{{ $users->where('role', 'siswa')->count() }}</p>
             </div>
         </div>
@@ -140,7 +140,7 @@ use App\Http\Services\LevelService;
                 <i class="text-xl text-purple-600 fa-solid fa-chalkboard-user"></i>
             </div>
             <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Guru</p>
+                <p class="text-sm font-medium text-gray-600">Monitor</p>
                 <p class="text-2xl font-bold text-gray-900">{{ $users->where('role', 'guru')->count() }}</p>
             </div>
         </div>
@@ -152,7 +152,7 @@ use App\Http\Services\LevelService;
                 <i class="text-xl text-orange-600 fa-solid fa-user-group"></i>
             </div>
             <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Orang Tua</p>
+                <p class="text-sm font-medium text-gray-600">Family</p>
                 <p class="text-2xl font-bold text-gray-900">{{ $users->where('role', 'ortu')->count() }}</p>
             </div>
         </div>
@@ -165,8 +165,8 @@ use App\Http\Services\LevelService;
     <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex items-center justify-between">
             <div>
-                <h3 class="text-lg font-semibold text-gray-800">Daftar Pengguna Sistem</h3>
-                <p class="text-sm text-gray-600">Menampilkan {{ $users->count() }} dari {{ $users->total() }} pengguna
+                <h3 class="text-lg font-semibold text-gray-800">Daftar Users Sistem</h3>
+                <p class="text-sm text-gray-600">Menampilkan {{ $users->count() }} dari {{ $users->total() }} users
                 </p>
             </div>
             
@@ -183,7 +183,7 @@ use App\Http\Services\LevelService;
                     </th>
                     <th scope="col"
                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                        <i class="mr-1 fa-solid fa-user"></i> Informasi Pengguna
+                        <i class="mr-1 fa-solid fa-user"></i> Informasi User
                     </th>
                     <th scope="col"
                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
@@ -262,7 +262,7 @@ use App\Http\Services\LevelService;
                         <div class="text-sm text-gray-500">{{ $user->email }}</div>
                         @if($user->role === 'siswa' && $user->parent)
                         <div class="text-xs text-gray-400">
-                            <i class="mr-1 fa-solid fa-user-group"></i>Orang Tua: {{ $user->parent->name }}
+                            <i class="mr-1 fa-solid fa-user-group"></i>Family: {{ $user->parent->name }}
                         </div>
                         @endif
                     </td>
@@ -305,12 +305,18 @@ use App\Http\Services\LevelService;
                         'siswa' => 'fa-graduation-cap',
                         'ortu' => 'fa-user-group'
                         ];
+                        $roleLabels = [
+                        'admin' => 'Admin',
+                        'guru' => 'Monitor',
+                        'siswa' => 'Member',
+                        'ortu' => 'Family'
+                        ];
                         @endphp
                         <div class="flex flex-col space-y-1">
                             <span
                                 class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full border {{ $roleColors[$user->role] ?? 'bg-gray-100 text-gray-800 border-gray-200' }}">
                                 <i class="mr-1 fa-solid {{ $roleIcons[$user->role] ?? 'fa-user' }}"></i>
-                                {{ ucfirst($user->role) }}
+                                {{ $roleLabels[$user->role] ?? ucfirst($user->role) }}
                             </span>
                             @if($user->role === 'siswa' && $user->classAsStudent->count() > 0)
                             <div class="text-xs text-gray-600">
@@ -373,7 +379,7 @@ use App\Http\Services\LevelService;
                             </a>
                             <a href="{{ route('admin.users.edit', $user->id) }}"
                                 class="p-2 text-yellow-600 transition-colors rounded-lg hover:bg-yellow-50 group"
-                                title="Edit Pengguna" data-tooltip="Edit">
+                                title="Edit User" data-tooltip="Edit">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </a>
                             <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline">
@@ -381,7 +387,7 @@ use App\Http\Services\LevelService;
                                 @method('DELETE')
                                 <button type="submit"
                                     class="p-2 text-red-600 transition-colors rounded-lg hover:bg-red-50 group"
-                                    title="Hapus Pengguna" data-tooltip="Hapus"
+                                    title="Hapus User" data-tooltip="Hapus"
                                     onclick="return confirm('Yakin ingin menghapus user {{ addslashes($user->name) }}?')">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
@@ -394,11 +400,11 @@ use App\Http\Services\LevelService;
                     <td colspan="9" class="px-6 py-12 text-center">
                         <div class="flex flex-col items-center justify-center text-gray-400">
                             <i class="mb-4 text-5xl fa-solid fa-users-slash"></i>
-                            <p class="mb-2 text-lg font-medium text-gray-600">Tidak ada data pengguna</p>
-                            <p class="text-sm text-gray-500">Coba ubah filter pencarian atau tambah pengguna baru</p>
+                            <p class="mb-2 text-lg font-medium text-gray-600">Tidak ada data users</p>
+                            <p class="text-sm text-gray-500">Coba ubah filter pencarian atau tambah user baru</p>
                             <a href="{{ route('admin.users.create') }}"
                                 class="inline-flex items-center px-4 py-2 mt-4 text-sm font-medium text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700">
-                                <i class="mr-2 fa-solid fa-plus"></i> Tambah Pengguna
+                                <i class="mr-2 fa-solid fa-plus"></i> Tambah User
                             </a>
                         </div>
                     </td>

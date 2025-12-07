@@ -19,10 +19,19 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $selectedRange = $this->resolveRange($request->query('range'));
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
 
-        $response = Http::get("{$this->goApiUrl}/api/v1/admin/dashboard", [
+        $query = [
             'range' => $selectedRange,
-        ]);
+        ];
+
+        if ($startDate && $endDate) {
+            $query['start_date'] = $startDate;
+            $query['end_date'] = $endDate;
+        }
+
+        $response = Http::get("{$this->goApiUrl}/api/v1/admin/dashboard", $query);
 
         if (!$response->successful()) {
             // Jika API Go gagal, kirim data default
@@ -31,8 +40,9 @@ class DashboardController extends Controller
 
         $data = $response->json('data') ?? [];
 
-        // Format habit trends untuk memastikan konsistensi
-        $habitTrends = $this->formatHabitTrends($data['habit_trends'] ?? []);
+        // Format habit/challenge trends untuk memastikan konsistensi
+        $habitTrends = $this->formatProgress($data['habit_trends'] ?? []);
+        $challengeProgress = $this->formatProgress($data['challenge_progress'] ?? []);
 
         // Pastikan semua key ada di data
         return view('admin.dashboard.index', [
@@ -41,32 +51,31 @@ class DashboardController extends Controller
             'totalStudents' => $data['total_students'] ?? 0,
             'totalTeachers' => $data['total_teachers'] ?? 0,
             'totalParents' => $data['total_parents'] ?? 0,
-            'activeIndividualChallenges' => $data['active_individual_challenges'] ?? 0,
-            'activeGroupChallenges' => $data['active_group_challenges'] ?? 0,
-            'doneHabits' => $data['done_habits'] ?? 0,
-            'notDoneHabits' => $data['not_done_habits'] ?? 0,
+            'activeChallenges' => $data['active_challenges'] ?? 0,
+            'activeHabits' => $data['active_habits'] ?? 0,
+            'doneHabits' => $this->sumHabitTrends($habitTrends, 'done'),
+            'notDoneHabits' => $this->sumHabitTrends($habitTrends, 'not_done'),
             'reflectionsToday' => $data['reflections_today'] ?? 0,
-            'forumPostsThisWeek' => $data['forum_posts_this_week'] ?? 0,
-            'forumCommentsThisWeek' => $data['forum_comments_this_week'] ?? 0,
             'topStudents' => collect($data['top_students'] ?? []),
             'recentActivities' => collect($data['recent_activities'] ?? []),
             'moodDistribution' => $data['mood_distribution'] ?? [],
             'habitTrends' => $habitTrends,
+            'challengeProgress' => $challengeProgress,
         ]);
     }
 
     /**
-     * Format habit trends data untuk memastikan struktur yang konsisten
+     * Format progress data untuk memastikan struktur yang konsisten
      */
-    private function formatHabitTrends(array $habitTrends): array
+    private function formatProgress(array $progress): array
     {
-        if (empty($habitTrends)) {
+        if (empty($progress)) {
             return [];
         }
 
-        return collect($habitTrends)->map(function ($trend) {
+        return collect($progress)->map(function ($trend) {
             return [
-                'week' => $trend['week'] ?? 'Minggu',
+                'week' => $trend['week'] ?? 'Periode',
                 'done' => (int) ($trend['done'] ?? 0),
                 'not_done' => (int) ($trend['not_done'] ?? 0),
             ];
@@ -81,13 +90,11 @@ class DashboardController extends Controller
             'totalStudents' => 0,
             'totalTeachers' => 0,
             'totalParents' => 0,
-            'activeIndividualChallenges' => 0,
-            'activeGroupChallenges' => 0,
+            'activeChallenges' => 0,
+            'activeHabits' => 0,
             'doneHabits' => 0,
             'notDoneHabits' => 0,
             'reflectionsToday' => 0,
-            'forumPostsThisWeek' => 0,
-            'forumCommentsThisWeek' => 0,
             'topStudents' => collect([]),
             'recentActivities' => collect([]),
             'moodDistribution' => [
@@ -98,6 +105,7 @@ class DashboardController extends Controller
                 'tired' => 0,
             ],
             'habitTrends' => [],
+            'challengeProgress' => [],
         ];
     }
 
@@ -108,5 +116,12 @@ class DashboardController extends Controller
         return in_array($normalizedRange, self::ALLOWED_RANGES, true)
             ? $normalizedRange
             : 'semua';
+    }
+
+    private function sumHabitTrends(array $habitTrends, string $key): int
+    {
+        return collect($habitTrends)->sum(function ($trend) use ($key) {
+            return (int) ($trend[$key] ?? 0);
+        });
     }
 }

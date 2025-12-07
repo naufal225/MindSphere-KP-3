@@ -1,7 +1,7 @@
 @extends('components.admin.layout.app')
 
-@section('header', 'Detail Kelas')
-@section('subtitle', 'Informasi lengkap tentang kelas')
+@section('header', 'Detail Divisi')
+@section('subtitle', 'Informasi lengkap tentang divisi')
 
 @section('content')
 <div class="max-w-6xl mx-auto">
@@ -11,7 +11,7 @@
                 <i class="text-xl text-blue-600 fa-solid fa-school-circle-check"></i>
             </div>
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">Detail Kelas</h1>
+                <h1 class="text-2xl font-bold text-gray-800">Detail Divisi</h1>
                 <p class="text-gray-600">Informasi lengkap tentang {{ $class->name }}</p>
             </div>
         </div>
@@ -45,21 +45,21 @@
     @endif
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <!-- Kelas Info Card -->
+        <!-- Divisi Info Card -->
         <div class="lg:col-span-1">
             <div class="overflow-hidden bg-white rounded-lg shadow-sm border border-gray-100">
                 <div class="p-6 text-center bg-gradient-to-r from-blue-50 to-indigo-50">
                     <div class="text-4xl font-bold text-gray-800">{{ $class->name }}</div>
-                    <p class="mt-2 text-gray-600">Kelas Sekolah</p>
+                    <p class="mt-2 text-gray-600">Divisi</p>
 
                     @if($class->teacher)
                     <div class="mt-4 p-3 bg-purple-100 rounded-lg">
-                        <p class="text-sm font-medium text-purple-800">Wali Kelas</p>
+                        <p class="text-sm font-medium text-purple-800">Penanggung Jawab</p>
                         <p class="font-semibold">{{ $class->teacher->name }}</p>
                     </div>
                     @else
                     <div class="mt-4 p-3 bg-gray-100 rounded-lg">
-                        <p class="text-sm font-medium text-gray-600">Wali Kelas belum ditentukan</p>
+                        <p class="text-sm font-medium text-gray-600">Penanggung jawab belum ditentukan</p>
                     </div>
                     @endif
                 </div>
@@ -71,7 +71,7 @@
                                 <i class="mr-2 text-green-500 fa-solid fa-users"></i>
                                 <span class="text-2xl font-bold text-gray-800">{{ $class->students->count() }}</span>
                             </div>
-                            <p class="text-sm text-gray-600">Jumlah Siswa</p>
+                            <p class="text-sm text-gray-600">Jumlah Member</p>
                         </div>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
             <div class="bg-white rounded-lg shadow-sm border border-gray-100">
                 <div class="border-b border-gray-200 px-6 py-4">
                     <h3 class="text-lg font-semibold text-gray-800">
-                        <i class="mr-2 fa-solid fa-users"></i> Daftar Siswa
+                        <i class="mr-2 fa-solid fa-users"></i> Daftar Member
                     </h3>
                 </div>
                 <div class="p-6">
@@ -107,7 +107,7 @@
                     @else
                     <div class="text-center py-6 text-gray-500">
                         <i class="mb-2 text-3xl fa-solid fa-user-group"></i>
-                        <p>Tidak ada siswa di kelas ini</p>
+                        <p>Tidak ada member di divisi ini</p>
                     </div>
                     @endif
                 </div>
@@ -115,21 +115,21 @@
 
             <!-- Action Buttons -->
             <div class="flex flex-col gap-3 mt-6 sm:flex-row sm:justify-end">
-                <a href="{{ route('admin.school_classes.index') }}"
+                <a href="{{ route('admin.divisions.index') }}"
                     class="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-gray-700 transition-colors bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200">
                     <i class="mr-2 fa-solid fa-arrow-left"></i> Kembali ke Daftar
                 </a>
-                <a href="{{ route('admin.school_classes.edit', $class->id) }}"
+                <a href="{{ route('admin.divisions.edit', $class->id) }}"
                     class="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white transition-colors bg-yellow-600 rounded-lg hover:bg-yellow-700">
-                    <i class="mr-2 fa-solid fa-edit"></i> Edit Kelas
+                    <i class="mr-2 fa-solid fa-edit"></i> Edit Divisi
                 </a>
-                <form action="{{ route('admin.school_classes.destroy', $class->id) }}" method="POST" class="inline">
+                <form action="{{ route('admin.divisions.destroy', $class->id) }}" method="POST" class="inline">
                     @csrf
                     @method('DELETE')
                     <button type="submit"
                         class="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white transition-colors bg-red-600 rounded-lg hover:bg-red-700"
-                        onclick="return confirm('Yakin ingin menghapus kelas {{ $class->name }}? Semua data terkait akan tetap ada, tapi kelas ini dihapus.')">
-                        <i class="mr-2 fa-solid fa-trash"></i> Hapus Kelas
+                        onclick="return confirm('Yakin ingin menghapus divisi {{ $class->name }}? Semua data terkait akan tetap ada, tapi divisi ini dihapus.')">
+                        <i class="mr-2 fa-solid fa-trash"></i> Hapus Divisi
                     </button>
                 </form>
             </div>

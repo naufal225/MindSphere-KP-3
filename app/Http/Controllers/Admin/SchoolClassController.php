@@ -44,7 +44,7 @@ class SchoolClassController extends Controller
     {
         try {
             $this->service->create($request->validated());
-            return redirect()->route('admin.school_classes.index')->with('success', 'Kelas berhasil ditambahkan.');
+            return redirect()->route('admin.divisions.index')->with('success', 'Divisi berhasil ditambahkan.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
@@ -75,7 +75,7 @@ class SchoolClassController extends Controller
     {
         try {
             $this->service->update($id, $request->validated());
-            return redirect()->route('admin.school_classes.index')->with('success', 'Kelas berhasil diperbarui.');
+            return redirect()->route('admin.divisions.index')->with('success', 'Divisi berhasil diperbarui.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
@@ -85,7 +85,7 @@ class SchoolClassController extends Controller
     {
         try {
             $this->service->delete($id);
-            return redirect()->route('admin.school_classes.index')->with('success', 'Kelas berhasil dihapus.');
+            return redirect()->route('admin.divisions.index')->with('success', 'Divisi berhasil dihapus.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }

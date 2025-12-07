@@ -11,8 +11,8 @@
 <!-- Stats Cards -->
 <div class="flex flex-col gap-4 mb-6 md:flex-row md:items-center md:justify-between">
     <div>
-        <p class="text-gray-600">Data terkini {{ now()->translatedFormat('F Y') }}</p>
-        <p class="text-sm text-gray-500">Rentang: {{ ucwords($currentRange) }}</p>
+        <p class="text-gray-600">Ringkasan data berdasarkan rentang waktu yang dipilih</p>
+        <p class="text-sm text-gray-500">Rentang waktu: {{ ucwords($currentRange) }}</p>
     </div>
     <form method="GET" action="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
         <label for="range" class="text-sm font-medium text-gray-700 whitespace-nowrap">Filter Waktu</label>
@@ -81,19 +81,19 @@
 @endif
 
 <div class="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4">
-    <!-- Total Pengguna -->
+    <!-- Total Users -->
     <div class="p-6 bg-white border border-gray-100 shadow-sm rounded-xl">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600">Total Pengguna Aktif</p>
+                <p class="text-sm font-medium text-gray-600">Total Users Aktif</p>
 
                 <p class="text-3xl font-bold text-gray-900">{{ number_format($totalActiveUsers) }}</p>
                 <div class="flex gap-2 mt-1 text-xs text-gray-500">
-                    <span>{{ $totalStudents }} Siswa</span>
-                    <span>•</span>
-                    <span>{{ $totalTeachers }} Guru</span>
-                    <span>•</span>
-                    <span>{{ $totalParents }} Ortu</span>
+                    <span>{{ $totalStudents }} Member</span>
+                    <span>|</span>
+                    <span>{{ $totalTeachers }} Monitor</span>
+                    <span>|</span>
+                    <span>{{ $totalParents }} Family</span>
                 </div>
             </div>
             <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg">
@@ -107,13 +107,8 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-600">Challenge Aktif</p>
-                <p class="text-3xl font-bold text-gray-900">{{ $activeIndividualChallenges + $activeGroupChallenges }}
-                </p>
-                <div class="flex gap-2 mt-1 text-xs text-gray-500">
-                    <span>{{ $activeIndividualChallenges }} Individu</span>
-                    <span>•</span>
-                    <span>{{ $activeGroupChallenges }} Grup</span>
-                </div>
+                <p class="text-3xl font-bold text-gray-900">{{ $activeChallenges }}</p>
+                <p class="text-xs text-gray-500 mt-1">Challenge dengan end date ≥ hari ini pada rentang terpilih</p>
             </div>
             <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
                 <i class="text-xl text-green-600 fa fa-flag-checkered"></i>
@@ -125,11 +120,11 @@
     <div class="p-6 bg-white border border-gray-100 shadow-sm rounded-xl">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600">Habit Minggu Ini</p>
-                <p class="text-3xl font-bold text-gray-900">{{ $doneHabits + $notDoneHabits }}</p>
+                <p class="text-sm font-medium text-gray-600">Habit Aktif</p>
+                <p class="text-3xl font-bold text-gray-900">{{ $activeHabits }}</p>
                 <div class="flex gap-2 mt-1 text-xs">
                     <span class="text-green-600">{{ $doneHabits }} Done</span>
-                    <span>•</span>
+                    <span>ƒ?›</span>
                     <span class="text-red-600">{{ $notDoneHabits }} Missed</span>
                 </div>
             </div>
@@ -139,17 +134,12 @@
         </div>
     </div>
 
-    <!-- Aktivitas Hari Ini -->
     <div class="p-6 bg-white border border-gray-100 shadow-sm rounded-xl">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600">Refleksi Hari Ini</p>
+                <p class="text-sm font-medium text-gray-600">Jumlah Refleksi</p>
                 <p class="text-3xl font-bold text-gray-900">{{ $reflectionsToday }}</p>
-                <div class="flex gap-2 mt-1 text-xs text-gray-500">
-                    <span>{{ $forumPostsThisWeek }} Post Forum</span>
-                    <span>•</span>
-                    <span>{{ $forumCommentsThisWeek }} Komentar</span>
-                </div>
+                <p class="text-xs text-gray-500 mt-1">Terekam pada rentang terpilih</p>
             </div>
             <div class="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-lg">
                 <i class="text-xl text-orange-600 fa fa-brain"></i>
@@ -166,8 +156,8 @@
             <div class="flex items-center justify-center w-12 h-12 mb-3  rounded-full bg-opacity-20">
                 <i class="text-xl fa fa-users"></i>
             </div>
-            <h3 class="mb-1 font-semibold">Kelola Pengguna</h3>
-            <p class="text-sm text-blue-100">Data siswa, guru, orang tua</p>
+            <h3 class="mb-1 font-semibold">Kelola Users</h3>
+            <p class="text-sm text-blue-100">Data member, monitor, family</p>
         </div>
     </a>
 
@@ -178,7 +168,7 @@
                 <i class="text-xl fa fa-flag-checkered"></i>
             </div>
             <h3 class="mb-1 font-semibold">Kelola Challenge</h3>
-            <p class="text-sm text-green-100">Tantangan untuk siswa</p>
+            <p class="text-sm text-green-100">Tantangan untuk member</p>
         </div>
     </a>
 
@@ -200,7 +190,7 @@
                 <i class="text-xl fa fa-gift"></i>
             </div>
             <h3 class="mb-1 font-semibold">Kelola Reward</h3>
-            <p class="text-sm text-amber-100">Reward yang bisa diredeem oleh siswa</p>
+            <p class="text-sm text-amber-100">Reward yang bisa diredeem oleh member</p>
         </div>
     </a>
 </div>
@@ -254,11 +244,13 @@
                 <div class="flex items-start space-x-3">
                     <div class="flex items-center justify-center w-8 h-8 mt-1 rounded-full
                         @if($activity['type'] === 'challenge_completion') bg-green-100 text-green-600
+                        @elseif($activity['type'] === 'habit_completion') bg-emerald-100 text-emerald-600
                         @elseif($activity['type'] === 'new_challenge') bg-blue-100 text-blue-600
                         @elseif($activity['type'] === 'appreciation') bg-purple-100 text-purple-600
                         @else bg-gray-100 text-gray-600 @endif">
                         <i class="text-sm fa
                             @if($activity['type'] === 'challenge_completion') fa-flag-checkered
+                            @elseif($activity['type'] === 'habit_completion') fa-check-circle
                             @elseif($activity['type'] === 'new_challenge') fa-plus-circle
                             @elseif($activity['type'] === 'appreciation') fa-heart
                             @else fa-info-circle @endif"></i>
@@ -287,12 +279,13 @@
 @php
     $moodTotal = array_sum($moodDistribution ?? []);
     $hasHabitTrends = !empty($habitTrends);
+    $hasChallengeProgress = !empty($challengeProgress);
 @endphp
-<div class="grid grid-cols-1 gap-6 mt-6 lg:grid-cols-2">
+<div class="grid grid-cols-1 gap-6 mt-6 lg:grid-cols-3">
     <!-- Mood Distribution -->
     <div class="bg-white border border-gray-200 rounded-xl shadow-soft">
         <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-800">Distribusi Mood Siswa</h3>
+            <h3 class="text-lg font-semibold text-gray-800">Distribusi Mood Member</h3>
         </div>
         <div class="p-6">
             @if($moodTotal > 0)
@@ -319,6 +312,23 @@
             </div>
             @else
             <canvas id="habitTrendChart" width="400" height="250"></canvas>
+            @endif
+        </div>
+    </div>
+
+    <!-- Challenge Progress -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-soft">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-800">Tren Challenge Completion</h3>
+        </div>
+        <div class="p-6">
+            @if(!$hasChallengeProgress)
+            <div class="text-center text-gray-500 py-8">
+                <i class="mb-2 text-4xl fa fa-flag-checkered"></i>
+                <p>Data tren challenge belum tersedia</p>
+            </div>
+            @else
+            <canvas id="challengeTrendChart" width="400" height="250"></canvas>
             @endif
         </div>
     </div>
@@ -420,6 +430,60 @@
                 mode: 'nearest',
                 axis: 'x',
                 intersect: false
+            }
+        }
+    });
+    @endif
+
+    // Challenge Trends Chart - HANYA di-render jika ada data
+    @if($hasChallengeProgress)
+    const challengeCtx = document.getElementById('challengeTrendChart').getContext('2d');
+    const challengeChart = new Chart(challengeCtx, {
+        type: 'bar',
+        data: {
+            labels: @json(array_column($challengeProgress, 'week')),
+            datasets: [
+                {
+                    label: 'Challenge Done',
+                    data: @json(array_column($challengeProgress, 'done')),
+                    backgroundColor: 'rgba(34, 197, 94, 0.7)',
+                    borderColor: '#22C55E',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Challenge Not Done',
+                    data: @json(array_column($challengeProgress, 'not_done')),
+                    backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                    borderColor: '#EF4444',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Jumlah Challenge'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Periode'
+                    }
+                }
             }
         }
     });
