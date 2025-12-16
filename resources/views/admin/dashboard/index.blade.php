@@ -6,7 +6,7 @@
 @section('content')
 
 @php
-    $currentRange = $selectedRange ?? 'semua';
+$currentRange = $selectedRange ?? 'semua';
 @endphp
 <!-- Stats Cards -->
 <div class="flex flex-col gap-4 mb-6 md:flex-row md:items-center md:justify-between">
@@ -19,10 +19,10 @@
         <select name="range" id="range"
             class="px-3 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             onchange="this.form.submit()">
-            <option value="semua" {{ $currentRange === 'semua' ? 'selected' : '' }}>Semua</option>
-            <option value="minggu ini" {{ $currentRange === 'minggu ini' ? 'selected' : '' }}>Minggu Ini</option>
-            <option value="bulan ini" {{ $currentRange === 'bulan ini' ? 'selected' : '' }}>Bulan Ini</option>
-            <option value="tahun ini" {{ $currentRange === 'tahun ini' ? 'selected' : '' }}>Tahun Ini</option>
+            <option value="semua" {{ $currentRange==='semua' ? 'selected' : '' }}>Semua</option>
+            <option value="minggu ini" {{ $currentRange==='minggu ini' ? 'selected' : '' }}>Minggu Ini</option>
+            <option value="bulan ini" {{ $currentRange==='bulan ini' ? 'selected' : '' }}>Bulan Ini</option>
+            <option value="tahun ini" {{ $currentRange==='tahun ini' ? 'selected' : '' }}>Tahun Ini</option>
         </select>
     </form>
 </div>
@@ -108,7 +108,6 @@
             <div>
                 <p class="text-sm font-medium text-gray-600">Challenge Aktif</p>
                 <p class="text-3xl font-bold text-gray-900">{{ $activeChallenges }}</p>
-                <p class="text-xs text-gray-500 mt-1">Challenge dengan end date ≥ hari ini pada rentang terpilih</p>
             </div>
             <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
                 <i class="text-xl text-green-600 fa fa-flag-checkered"></i>
@@ -122,11 +121,6 @@
             <div>
                 <p class="text-sm font-medium text-gray-600">Habit Aktif</p>
                 <p class="text-3xl font-bold text-gray-900">{{ $activeHabits }}</p>
-                <div class="flex gap-2 mt-1 text-xs">
-                    <span class="text-green-600">{{ $doneHabits }} Done</span>
-                    <span>ƒ?›</span>
-                    <span class="text-red-600">{{ $notDoneHabits }} Missed</span>
-                </div>
             </div>
             <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg">
                 <i class="text-xl text-purple-600 fa fa-sync-alt"></i>
@@ -139,7 +133,6 @@
             <div>
                 <p class="text-sm font-medium text-gray-600">Jumlah Refleksi</p>
                 <p class="text-3xl font-bold text-gray-900">{{ $reflectionsToday }}</p>
-                <p class="text-xs text-gray-500 mt-1">Terekam pada rentang terpilih</p>
             </div>
             <div class="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-lg">
                 <i class="text-xl text-orange-600 fa fa-brain"></i>
@@ -277,9 +270,9 @@
 
 <!-- Charts Section -->
 @php
-    $moodTotal = array_sum($moodDistribution ?? []);
-    $hasHabitTrends = !empty($habitTrends);
-    $hasChallengeProgress = !empty($challengeProgress);
+$moodTotal = array_sum($moodDistribution ?? []);
+$hasHabitTrends = !empty($habitTrends);
+$hasChallengeProgress = !empty($challengeProgress);
 @endphp
 <div class="grid grid-cols-1 gap-6 mt-6 lg:grid-cols-3">
     <!-- Mood Distribution -->
