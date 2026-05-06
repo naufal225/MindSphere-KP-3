@@ -2,183 +2,120 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Create Admin
-        $admin = DB::table('users')->insertGetId([
-            'name' => 'Naufal Ma\'ruf Ashrori',
-            'username' => 'nma225',
+        $password = Hash::make('password');
+        $timestamp = now();
+
+        DB::table('users')->insert([
+            'name' => 'Admin 1',
+            'username' => 'admin1',
             'nis' => null,
             'npk' => null,
             'email' => 'naufalmarufashrori225@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => $password,
             'role' => 'admin',
             'parent_id' => null,
             'avatar_url' => null,
             'xp' => 0,
+            'coin' => 0,
             'level' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'created_at' => $timestamp,
+            'updated_at' => $timestamp,
         ]);
 
-        // Create Classes
-        $classes = [];
-        $classNames = ['X RPL 1', 'X RPL 2', 'X RPL 3'];
+        $classNames = [
+            'X RPL 1',
+            'X RPL 2',
+            'X RPL 3',
+            'X RPL 4',
+            'X DKV 1',
+            'X DKV 2',
+            'X DKV 3',
+            'X TKJ 1',
+            'X TKJ 2',
+        ];
 
-        foreach ($classNames as $className) {
-            $classes[$className] = DB::table('school_classes')->insertGetId([
-                'name' => $className,
-                'teacher_id' => null, // Will be updated after creating teachers
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+        $studentNumber = 1;
 
-        // Create Teachers dengan NPK
-        $teachers = [];
         foreach ($classNames as $index => $className) {
             $teacherNumber = $index + 1;
-            $teachers[$className] = DB::table('users')->insertGetId([
+
+            $teacherId = DB::table('users')->insertGetId([
                 'name' => "Guru {$teacherNumber}",
                 'username' => "guru{$teacherNumber}",
                 'nis' => null,
-                'npk' => "NPK{$teacherNumber}",
+                'npk' => 'NPK' . str_pad((string) $teacherNumber, 3, '0', STR_PAD_LEFT),
                 'email' => "guru{$teacherNumber}@gmail.com",
-                'password' => Hash::make('password'),
+                'password' => $password,
                 'role' => 'guru',
                 'parent_id' => null,
                 'avatar_url' => null,
                 'xp' => 0,
+                'coin' => 0,
                 'level' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
             ]);
 
-            // Update class with teacher_id
-            DB::table('school_classes')
-                ->where('id', $classes[$className])
-                ->update(['teacher_id' => $teachers[$className]]);
-        }
+            $classId = DB::table('school_classes')->insertGetId([
+                'name' => $className,
+                'teacher_id' => $teacherId,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ]);
 
-        // Create Students dengan NIS dan Parents
-        $allStudents = [];
-        $parents = [];
+            for ($i = 0; $i < 5; $i++) {
+                $parentId = DB::table('users')->insertGetId([
+                    'name' => "Ortu {$studentNumber}",
+                    'username' => "ortu{$studentNumber}",
+                    'nis' => null,
+                    'npk' => null,
+                    'email' => "ortu{$studentNumber}@gmail.com",
+                    'password' => $password,
+                    'role' => 'ortu',
+                    'parent_id' => null,
+                    'avatar_url' => null,
+                    'xp' => 0,
+                    'coin' => 0,
+                    'level' => 1,
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp,
+                ]);
 
-        foreach ($classNames as $className) {
-            $classId = $classes[$className];
-
-            // Create 5 students for each class
-            for ($i = 1; $i <= 5; $i++) {
-                $studentNumber = ($i + (array_search($className, $classNames) * 5));
                 $studentId = DB::table('users')->insertGetId([
                     'name' => "Siswa {$studentNumber}",
                     'username' => "siswa{$studentNumber}",
-                    'nis' => "NIS{$studentNumber}",
+                    'nis' => 'NIS' . str_pad((string) $studentNumber, 4, '0', STR_PAD_LEFT),
                     'npk' => null,
                     'email' => "siswa{$studentNumber}@gmail.com",
-                    'password' => Hash::make('password'),
+                    'password' => $password,
                     'role' => 'siswa',
-                    'parent_id' => null, // Will be set after creating parents
+                    'parent_id' => $parentId,
                     'avatar_url' => null,
                     'xp' => 0,
+                    'coin' => 0,
                     'level' => 1,
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp,
                 ]);
 
-                $allStudents[$studentId] = $studentNumber;
-
-                // Add student to class
                 DB::table('class_student')->insert([
                     'student_id' => $studentId,
                     'class_id' => $classId,
-                    'joined_at' => now(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'joined_at' => $timestamp,
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp,
                 ]);
+
+                $studentNumber++;
             }
-        }
-
-        // Create Parents
-        $studentIds = array_keys($allStudents);
-
-        // Parent 1 - for 2 children (first 2 students)
-        $parent1 = DB::table('users')->insertGetId([
-            'name' => 'Ortu 1',
-            'username' => 'ortu1',
-            'nis' => null,
-            'npk' => null,
-            'email' => 'ortu1@gmail.com',
-            'password' => Hash::make('password'),
-            'role' => 'ortu',
-            'parent_id' => null,
-            'avatar_url' => null,
-            'xp' => 0,
-            'level' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        // Assign first 2 students to parent 1
-        DB::table('users')
-            ->whereIn('id', [$studentIds[0], $studentIds[1]])
-            ->update(['parent_id' => $parent1]);
-
-        // Parent 2 - for 1 child (third student)
-        $parent2 = DB::table('users')->insertGetId([
-            'name' => 'Ortu 2',
-            'username' => 'ortu2',
-            'nis' => null,
-            'npk' => null,
-            'email' => 'ortu2@gmail.com',
-            'password' => Hash::make('password'),
-            'role' => 'ortu',
-            'parent_id' => null,
-            'avatar_url' => null,
-            'xp' => 0,
-            'level' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        // Assign third student to parent 2
-        DB::table('users')
-            ->where('id', $studentIds[2])
-            ->update(['parent_id' => $parent2]);
-
-        // Parent 3 - for remaining students (students 4-15)
-        $parent3 = DB::table('users')->insertGetId([
-            'name' => 'Ortu 3',
-            'username' => 'ortu3',
-            'nis' => null,
-            'npk' => null,
-            'email' => 'ortu3@gmail.com',
-            'password' => Hash::make('password'),
-            'role' => 'ortu',
-            'parent_id' => null,
-            'avatar_url' => null,
-            'xp' => 0,
-            'level' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        // Assign remaining students to parent 3 (students 4-15)
-        if (count($studentIds) > 3) {
-            $remainingStudents = array_slice($studentIds, 3);
-            DB::table('users')
-                ->whereIn('id', $remainingStudents)
-                ->update(['parent_id' => $parent3]);
         }
     }
 }

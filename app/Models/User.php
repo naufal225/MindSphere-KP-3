@@ -132,4 +132,9 @@ class User extends Authenticatable
     public function challengeParticipants() {
         return $this->hasMany(ChallengeParticipant::class, 'user_id');
     }
+
+    public function rewardRequests()
+    {
+        return $this->hasMany(RewardRequest::class, 'user_id');
+    }
 }

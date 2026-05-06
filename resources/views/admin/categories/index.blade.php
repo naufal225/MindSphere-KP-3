@@ -131,10 +131,6 @@
                 <tr>
                     <th scope="col"
                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                        <i class="mr-1 fa-solid fa-tag"></i> Kode
-                    </th>
-                    <th scope="col"
-                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                         <i class="mr-1 fa-solid fa-heading"></i> Nama Kategori
                     </th>
                     <th scope="col"
@@ -158,21 +154,6 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($categories as $category)
                 <tr class="transition-colors hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        @php
-                        $codeColors = [
-                        'SA' => 'bg-blue-100 text-blue-800',
-                        'SI' => 'bg-green-100 text-green-800',
-                        'GM' => 'bg-purple-100 text-purple-800',
-                        'KL' => 'bg-orange-100 text-orange-800',
-                        'KR' => 'bg-red-100 text-red-800'
-                        ];
-                        @endphp
-                        <span
-                            class="inline-flex items-center px-3 py-1 text-sm font-bold rounded-full {{ $codeColors[$category->code] ?? 'bg-gray-100 text-gray-800' }}">
-                            {{ $category->code }}
-                        </span>
-                    </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm font-semibold text-gray-900">{{ $category->name }}</div>
                     </td>
@@ -226,7 +207,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-8 text-center">
+                    <td colspan="5" class="px-6 py-8 text-center">
                         <div class="flex flex-col items-center justify-center text-gray-400">
                             <i class="mb-3 text-4xl fa-solid fa-tags"></i>
                             <p class="text-lg font-medium text-gray-600">Tidak ada data kategori</p>

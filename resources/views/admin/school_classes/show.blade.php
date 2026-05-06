@@ -92,10 +92,15 @@
                         @foreach($class->students as $student)
                         <a href="{{ route('admin.users.show', $student->id) }}">
                             <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                @if($student->avatar_url)
+                                <img src="{{ Storage::url($student->avatar_url) }}" alt="{{ $student->name }}"
+                                    class="object-cover w-10 h-10 rounded-full shadow-sm">
+                                @else
                                 <div
-                                    class="flex items-center justify-center w-10 h-10 text-white bg-gradient-to-r from-green-500 to-teal-600 rounded-full">
+                                    class="flex items-center justify-center w-10 h-10 text-lg font-bold text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-full shadow-sm">
                                     {{ substr($student->name, 0, 1) }}
                                 </div>
+                                @endif
                                 <div class="ml-4">
                                     <p class="font-medium text-gray-900">{{ $student->name }}</p>
                                     <p class="text-sm text-gray-600">{{ $student->email }}</p>

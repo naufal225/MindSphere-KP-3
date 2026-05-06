@@ -70,7 +70,6 @@ use App\Http\Services\LevelService;
                 <select name="role" id="role"
                     class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Semua Role</option>
-                    <option value="admin" {{ request('role')==='admin' ? 'selected' : '' }}>Admin</option>
                     <option value="guru" {{ request('role')==='guru' ? 'selected' : '' }}>Monitor</option>
                     <option value="siswa" {{ request('role')==='siswa' ? 'selected' : '' }}>Member</option>
                     <option value="ortu" {{ request('role')==='ortu' ? 'selected' : '' }}>Family</option>
@@ -169,7 +168,7 @@ use App\Http\Services\LevelService;
                 <p class="text-sm text-gray-600">Menampilkan {{ $users->count() }} dari {{ $users->total() }} users
                 </p>
             </div>
-            
+
         </div>
     </div>
 

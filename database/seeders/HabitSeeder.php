@@ -2,77 +2,121 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class HabitSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Get category ID
-        $categoryId = DB::table('categories')->where('name', 'Self Awareness')->first()->id;
+        $adminId = DB::table('users')->where('role', 'admin')->value('id');
+        $teachers = DB::table('users')
+            ->where('role', 'guru')
+            ->orderBy('id')
+            ->pluck('id')
+            ->values();
 
-        // Get admin user ID
-        $adminId = DB::table('users')->where('role', 'admin')->first()->id;
+        $categories = DB::table('categories')->pluck('id', 'name');
+        $today = today();
+        $timestamp = now();
 
-        $today = now();
-        $habits = [];
-
-        // 1 Habit yang sudah lewat (1 hari yang lalu sampai kemarin)
-        $habits[] = [
-            'title' => 'Habit 1 - Refleksi Harian',
-            'description' => 'Melakukan refleksi harian tentang pencapaian dan pembelajaran',
-            'type' => 'self',
-            'assigned_by' => null,
-            'category_id' => $categoryId,
-            'period' => 'daily',
-            'xp_reward' => 50,
-            'coin_reward' => 100,
-            'start_date' => $today->copy()->subDays(2)->format('Y-m-d'),
-            'end_date' => $today->copy()->subDay()->format('Y-m-d'),
-            'created_by' => $adminId,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
-
-        // 4 Habit aktif (dimulai kemarin sampai 6 hari ke depan)
-        for ($i = 2; $i <= 5; $i++) {
-            $habits[] = [
-                'title' => "Habit $i - Mindfulness Practice",
-                'description' => "Praktik mindfulness untuk meningkatkan kesadaran diri ke-$i",
-                'type' => $i % 2 == 0 ? 'self' : 'assigned',
-                'assigned_by' => $i % 2 == 0 ? null : $adminId,
-                'category_id' => $categoryId,
-                'period' => $i % 2 == 0 ? 'daily' : 'weekly',
-                'xp_reward' => 50 + ($i * 10),
-                'coin_reward' => 100 + ($i * 10),
-                'start_date' => $today->copy()->subDay()->format('Y-m-d'),
-                'end_date' => $today->copy()->addDays(6)->format('Y-m-d'),
+        $habits = [
+            [
+                'title' => 'Refleksi Fokus Pagi',
+                'description' => 'Siswa menuliskan fokus utama belajar dan target kecil untuk hari ini.',
+                'type' => 'self',
+                'assigned_by' => null,
+                'category_id' => $categories['Refleksi Diri'],
+                'period' => 'daily',
+                'xp_reward' => 40,
+                'coin_reward' => 35,
                 'created_by' => $adminId,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-
-        // 1 Habit yang akan datang (dimulai besok sampai 7 hari ke depan)
-        $habits[] = [
-            'title' => 'Habit 6 - Goal Setting',
-            'description' => 'Menetapkan dan mengevaluasi tujuan pribadi',
-            'type' => 'assigned',
-            'assigned_by' => $adminId,
-            'category_id' => $categoryId,
-            'period' => 'weekly',
-            'xp_reward' => 100,
-            'coin_reward' => 120,
-            'start_date' => $today->copy()->addDay()->format('Y-m-d'),
-            'end_date' => $today->copy()->addDays(8)->format('Y-m-d'),
-            'created_by' => $adminId,
-            'created_at' => now(),
-            'updated_at' => now(),
+                'updated_by' => $adminId,
+                'start_date' => $today->copy()->subDays(10)->toDateString(),
+                'end_date' => $today->copy()->addDays(10)->toDateString(),
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ],
+            [
+                'title' => 'Jurnal Syukur Kelas X RPL 1',
+                'description' => 'Latihan syukur singkat untuk siswa kelas X RPL 1.',
+                'type' => 'assigned',
+                'assigned_by' => $teachers[0],
+                'category_id' => $categories['Refleksi Diri'],
+                'period' => 'daily',
+                'xp_reward' => 45,
+                'coin_reward' => 40,
+                'created_by' => $teachers[0],
+                'updated_by' => $teachers[0],
+                'start_date' => $today->copy()->subDays(6)->toDateString(),
+                'end_date' => $today->copy()->addDays(7)->toDateString(),
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ],
+            [
+                'title' => 'Review Target Mingguan',
+                'description' => 'Siswa meninjau target mingguan dan progres belajarnya.',
+                'type' => 'self',
+                'assigned_by' => null,
+                'category_id' => $categories['Kedisiplinan'],
+                'period' => 'weekly',
+                'xp_reward' => 85,
+                'coin_reward' => 60,
+                'created_by' => $adminId,
+                'updated_by' => $adminId,
+                'start_date' => $today->copy()->subDays(21)->toDateString(),
+                'end_date' => $today->copy()->subDays(5)->toDateString(),
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ],
+            [
+                'title' => 'Rutinitas Tepat Waktu X DKV 2',
+                'description' => 'Guru memantau konsistensi siswa hadir dan mengumpulkan tugas tepat waktu.',
+                'type' => 'assigned',
+                'assigned_by' => $teachers[5],
+                'category_id' => $categories['Kedisiplinan'],
+                'period' => 'weekly',
+                'xp_reward' => 95,
+                'coin_reward' => 75,
+                'created_by' => $teachers[5],
+                'updated_by' => $teachers[5],
+                'start_date' => $today->copy()->subDays(7)->toDateString(),
+                'end_date' => $today->copy()->addDays(14)->toDateString(),
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ],
+            [
+                'title' => 'Persiapan Presentasi X TKJ 1',
+                'description' => 'Habit mendatang untuk menyiapkan presentasi singkat di kelas.',
+                'type' => 'assigned',
+                'assigned_by' => $teachers[7],
+                'category_id' => $categories['Kolaborasi'],
+                'period' => 'daily',
+                'xp_reward' => 55,
+                'coin_reward' => 45,
+                'created_by' => $teachers[7],
+                'updated_by' => $teachers[7],
+                'start_date' => $today->copy()->addDays(2)->toDateString(),
+                'end_date' => $today->copy()->addDays(10)->toDateString(),
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ],
+            [
+                'title' => 'Aksi Baik Harian',
+                'description' => 'Siswa mencatat satu aksi baik atau bantuan kecil yang dilakukan setiap hari.',
+                'type' => 'assigned',
+                'assigned_by' => $adminId,
+                'category_id' => $categories['Kolaborasi'],
+                'period' => 'daily',
+                'xp_reward' => 50,
+                'coin_reward' => 45,
+                'created_by' => $adminId,
+                'updated_by' => $adminId,
+                'start_date' => $today->copy()->subDays(4)->toDateString(),
+                'end_date' => $today->copy()->addDays(5)->toDateString(),
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ],
         ];
 
         DB::table('habits')->insert($habits);

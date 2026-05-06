@@ -312,7 +312,7 @@ class RewardRequest extends Model
             // Potong koin saat request dibuat
             $user->decrement('coin', $data['total_coin_cost']);
 
-            return self::create($data);
+            return self::create($data)->fresh();
         });
     }
 }

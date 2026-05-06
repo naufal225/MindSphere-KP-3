@@ -1,6 +1,8 @@
 @extends('components.admin.layout.app')
 
 @section('title', 'User Progress Report - MindSphere')
+@section('header', 'User Progress Report')
+@section('subtitle', 'Monitor dan analisis progress dan aktivitas')
 
 @section('content')
 <div class="space-y-6">
@@ -43,10 +45,6 @@
     @endif
     <!-- Page Header -->
     <div class="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900">User Progress Report</h1>
-            <p class="text-gray-600">Monitor and analyze member progress and activities</p>
-        </div>
         <div class="flex gap-3">
             <button id="export-btn" class="px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700">
                 <i class="mr-2 fas fa-file-excel"></i>Export Excel
@@ -248,9 +246,11 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead>
                     <tr class="bg-gray-50">
-                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Member
+                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                            Member
                         </th>
-                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Divisi
+                        <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                            Divisi
                         </th>
                         <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Level
                         </th>
@@ -274,15 +274,36 @@
                     @forelse($userProgressData as $progress)
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 whitespace-nowrap">
+                            @php
+                            $user = $progress['user'];
+                            $nameParts = preg_split('/\s+/', trim($user->name ?? '')) ?: [];
+                            $initials = strtoupper(
+                            (mb_substr($nameParts[0] ?? '', 0, 1)) .
+                            (mb_substr($nameParts[1] ?? '', 0, 1))
+                            );
+                            $avatarUrl = null;
+
+                            if (!empty($user->avatar_url)) {
+                            $avatarUrl = filter_var($user->avatar_url, FILTER_VALIDATE_URL)
+                            ? $user->avatar_url
+                            : Storage::url($user->avatar_url);
+                            }
+                            @endphp
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 w-10 h-10">
-                                    <img class="w-10 h-10 rounded-full"
-                                        src="{{ Storage::url($progress['user']->avatar_url) ?: asset('img/default-avatar.png') }}"
-                                        alt="{{ $progress['user']->name }}">
+                                    @if($avatarUrl)
+                                    <img class="object-cover w-10 h-10 rounded-full" src="{{ $avatarUrl }}"
+                                        alt="{{ $user->name }}">
+                                    @else
+                                    <div
+                                        class="flex items-center justify-center w-10 h-10 text-sm font-semibold text-blue-700 rounded-full bg-blue-100">
+                                        {{ $initials ?: 'U' }}
+                                    </div>
+                                    @endif
                                 </div>
                                 <div class="ml-4">
-                                    <div class="text-sm font-medium text-gray-900">{{ $progress['user']->name }}</div>
-                                    <div class="text-sm text-gray-500">{{ $progress['user']->email }}</div>
+                                    <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
+                                    <div class="text-sm text-gray-500">{{ $user->email }}</div>
                                 </div>
                             </div>
                         </td>

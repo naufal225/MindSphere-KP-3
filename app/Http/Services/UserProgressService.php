@@ -190,7 +190,7 @@ class UserProgressService
                 ->whereBetween('date', [$startDate, $endDate])
                 ->get();
 
-            $completed = $habitLogs->where('status', 'done')->count();
+            $completed = $habitLogs->where('status', 'completed')->count();
             $streak = $this->calculateHabitStreak($habitLogs);
 
             return [
@@ -208,7 +208,7 @@ class UserProgressService
     private function calculateHabitStreak($habitLogs)
     {
         try {
-            $doneLogs = $habitLogs->where('status', 'done')
+            $doneLogs = $habitLogs->where('status', 'completed')
                 ->sortBy('date')
                 ->groupBy('date')
                 ->keys();

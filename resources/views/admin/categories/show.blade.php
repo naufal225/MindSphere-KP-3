@@ -21,9 +21,9 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <!-- Overview Card -->
-        <div class="lg:col-span-1">
+        {{-- <div class="lg:col-span-1">
             <div class="overflow-hidden bg-white rounded-lg shadow-sm border border-gray-100">
                 <!-- Category Header -->
                 <div class="p-6 text-center bg-gradient-to-r from-blue-50 to-indigo-50">
@@ -80,7 +80,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Category Details -->
         <div class="lg:col-span-3">
@@ -275,14 +275,14 @@
 
                         </div>
 
-                        <!-- Distribution Chart (Placeholder) -->
+                        {{-- <!-- Distribution Chart (Placeholder) -->
                         <div class="mt-6 p-6 bg-gray-50 border border-gray-200 rounded-lg">
                             <h4 class="mb-4 font-semibold text-gray-800">Distribusi Konten</h4>
                             <div class="text-center py-8 text-gray-500">
                                 <i class="mb-4 text-4xl fa-solid fa-chart-pie"></i>
                                 <p>Grafik distribusi konten akan ditampilkan di sini</p>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

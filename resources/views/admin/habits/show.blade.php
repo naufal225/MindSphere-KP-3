@@ -346,14 +346,28 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             @php
-                                            $statusColors = [
-                                            'completed' => 'bg-green-100 text-green-800',
-                                            'joined' => 'bg-red-100 text-red-800'
+                                            $statusConfig = [
+                                            'completed' => [
+                                            'class' => 'bg-green-100 text-green-800',
+                                            'label' => 'Selesai',
+                                            ],
+                                            'submitted' => [
+                                            'class' => 'bg-yellow-100 text-yellow-800',
+                                            'label' => 'Menunggu Verifikasi',
+                                            ],
+                                            'joined' => [
+                                            'class' => 'bg-red-100 text-red-800',
+                                            'label' => 'Belum Selesai',
+                                            ],
+                                            ];
+                                            $currentStatus = $statusConfig[$log->status->value] ?? [
+                                            'class' => 'bg-gray-100 text-gray-800',
+                                            'label' => ucfirst($log->status->value),
                                             ];
                                             @endphp
                                             <span
-                                                class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $statusColors[$log->status->value] }}">
-                                                {{ $log->status->value === 'completed' ? 'Selesai' : 'Belum Selesai' }}
+                                                class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $currentStatus['class'] }}">
+                                                {{ $currentStatus['label'] }}
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-500 max-w-xs">
