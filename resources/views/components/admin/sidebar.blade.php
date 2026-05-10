@@ -56,6 +56,12 @@
             <span class="font-medium">Habits</span>
         </a>
 
+        <a href="{{ route('admin.reflection-templates.index') }}"
+            class="flex items-center px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.reflection-templates.*') ? 'bg-[#2563EB] text-white shadow-soft' : 'text-blue-100 hover:bg-[#2563EB] hover:text-white' }}">
+            <i class="w-5 mr-3 text-center fas fa-note-sticky"></i>
+            <span class="font-medium">Template Refleksi</span>
+        </a>
+
         <!-- Reward -->
         <div class="space-y-1"
             x-data="{ open: {{ request()->routeIs('admin.rewards.*', 'admin.requests.*') ? 'true' : 'false' }} }">

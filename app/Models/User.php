@@ -115,6 +115,16 @@ class User extends Authenticatable
         return $this->hasMany(Reflection::class);
     }
 
+    public function reflectionTemplatesCreated()
+    {
+        return $this->hasMany(ReflectionTemplate::class, 'created_by_user_id');
+    }
+
+    public function studentReflections()
+    {
+        return $this->hasMany(StudentReflection::class, 'student_id');
+    }
+
     public function classesAsTeacher()
     {
         return $this->hasMany(SchoolClass::class, 'teacher_id');

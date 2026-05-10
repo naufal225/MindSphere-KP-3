@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Siswa\ProfileController;
 use App\Http\Controllers\Api\Siswa\RewardController;
 use App\Http\Controllers\Api\Siswa\ReflectionController;
 use App\Http\Controllers\Api\Siswa\ReflectionSubmissionController;
+use App\Http\Controllers\Api\Siswa\ReflectionTemplateController;
 use App\Http\Controllers\Api\Siswa\StudentLeaderboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,13 @@ Route::middleware('auth:sanctum')->prefix('siswa')->name('siswa.')->group(functi
     Route::post('/reflections/mood', [ReflectionSubmissionController::class, 'submitMood']);
     Route::get('/reflections/stats', [ReflectionSubmissionController::class, 'getStats']);
     Route::get('/reflections/moods/{year}/{month}', [ReflectionSubmissionController::class, 'getMonthlyMoods']);
+
+    Route::get('/reflection-template/active', [ReflectionTemplateController::class, 'active']);
+    Route::get('/reflection-template/active/submission', [ReflectionTemplateController::class, 'activeSubmission']);
+    Route::post('/reflection-template/active/draft', [ReflectionTemplateController::class, 'saveDraft']);
+    Route::post('/reflection-template/active/submit', [ReflectionTemplateController::class, 'submit']);
+    Route::get('/reflection-template/history', [ReflectionTemplateController::class, 'history']);
+    Route::get('/reflection-template/history/{studentReflection}', [ReflectionTemplateController::class, 'showHistory']);
 
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'show']);

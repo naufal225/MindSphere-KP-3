@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\HabitController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RewardController;
+use App\Http\Controllers\Admin\ReflectionTemplateController;
 use App\Http\Controllers\Admin\RewardRequestController;
 use App\Http\Controllers\Admin\UserProgressController;
 use App\Models\ForumComment;
@@ -35,6 +36,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('challenges', ChallengeController::class);
 
     Route::resource('habits', HabitController::class);
+
+    Route::resource('reflection-templates', ReflectionTemplateController::class)->except(['show']);
+    Route::post('reflection-templates/{id}/duplicate', [ReflectionTemplateController::class, 'duplicate'])
+        ->name('reflection-templates.duplicate');
+    Route::post('reflection-templates/{id}/publish', [ReflectionTemplateController::class, 'publish'])
+        ->name('reflection-templates.publish');
+    Route::post('reflection-templates/{id}/unpublish', [ReflectionTemplateController::class, 'unpublish'])
+        ->name('reflection-templates.unpublish');
 
     Route::prefix('user-progress')->name('user-progress.')->group(function () {
         Route::get('/', [UserProgressController::class, 'index'])->name('index');

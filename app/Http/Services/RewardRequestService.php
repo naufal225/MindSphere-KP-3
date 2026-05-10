@@ -100,9 +100,9 @@ class RewardRequestService
             }
 
             // Validasi koin user
-            if ($rewardRequest->user->coin < $rewardRequest->total_coin_cost) {
-                throw new Exception('Koin user tidak mencukupi');
-            }
+            // if ($rewardRequest->user->coin < $rewardRequest->total_coin_cost) {
+            //     throw new Exception('Koin user tidak mencukupi');
+            // }
 
             // Approve request
             $rewardRequest->approve($approver);
